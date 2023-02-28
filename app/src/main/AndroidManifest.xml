@@ -12,6 +12,9 @@
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".TestActivity2"
+            android:exported="false" />
+        <activity
             android:name=".TestActivity1"
             android:exported="false" />
         <activity
