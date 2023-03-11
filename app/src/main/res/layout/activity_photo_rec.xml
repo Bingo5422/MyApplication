@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ECEADE"
+    android:orientation="vertical"
+    tools:context=".ui.home.PhotoRecActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/title_back"
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:layout_margin="5dp"
+        android:background="@mipmap/one_dir_arrow"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Photo Identification"
+        android:textSize="24sp"
+        android:textColor="#AF9B90"
+        android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/rec_photo"
+        android:layout_marginStart="25dp"
+        android:layout_width="240dp"
+        android:layout_height="320dp"
+        android:layout_gravity="center"
+        />
+
+    <Button
+        android:textAllCaps="false"
+        android:id="@+id/rec_start"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:text="Start Identification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#AF9B90"
+        android:background="#278E84"
+        android:textSize="18sp"/>
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/Rec_play"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/Rec_start"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        android:gravity="center_vertical">-->
+<!--        <TextView-->
+<!--            android:id="@+id/Rec_result"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="22sp"-->
+<!--            android:textStyle="bold"-->
+<!--            tools:text="结果"-->
+<!--            />-->
+        <ImageView
+            android:src="@mipmap/voice"
+            android:layout_marginLeft="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+<!--    </LinearLayout>-->
+
+
+
+
+
+
+</LinearLayout>
+
