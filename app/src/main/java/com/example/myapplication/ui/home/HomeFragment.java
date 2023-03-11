@@ -106,8 +106,8 @@ public class HomeFragment extends Fragment{
 
         //判断是否为当前请求
         if (requestCode == 1) {
-            //这个压缩方法有点子问题。。。
-            //PhotoUtil.compressPhoto(file, 2);
+
+            PhotoUtil.compressPhoto(file, 4);
             String absolutePath = file.getAbsolutePath();
             Intent intent = new Intent(getContext(), PhotoRecActivity.class);
             intent.putExtra("path", absolutePath);
