@@ -15,8 +15,6 @@ import java.util.Map;
  * Http Client 工具类
  */
 public class HttpUtil {
-	
-	
 
 	
 	/**

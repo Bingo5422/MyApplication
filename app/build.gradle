@@ -8,13 +8,17 @@ android {
 
     defaultConfig {
         applicationId "com.example.myapplication"
-        minSdk 24
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+//    aaptOptions {
+//        cruncherEnabled = false
+//    }
 
     buildTypes {
         release {
@@ -32,6 +36,8 @@ android {
 }
 
 dependencies {
+    //okhttp
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -46,12 +52,6 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.11'
     implementation 'org.apache.poi:poi:4.1.2'
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
-
-
-
-
-
-
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
