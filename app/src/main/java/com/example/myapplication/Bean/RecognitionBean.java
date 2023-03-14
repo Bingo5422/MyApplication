@@ -1,12 +1,18 @@
 package com.example.myapplication.Bean;
 
-public class RecognitionBean {
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity
+public class RecognitionBean {
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String code;
     private String enName;
     private String name;
     private String cate;
+
 
 
     public int getId() {
@@ -52,7 +58,7 @@ public class RecognitionBean {
 
     @Override
     public String toString() {
-        return "RecResultBean{" +
+        return "RecognitionBean{" +
                 "id=" + id +
                 ", code='" + code + '\'' +
                 ", enName='" + enName + '\'' +

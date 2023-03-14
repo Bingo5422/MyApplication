@@ -38,7 +38,8 @@ public class RecognitionUtil {
     // 图片地址
     //private static String PATH = "文件路径";
 
-    public static void startRecognition(String path){//传入文件路径
+    //传入文件路径
+    public static void startRecognition(String path,RecBack back){
 
         new Thread(){
             @Override
@@ -50,8 +51,9 @@ public class RecognitionUtil {
                     byte[] imageByteArray = FileUtil.read(path);
                     String result = HttpUtil.doPost1(URL, header, imageByteArray);
                     System.out.println("接口调用结果：" + result);
+                    back.onFinished(result);
                 }catch (Exception e){
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
 
             }
@@ -76,16 +78,18 @@ public class RecognitionUtil {
     }
 
 
-    public static List<RecognitionBean> readExcel(InputStream stream) {
+    public static List<RecognitionBean> read(InputStream stream) {
         List<RecognitionBean> data = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(stream);
             XSSFSheet sheet = workbook.getSheetAt(0);
             int rowsCount = sheet.getPhysicalNumberOfRows();
             FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
             for (int r = 0; r < rowsCount; r++) {
                 Row row = sheet.getRow(r);
                 int cellsCount = row.getPhysicalNumberOfCells();
+
                 RecognitionBean bean = new RecognitionBean();
                 String code = row.getCell(0).toString();
                 String enName = row.getCell(1).toString();
@@ -116,6 +120,8 @@ public class RecognitionUtil {
 
         return data;
     }
+
+
 
 
 
