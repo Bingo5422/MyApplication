@@ -52,29 +52,33 @@
         android:background="#278E84"
         android:textSize="18sp"/>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/Rec_play"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/Rec_start"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        android:gravity="center_vertical">-->
-<!--        <TextView-->
-<!--            android:id="@+id/Rec_result"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textSize="22sp"-->
-<!--            android:textStyle="bold"-->
-<!--            tools:text="结果"-->
-<!--            />-->
+    <LinearLayout
+        android:id="@+id/Rec_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/Rec_start"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:gravity="center_vertical">
+
         <ImageView
             android:src="@mipmap/voice"
             android:layout_marginLeft="40dp"
             android:layout_width="30dp"
             android:layout_height="30dp"/>
-<!--    </LinearLayout>-->
+        <TextView
+            android:id="@+id/Rec_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="result"
+            />
+
+    </LinearLayout>
 
 
 

@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.MainActivity;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Room;
 
 import com.example.myapplication.Utils.PhotoUtil;
 import com.example.myapplication.databinding.FragmentHomeBinding;
@@ -34,12 +37,13 @@ public class HomeFragment extends Fragment{
     private ImageView main_camera = null;
     private String picPath;
     private File file;
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "HomeFragment";
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         picPath = getContext().getFilesDir().getAbsolutePath() + File.separator + "photos";
         File temp = new File(picPath);
@@ -90,9 +94,12 @@ public class HomeFragment extends Fragment{
 
 //        final TextView textView = binding.textHome;
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
     //这上面是初始化fragment自带的代码
+
+
 
 @Override
     public void onDestroyView() {
