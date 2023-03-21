@@ -30,6 +30,7 @@ import com.example.myapplication.databinding.FragmentHomeBinding;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class HomeFragment extends Fragment{
 
@@ -54,15 +55,15 @@ public class HomeFragment extends Fragment{
             Log.d(TAG, "onCreate: 文件夹创建了 路径为 = " + temp.getAbsolutePath());
         }
 
-        file = new File(picPath, "temp.jpg");
-        //创建文件
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        file = new File(picPath, "temp.jpg");
+//        //创建文件
+//        if (!file.exists()) {
+//            try {
+//                file.createNewFile();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,6 +76,9 @@ public class HomeFragment extends Fragment{
         main_camera.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
+
+                File file = getFileName();
                 //Call the system camera
                 Intent intent_cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 //Generate a uri based on picPath
@@ -121,5 +125,20 @@ public class HomeFragment extends Fragment{
             startActivity(intent);
 
         }
+    }
+
+    public File getFileName(){
+        String name = UUID.randomUUID().toString();
+
+        file = new File(picPath, name+".jpg");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Log.d(TAG, "fileName: 随机文件创建了，路径为 = " + file.getAbsolutePath());
+        return file;
     }
 }

@@ -17,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Bean.RecognitionBean;
+import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.Dao.RecognitionDao;
 import com.example.myapplication.R;
@@ -45,6 +47,7 @@ public class PhotoRecActivity extends AppCompatActivity {
 
     private RecDataBase recDataBase;
     private RecognitionDao recDao;
+    private HistoryDao historyDao;
     private RecognitionBean bean;
 
     private static final String TAG = "PhotoRecActivity";
@@ -68,7 +71,10 @@ public class PhotoRecActivity extends AppCompatActivity {
 
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
         recDao = recDataBase.recognitionDao();
-//        loadExcel();
+
+        historyDao = recDataBase.historyDao();
+
+        loadExcel();
         recStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,8 +160,33 @@ public class PhotoRecActivity extends AppCompatActivity {
         if(bean!=null){
             String s = bean.getEnName()+"\n"+bean.getName();
             recShow.setText(s);
+            saveResult(bean);
         }
 
+    }
+
+
+    //保存图片路径到数据库
+    public void saveResult(RecognitionBean bean){
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                HistoryBean historyBean = new HistoryBean();
+
+                historyBean.setPath(photoPath);
+                historyBean.setId(bean.getId());
+                historyBean.setCode(bean.getCode());
+                historyBean.setEnName(bean.getEnName());
+                historyBean.setName(bean.getName());
+
+                historyDao.insertHistory(historyBean);
+
+            }
+        }.start();
+
+        Log.d(TAG, "saveResult: 插入历史数据成功");
     }
 
 
