@@ -60,8 +60,8 @@ public class PhotoUtil {
 
     //图片压缩
     public static File compressPhoto(File file, int scale) {
-        String photo_path = MainActivity.getContext().getFilesDir() + File.separator + "photos" + File.separator + "temp.jpg";
-        File targetFile = new File(photo_path);
+        //String photo_path = MainActivity.getContext().getFilesDir() + File.separator + "photos" + File.separator + "temp.jpg";
+        File targetFile = new File(file.getAbsolutePath());
         try {
             if (!targetFile.exists()) {
                 if (!targetFile.getParentFile().exists()){
@@ -87,7 +87,7 @@ public class PhotoUtil {
 
         try {
             FileOutputStream fos = new FileOutputStream(targetFile);
-            fos.write(bos.toByteArray());
+            fos.write(bos.toByteArray());//覆盖
             fos.flush();
             fos.close();
         } catch (IOException e) {

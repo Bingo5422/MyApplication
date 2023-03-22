@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Bean.RecognitionBean;
 
 import java.util.List;
@@ -16,6 +17,10 @@ public interface RecognitionDao {
 
     @Insert
     void insert(RecognitionBean bean);
+
+//    @Insert
+//    void insertHistory(HistoryBean bean);
+
 
 
 
