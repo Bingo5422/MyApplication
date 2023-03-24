@@ -9,39 +9,123 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
-        <EditText
-            android:id="@+id/et_email_login"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_login_back"
+                android:src="@mipmap/one_dir_arrow"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_go_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:text="Register"
+                android:textColor="@color/deep_grey"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="30sp"
+            android:text="LOGIN"
+            android:textColor="@color/deep_grey"
+            android:textSize="30sp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Please enter your email address"
-            android:inputType="textEmailAddress" />
+            android:orientation="horizontal"
+            android:paddingTop="30sp">
 
-        <EditText
-            android:id="@+id/et_password_login"
+            <TextView
+                android:layout_width="120sp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Email:"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/et_email_login"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:hint="Please enter your email address"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/brown"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Please enter your password"
-            android:inputType="text"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="120sp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Password:"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/et_password_login"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:hint="Please enter your password"
+                android:inputType="text"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+
 
         <Button
             android:id="@+id/btn_login_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/text_green"
+            android:background="@color/deep_grey"
             android:text="login"
-            android:textSize="15sp" />
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:layout_marginTop="20dp"/>
 
-        <Button
-            android:id="@+id/btn_login_back"
+
+
+
+        <TextView
+            android:id="@+id/tv_forget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/text_green"
-            android:text="back"
-            android:textSize="15sp" />
+            android:layout_marginTop="200dp"
+            android:text="Forgot password?" />
+
 
     </LinearLayout>
 

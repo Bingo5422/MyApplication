@@ -68,6 +68,7 @@
             android:layout_marginLeft="40dp"
             android:layout_width="30dp"
             android:layout_height="30dp"/>
+
         <TextView
             android:id="@+id/Rec_result"
             android:layout_width="wrap_content"
@@ -79,9 +80,6 @@
             />
 
     </LinearLayout>
-
-
-
 
 
 

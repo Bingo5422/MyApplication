@@ -28,22 +28,10 @@ public class CookieJarImpl implements CookieJar {
         preferences = context.getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
-//        for (Cookie cookie : cookies) {
-//            String name = cookie.name();
-//            //如果已经存在
-//            //全部清空
-//            if(preferences.getString(name,"null") != null){
-//                editor.clear();
-//            }
-//            editor.putString(name, cookie.value());
-//        }
-//
-//        editor.commit();
-
         // 确保对应host没有cookie
-        String exist_cookie_name = preferences.getString(host+"name","null");
-        String exist_cookie_value = preferences.getString(host+"value",null);
-        if (exist_cookie_name != null && exist_cookie_value!=null){
+        String exist_cookie_name = preferences.getString(host+"name","");
+        String exist_cookie_value = preferences.getString(host+"value","");
+        if (exist_cookie_name != "" || exist_cookie_value!= ""){
             // 删除对应key中的数据
             editor.remove(host+"name");
             editor.remove(host+"value");
@@ -52,7 +40,6 @@ public class CookieJarImpl implements CookieJar {
         //主服务器对应名字
         editor.putString(url.host()+"name", cookies.get(0).name());
         editor.putString(url.host()+"value", cookies.get(0).value());
-
         editor.commit();
     }
 
@@ -62,13 +49,13 @@ public class CookieJarImpl implements CookieJar {
         preferences = context.getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
 
         // 调取对应url的cookie
-        String exist_cookie_name = preferences.getString(host+"name", null);
-        String exist_cookie_value = preferences.getString(host+"value", null);
+        String exist_cookie_name = preferences.getString(host+"name", "");
+        String exist_cookie_value = preferences.getString(host+"value", "");
 
         // 创建一个新的cookie列表
         List<Cookie> cookies = new ArrayList<Cookie>();
         //把之前的字符串全都当作cookie的名字放入
-        if (exist_cookie_name!=null && exist_cookie_value!= null) {
+        if (exist_cookie_name!="" && exist_cookie_value!="") {
             Cookie cookie = new Cookie.Builder().name(exist_cookie_name)
                     .domain(url.host())
                     .value(exist_cookie_value)
