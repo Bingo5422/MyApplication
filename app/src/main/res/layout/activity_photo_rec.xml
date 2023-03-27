@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     android:background="#ECEADE"
     android:orientation="vertical"
-    tools:context=".ui.home.PhotoRecActivity">
+    tools:context=".ui.recognition.PhotoRecActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <Button
         android:id="@+id/title_back"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
         android:layout_height="70dp"
+        android:layout_weight="1"
         android:layout_margin="5dp"
         android:background="@mipmap/one_dir_arrow"/>
 
@@ -22,7 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:gravity="center"
         android:text="Photo Identification"
         android:textSize="24sp"
@@ -67,6 +68,7 @@
             android:src="@mipmap/voice"
             android:layout_marginLeft="40dp"
             android:layout_width="30dp"
+            tools:text="voice"
             android:layout_height="30dp"/>
 
         <TextView

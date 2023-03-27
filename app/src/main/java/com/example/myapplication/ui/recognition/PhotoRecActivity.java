@@ -1,18 +1,15 @@
-package com.example.myapplication.ui.home;
+package com.example.myapplication.ui.recognition;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
-import androidx.room.RoomDatabase;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,17 +22,13 @@ import com.example.myapplication.Dao.RecognitionDao;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.RecBack;
 import com.example.myapplication.Utils.RecognitionUtil;
-import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 public class PhotoRecActivity extends AppCompatActivity {
 
@@ -44,6 +37,7 @@ public class PhotoRecActivity extends AppCompatActivity {
     private String photoPath;
     private TextView recStart;
     private TextView recShow;
+    private Button recHistory;
 
     private RecDataBase recDataBase;
     private RecognitionDao recDao;
@@ -61,6 +55,8 @@ public class PhotoRecActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_rec);
         recPhoto=findViewById(R.id.rec_photo);
         recShow=findViewById(R.id.Rec_result);
+
+
         Intent intent = getIntent();
         photoPath = intent.getStringExtra("path");//intent传来的照片路径
         bitmap = BitmapFactory.decodeFile(photoPath);

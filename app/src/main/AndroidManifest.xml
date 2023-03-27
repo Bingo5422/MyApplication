@@ -19,7 +19,7 @@
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-       <!-- <activity -->
+        <!-- <activity -->
         <!-- android:name=".MainActivity" -->
         <!-- android:exported="false" -->
         <!-- android:label="@string/title_activity_me" /> -->
@@ -46,7 +46,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.home.PhotoRecActivity"
+            android:name=".ui.recognition.PhotoRecActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.recognition.HistoryActivity"
             android:exported="false" />
 
         <provider
@@ -58,6 +61,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity
+            android:name=".ui.dashboard.ResultActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
     </application>
 
 </manifest>

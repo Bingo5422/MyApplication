@@ -8,6 +8,14 @@
     android:background="@color/background"
     tools:context=".ui.home.HomeFragment" >
 
+    <ImageView
+        android:id="@+id/rec_history"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@mipmap/arrows"/>
+
     <LinearLayout
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

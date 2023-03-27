@@ -9,24 +9,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.myapplication.Dao.RecDataBase;
-import com.example.myapplication.MainActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.room.Room;
 
+import com.example.myapplication.R;
 import com.example.myapplication.Utils.PhotoUtil;
 import com.example.myapplication.databinding.FragmentHomeBinding;
+import com.example.myapplication.ui.recognition.HistoryActivity;
+import com.example.myapplication.ui.recognition.PhotoRecActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +30,7 @@ public class HomeFragment extends Fragment{
 
     private FragmentHomeBinding binding;
     private ImageView main_camera = null;
+    private ImageView main_history = null;
     private String picPath;
     private File file;
     private static final String TAG = "HomeFragment";
@@ -95,6 +90,29 @@ public class HomeFragment extends Fragment{
 
             }
         });
+
+        //查看历史记录的按钮监听
+        main_history=binding.recHistory;
+        main_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), HistoryActivity.class);
+                startActivity(intent);
+                Log.d(TAG,"跳到历史界面");
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
 
 //        final TextView textView = binding.textHome;
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
