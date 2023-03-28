@@ -40,6 +40,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     //绑定数据
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         HistoryBean bean = list.get(position);
         holder.enName.setText(bean.getEnName());
         holder.name.setText(bean.getName());
@@ -57,6 +58,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public int getItemCount() {
         return list==null?0:list.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView enName;

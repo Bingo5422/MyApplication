@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.recognition;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -37,13 +38,21 @@ public class HistoryActivity extends AppCompatActivity {
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
         historyDao = recDataBase.historyDao();
 
+
         //设置布局管理器
         list.setLayoutManager(new LinearLayoutManager(this));
+        //设置分割线
+        DividerItemDecoration mDivider = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        list.addItemDecoration(mDivider);
+
+
         //设置适配器
         adapter = new HistoryAdapter();
         list.setAdapter(adapter);
+
         loadHistory();
-        Log.d(TAG,"加载历史数据库完成");
+
+
 
     }
 
@@ -62,4 +71,5 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }.start();
     }
+
 }
