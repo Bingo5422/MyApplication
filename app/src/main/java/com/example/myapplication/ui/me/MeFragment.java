@@ -44,7 +44,7 @@ import okhttp3.Response;
 public class MeFragment extends Fragment {
 
     private FragmentMeBinding binding;
-    private Button btn;
+    private Button btn, btn_display;
     private TextView text;
     private JSONObject res;
     private SharedPreferences preferences;
@@ -56,12 +56,29 @@ public class MeFragment extends Fragment {
         btn = root.findViewById(R.id.btn_login);
         text = root.findViewById(R.id.status);
 
+        btn_display = root.findViewById(R.id.btn_display);
+
+        btn_display.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.getContext(), ServerHistActivity.class));
+            }
+        });
+
         String url = "http://172.26.14.175:5000/auth/login";
 
         preferences = getActivity().getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         // 从本地调取基本用户信息先进行显示
         String user = preferences.getString("user_id", "NO USER");
         text.setText(user);
+        if(user!="NO USER"){
+            btn.post(new Runnable() {
+                @Override
+                public void run() {
+                    btn.setText("logout");
+                }
+            });
+        }
 
         CookieJarImpl cookieJar = new CookieJarImpl(getActivity());
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
@@ -85,8 +102,7 @@ public class MeFragment extends Fragment {
                 public void onFailure(Call call, IOException e) {
                     if(Looper.myLooper()==null)
                         Looper.prepare();
-                    Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
-                            "the Internet connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.getContext(), "Server Error", Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 }
                 @Override
@@ -98,17 +114,22 @@ public class MeFragment extends Fragment {
                         if (res.getBoolean("logon")) {
                             // 如果名字有更新，用新名字显示
                             String user_id = res.getString("user_id");
-                            text.setText(user_id);
+                            text.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    text.setText(user_id);
+                                }
+                            });
                             // 存储新名字到本地SharedPreference
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("user_id", user_id);
                             editor.commit();
-                            btn.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    btn.setText("logout");
-                                }
-                            });
+//                            btn.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    btn.setText("logout");
+//                                }
+//                            });
 
                         // cookie过期
                         }else {
@@ -127,7 +148,7 @@ public class MeFragment extends Fragment {
                             if(Looper.myLooper()==null)
                                 Looper.prepare();
                             Toast.makeText(MainActivity.getContext(),
-                                    "Authentication expired, please login again", Toast.LENGTH_SHORT).show();
+                                    "Authentication expired, please login", Toast.LENGTH_SHORT).show();
                             Looper.loop();
                         }
 
@@ -136,7 +157,6 @@ public class MeFragment extends Fragment {
                     }
                 }
             });
-
         }
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +190,12 @@ public class MeFragment extends Fragment {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.remove("user_id");
                             editor.commit();
-                            text.setText("NO USER");
+                            text.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    text.setText("NO USER");
+                                }
+                            });
 
                             btn.post(new Runnable() {
                                 @Override

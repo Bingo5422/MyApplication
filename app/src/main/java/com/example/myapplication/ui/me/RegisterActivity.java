@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btn_register, btn_send_code;
     private EditText et_email, et_password, et_confirm_pw, et_captcha;
     private TextView tv_error_info;
+    private ImageView iv_back_to_login;
 
 
     @Override
@@ -55,7 +58,10 @@ public class RegisterActivity extends AppCompatActivity {
         et_confirm_pw = findViewById(R.id.et_confirm_pw);
         et_captcha = findViewById(R.id.et_captcha);
         tv_error_info = findViewById(R.id.tv_error_info);
+        iv_back_to_login = findViewById(R.id.iv_back_to_login);
 
+
+        // 提交注册
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        // 发送验证码
         btn_send_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,6 +155,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                     }
                 });
+            }
+        });
+
+        // 返回登录界面
+        iv_back_to_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
 

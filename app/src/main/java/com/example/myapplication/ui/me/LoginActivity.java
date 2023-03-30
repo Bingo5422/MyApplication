@@ -74,8 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 LoginCallback callback = new LoginCallback(client, LoginActivity.this);
                 client.newCall(request).enqueue(callback);
-                Intent login_intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(login_intent);
+
             }
         });
 
@@ -107,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    static class LoginCallback implements Callback{
+    class LoginCallback implements Callback{
         private OkHttpClient client;
         private Context context;
         private SharedPreferences preferences;
@@ -147,10 +146,16 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("user_id", res_json.getString("message")); //存储返回的用户名
                     editor.commit();
+
+                    // 登陆成功 跳转回主界面
+                    Intent login_intent = new Intent(context, MainActivity.class);
+                    startActivity(login_intent);
+
                     if(Looper.myLooper()==null)
                         Looper.prepare();
                     Toast.makeText(MainActivity.getContext(), "Login successfully", Toast.LENGTH_SHORT).show();
                     Looper.loop();
+
 
                 } else {
                     Looper.prepare();
