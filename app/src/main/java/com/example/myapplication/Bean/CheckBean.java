@@ -1,11 +1,15 @@
 package com.example.myapplication.Bean;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 public class CheckBean implements Serializable {
 
     private int id;
     private String user_id;
+
+    private Bitmap pic; // 网络图片预览
     private String filename;
     private String filepath;
     private String code;
@@ -16,6 +20,9 @@ public class CheckBean implements Serializable {
     private int proficiency;
     private boolean isChecked;
 
+    public Bitmap getPic() {
+        return pic;
+    }
 
     public int getId() {
         return id;
@@ -79,6 +86,10 @@ public class CheckBean implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setPic(Bitmap pic) {
+        this.pic = pic;
     }
 
     public void setDatetime(String datetime) {

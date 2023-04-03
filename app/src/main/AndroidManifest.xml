@@ -19,6 +19,9 @@
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ServerUploadActivity"
+            android:exported="false" />
         <!-- <activity -->
         <!-- android:name=".MainActivity" -->
         <!-- android:exported="false" -->
@@ -37,7 +40,7 @@
             android:exported="true" />
         <activity
             android:name=".ui.me.ServerHistActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

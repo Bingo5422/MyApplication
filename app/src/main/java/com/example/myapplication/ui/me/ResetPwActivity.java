@@ -68,6 +68,8 @@ public class ResetPwActivity extends AppCompatActivity {
                 // 寻找对应的cookie
                 List<Cookie> cookie = client.cookieJar().loadForRequest(httpurl);
 
+                request.newBuilder().addHeader(cookie.get(0).name(),cookie.get(0).value());
+
                 // 如果cookie不为空， 发送请求414
                 if(!cookie.isEmpty()){
                     client.newCall(request).enqueue(new Callback() {

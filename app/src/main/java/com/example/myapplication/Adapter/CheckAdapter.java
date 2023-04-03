@@ -1,10 +1,14 @@
 package com.example.myapplication.Adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,15 +20,23 @@ import com.example.myapplication.R;
 
 import java.util.List;
 
+/**
+ *  用来浏览云端上传记录的Adapter
+ */
 public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
     private Context mContext;
     private List<CheckBean> mData;
     private CheckItemListener mCheckListener;
+
+
+
     public CheckAdapter(Context mContext, List<CheckBean> mData, CheckItemListener mCheckListener){
         this.mContext = mContext;
         this.mData = mData;
         this.mCheckListener = mCheckListener;
     }
+
+
 
     @NonNull
     @Override
@@ -37,11 +49,12 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder( final ViewHolder holder, final int position) {
         final CheckBean bean = mData.get(position);
+        holder.item_server_photo.setImageBitmap(bean.getPic());
         holder.item_filename_tv.setText(bean.getFilename());
         holder.item_enName_tv.setText(bean.getEnName());
         holder.item_datetime_tv.setText(bean.getDatetime());
         holder.item_cb.setChecked(bean.isChecked());
-        holder.item_content_ll.setOnClickListener(new View.OnClickListener(){
+        holder.item_cb.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
@@ -64,6 +77,7 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView item_enName_tv, item_datetime_tv, item_filename_tv;
+        ImageView item_server_photo;
         private CheckBox item_cb;
         private LinearLayout item_content_ll;
         public ViewHolder(View itemView){
@@ -73,6 +87,8 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
             item_filename_tv = itemView.findViewById(R.id.item_filename_tv);
             item_cb = itemView.findViewById(R.id.item_cb);
             item_content_ll = itemView.findViewById(R.id.item_content_ll);
+            item_server_photo = itemView.findViewById(R.id.item_server_photo);
+
         }
     }
 

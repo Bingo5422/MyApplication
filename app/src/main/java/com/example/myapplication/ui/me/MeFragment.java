@@ -43,6 +43,7 @@ import okhttp3.Response;
 
 public class MeFragment extends Fragment {
 
+    final static String DomainURL = "http://172.26.14.175:5000";
     private FragmentMeBinding binding;
     private Button btn, btn_display;
     private TextView text;
@@ -86,18 +87,20 @@ public class MeFragment extends Fragment {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-        HttpUrl httpurl = request.url();
+
         // 寻找对应的cookie
-        List<Cookie> cookie = client.cookieJar().loadForRequest(httpurl);
+        List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
+
 
         // 如果找到了cookie
         if(!cookie.isEmpty()){
             // 创建一个带有header的request
-            Request r_with_header = new Request.Builder().url(url)
-                    .header(cookie.get(0).name(),cookie.get(0).value())
-                    .build();
+//            Request r_with_header = new Request.Builder().url(url)
+//                    .header(cookie.get(0).name(),cookie.get(0).value())
+//                    .build();
+            request.newBuilder().addHeader(cookie.get(0).name(),cookie.get(0).value());
 
-            client.newCall(r_with_header).enqueue(new Callback() {
+            client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     if(Looper.myLooper()==null)
@@ -124,12 +127,6 @@ public class MeFragment extends Fragment {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("user_id", user_id);
                             editor.commit();
-//                            btn.post(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    btn.setText("logout");
-//                                }
-//                            });
 
                         // cookie过期
                         }else {
@@ -137,7 +134,12 @@ public class MeFragment extends Fragment {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.remove("user_id");
                             editor.commit();
-                            text.setText("NO USER");
+                            text.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    text.setText("NO USER");
+                                }
+                            });
                             btn.post(new Runnable() {
                                 @Override
                                 public void run() {
