@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
 public class ResultActivity extends AppCompatActivity {
@@ -47,10 +48,10 @@ public class ResultActivity extends AppCompatActivity {
         btnQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent newIntent = new Intent(Intent.ACTION_MAIN);
-                newIntent.addCategory(Intent.CATEGORY_HOME);
-                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(newIntent);
+//                Intent newIntent = new Intent(view.getContext(), MainActivity.class);
+//                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(newIntent);
                 finish();
             }
         });

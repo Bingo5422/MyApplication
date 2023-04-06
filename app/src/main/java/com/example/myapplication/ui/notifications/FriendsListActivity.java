@@ -1,0 +1,100 @@
+package com.example.myapplication.ui.notifications;
+
+
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+
+import android.os.Bundle;
+
+import com.example.myapplication.Adapter.FriendsAdapter;
+import com.example.myapplication.Bean.FriendsBean;
+import com.example.myapplication.Dao.FriendsDao;
+import com.example.myapplication.Dao.RecDataBase;
+import com.example.myapplication.R;
+
+import java.util.List;
+import java.util.Random;
+
+
+public class FriendsListActivity extends AppCompatActivity {
+
+    private static final String TAG = "FriendsActivity";
+
+
+    private RecyclerView list;
+    private FriendsAdapter adapter;
+    private RecDataBase recDataBase;
+
+    private FriendsDao friendsDao;
+    private FriendsBean friendsBean;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_friends_list);
+
+
+        list=findViewById(R.id.fri_list);
+        recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
+        friendsDao = recDataBase.friendsDao();
+        friendsBean = new FriendsBean();
+        insert();
+
+
+
+        //设置布局管理器
+        list.setLayoutManager(new LinearLayoutManager(this));
+        //设置分割线
+        DividerItemDecoration mDivider = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        list.addItemDecoration(mDivider);
+
+
+        //设置适配器
+        adapter = new FriendsAdapter();
+        list.setAdapter(adapter);
+
+
+        loadHistory();
+
+
+    }
+    public void insert(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Random r = new Random();
+                friendsBean.setId(r.nextInt(1000000));
+                friendsBean.setName("Tony");
+                friendsBean.setPath("");
+                friendsDao.insert(friendsBean);
+            }
+        }.start();
+
+    }
+
+
+
+
+    public void loadHistory(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                List<FriendsBean> l= friendsDao.query();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.setList(l);
+                    }
+                });
+            }
+        }.start();
+    }
+
+}

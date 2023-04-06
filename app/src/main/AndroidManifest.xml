@@ -20,9 +20,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ServerUploadActivity"
+            android:name=".ui.notifications.FriendsListActivity"
             android:exported="false" />
-        <!-- <activity -->
+        <activity
+            android:name=".ui.me.ServerUploadActivity"
+            android:exported="false" /> <!-- <activity -->
         <!-- android:name=".MainActivity" -->
         <!-- android:exported="false" -->
         <!-- android:label="@string/title_activity_me" /> -->
@@ -41,6 +43,21 @@
         <activity
             android:name=".ui.me.ServerHistActivity"
             android:exported="true" />
+        <activity
+            android:name=".ui.CollectListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.TestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.WordDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.WordListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.Test2Activity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

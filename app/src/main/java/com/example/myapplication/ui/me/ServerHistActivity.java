@@ -6,11 +6,13 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -21,6 +23,10 @@ import android.widget.Toast;
 
 import com.example.myapplication.Adapter.CheckAdapter;
 import com.example.myapplication.Bean.CheckBean;
+import com.example.myapplication.Bean.HistoryBean;
+import com.example.myapplication.Bean.RecognitionBean;
+import com.example.myapplication.Dao.HistoryDao;
+import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
 import com.example.myapplication.Utils.FileUtil;
@@ -67,6 +73,9 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
     private Handler handler;
 
+    private HistoryDao historyDao;
+
+
 
 
     @Override
@@ -75,6 +84,10 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         setContentView(R.layout.activity_server_hist);
         server_hist_delete = findViewById(R.id.server_hist_delete);
         server_hist_download = findViewById(R.id.server_hist_download);
+
+        RecDataBase recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
+        historyDao = recDataBase.historyDao();
+
 
         handler = new Handler(Looper.getMainLooper()){
             @Override
@@ -146,7 +159,9 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         FileOutputStream fos = null;
                         // 储存下载文件的目录，目前只是测试用的路径
                         // todo: savePath: 服务器的图片会打包成zip下载到本地的位置，改成需要的路径
-                        String savePath = getExternalFilesDir("Load_from_server").getAbsolutePath();
+
+                        String savePath = Environment.getDataDirectory().getAbsolutePath()+"/files";
+
                         try {
                             is = response.body().byteStream();
                             long total = response.body().contentLength();
@@ -167,11 +182,23 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
                         String zipPath = savePath+"\\pack.zip";
                         // todo 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
-                        FileUtil.unzip(zipPath, savePath);
+                        FileUtil.unzip(zipPath, savePath+"/photos");
 
                         // todo: 遍历checkedList，把每个被选中的条目信息保存到本地数据库
                         // todo：每个CheckBean里有相关内容，但不要保存bitmap，用上面解压的图片来保存图片信息
-
+                        for(int i=0;i<checkedList.size()-1;i++){
+                            CheckBean bean =checkedList.get(i);
+                            if(bean.isChecked()){
+                                HistoryBean historyBean=new HistoryBean();
+                                historyBean.setName(bean.getName());
+                                historyBean.setPath(savePath+"/photos/"+bean.getName());
+                                historyBean.setDateTime(bean.getDatetime());
+                                historyBean.setCode(bean.getCode());
+                                historyBean.setEnName(bean.getEnName());
+                                historyBean.setFileName(bean.getFilename());
+                                historyDao.insertHistory(historyBean);
+                            }
+                        }
 
                         if(Looper.myLooper()==null)
                             Looper.prepare();
@@ -234,16 +261,18 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         try {
                             JSONObject res_json = new JSONObject(response.body().string());
                             if(res_json.getBoolean("if_success")){
+                                List<CheckBean> deleteBean=new ArrayList<>();
                                 //在原本的数据列表中删除对应的bean
                                 for(int i=0;i<checkedList.size();i++){
                                     CheckBean cb = checkedList.get(i);
                                     for(int j=0;j<dataArray.size();j++){
                                         if(cb.getFilename()==dataArray.get(j).getFilename()){
-                                            dataArray.remove(j);
+//                                            dataArray.remove(j);
+                                            deleteBean.add(dataArray.get(j));
                                         }
                                     }
                                 }
-
+                                dataArray.removeAll(deleteBean);
                                 // 清空被选择的项目
                                 checkedList.clear();
 

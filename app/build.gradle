@@ -44,6 +44,14 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    //couldn't find "libmsc.so"
+    sourceSets {
+        main {
+            // 这句话的意思是，jniLibs 下的so库，直接映射到libs目录下
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
@@ -62,9 +70,12 @@ dependencies {
     implementation 'androidx.navigation:navigation-runtime:2.4.1'
 
     //读Excel
-    implementation 'commons-codec:commons-codec:1.11'
+//    implementation 'commons-codec:commons-codec:1.11'
     implementation files('libs/poi-3.12-android-a.jar')
+    implementation files('libs/commons-codec.jar')
     implementation files('libs/poi-ooxml-schemas-3.12-20150511-a.jar')
+    implementation files('libs/Msc.jar')
+
 
     //room数据库框架
     def room_version = "2.4.2"
