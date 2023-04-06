@@ -27,9 +27,9 @@ public class RecognitionUtil {
     // webapi 接口地址
     private static final String URL = "http://tupapi.xfyun.cn/v1/currency";
     // 应用ID
-    private static final String APPID = "ad6c8325";
+    private static final String APPID = "c87833ad";
     // 接口密钥
-    private static final String API_KEY = "76474f0cfad5d03adccf24105f4f278f";
+    private static final String API_KEY = "a568207d5b7850097b8f64d3d40c124d";
     // 图片名称
     private static final String IMAGE_NAME = "temp.jpg";
     // 图片url

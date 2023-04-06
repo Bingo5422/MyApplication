@@ -146,6 +146,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         FileOutputStream fos = null;
                         // 储存下载文件的目录，目前只是测试用的路径
                         // todo: savePath: 服务器的图片会打包成zip下载到本地的位置，改成需要的路径
+
                         String savePath = getExternalFilesDir("Load_from_server").getAbsolutePath();
                         try {
                             is = response.body().byteStream();

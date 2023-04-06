@@ -74,6 +74,8 @@ public class HomeFragment extends Fragment{
 
 
                 File file = getFileName();
+
+                Log.d(TAG, "!!!!!!!!" + file.getAbsolutePath());
                 //Call the system camera
                 Intent intent_cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 //Generate a uri based on picPath

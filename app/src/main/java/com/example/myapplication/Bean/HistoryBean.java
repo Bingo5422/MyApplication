@@ -13,7 +13,9 @@ public class HistoryBean {
     private String code;
     private String enName;
     private String name;
-    private String cate;
+
+    private String dateTime;
+    private String fileName;
 
     public void setPath(String path) {
         this.path = path;
@@ -55,12 +57,20 @@ public class HistoryBean {
         this.name = name;
     }
 
-    public String getCate() {
-        return cate;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public void setCate(String cate) {
-        this.cate = cate;
+    public String getDateTime(){
+        return dateTime;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileName(){
+        return fileName;
     }
 
 
@@ -71,7 +81,8 @@ public class HistoryBean {
                 ", code='" + code + '\'' +
                 ", enName='" + enName + '\'' +
                 ", name='" + name + '\'' +
-                ", cate='" + cate + '\'' +
+                ", dateTime='" + dateTime + '\'' +
+                ", fileName='" + fileName + '\'' +
                 '}';
     }
 }

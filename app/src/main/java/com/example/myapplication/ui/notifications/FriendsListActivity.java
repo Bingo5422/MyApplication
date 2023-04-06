@@ -1,4 +1,6 @@
-package com.example.myapplication.ui.recognition;
+package com.example.myapplication.ui.notifications;
+
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -9,35 +11,44 @@ import androidx.room.Room;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.myapplication.Adapter.FriendsAdapter;
 import com.example.myapplication.Adapter.HistoryAdapter;
+import com.example.myapplication.Bean.FriendsBean;
 import com.example.myapplication.Bean.HistoryBean;
+import com.example.myapplication.Dao.FriendsDao;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.R;
-import com.example.myapplication.Utils.VoiceUtil;
 
 import java.util.List;
+import java.util.Random;
 
 
-public class HistoryActivity extends AppCompatActivity {
+public class FriendsListActivity extends AppCompatActivity {
 
-    private static final String TAG = "HistoryActivity";
+    private static final String TAG = "FriendsActivity";
 
 
     private RecyclerView list;
-    private HistoryAdapter adapter;
+    private FriendsAdapter adapter;
     private RecDataBase recDataBase;
-    private HistoryDao historyDao;
+
+    private FriendsDao friendsDao;
+    private FriendsBean friendsBean;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_friends_list);
 
-        list=findViewById(R.id.his_list);
+
+        list=findViewById(R.id.fri_list);
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
-        historyDao = recDataBase.historyDao();
+        friendsDao = recDataBase.friendsDao();
+        friendsBean = new FriendsBean();
+        insert();
+
 
 
         //设置布局管理器
@@ -48,28 +59,38 @@ public class HistoryActivity extends AppCompatActivity {
 
 
         //设置适配器
-        adapter = new HistoryAdapter();
+        adapter = new FriendsAdapter();
         list.setAdapter(adapter);
+
 
         loadHistory();
 
 
-        adapter.setListener(new HistoryAdapter.Listener() {
+    }
+    public void insert(){
+        new Thread(){
             @Override
-            public void onClickListener(HistoryBean bean) {
-                String chinese = bean.getName();
-                VoiceUtil.voice(HistoryActivity.this ,chinese);
+            public void run() {
+                super.run();
+                Random r = new Random();
+                friendsBean.setId(r.nextInt(1000000));
+                friendsBean.setName("Tony");
+                friendsBean.setPath("");
+                friendsDao.insert(friendsBean);
             }
-        });
+        }.start();
 
     }
+
+
+
 
     public void loadHistory(){
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                List<HistoryBean> l=historyDao.query();
+                List<FriendsBean> l= friendsDao.query();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

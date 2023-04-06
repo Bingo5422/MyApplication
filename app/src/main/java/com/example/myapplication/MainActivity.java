@@ -9,6 +9,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.myapplication.databinding.ActivityMainBinding;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
+
+        // 语音合成APPID
+        SpeechUtility.createUtility(context, SpeechConstant.APPID +"=ad6c8325");
 
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());

@@ -21,6 +21,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     private List<HistoryBean> list;
 
+    public interface Listener{
+        void onClickListener(HistoryBean bean);
+    }
+    private Listener listener;
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
     public void setList(List<HistoryBean> list) {
         this.list=list;
         notifyDataSetChanged();//刷新
@@ -48,10 +57,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         String path = bean.getPath();
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         holder.image.setImageBitmap(bitmap);
-
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener!=null){
+                    listener.onClickListener(bean);
+                }
+            }
+        });
 
     }
+
+
 
     @Override
     //数据条数

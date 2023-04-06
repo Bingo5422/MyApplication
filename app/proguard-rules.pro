@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# 语音合成：如需在打包或者生成APK的时候进行混淆，请在proguard.cfg中添加如下代码：
+-keep class com.iflytek.**{*;}
+-keepattributes Signature
