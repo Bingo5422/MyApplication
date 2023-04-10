@@ -1,5 +1,5 @@
 package com.example.myapplication.ui.me;
-
+import static com.example.myapplication.ui.me.MeFragment.DomainURL;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -51,7 +51,7 @@ public class ResetPwActivity extends AppCompatActivity {
         btn_reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "http://172.26.14.175:5000/auth/reset_pw";
+                String url = DomainURL+"/auth/reset_pw";
 
                 CookieJarImpl cookieJar = new CookieJarImpl(ResetPwActivity.this);
                 OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。

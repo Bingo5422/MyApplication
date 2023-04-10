@@ -5,9 +5,11 @@ import static com.example.myapplication.ui.me.MeFragment.DomainURL;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -17,6 +19,9 @@ import android.widget.TextView;
 
 import com.example.myapplication.Adapter.UploadCheckAdapter;
 import com.example.myapplication.Bean.CheckBean;
+import com.example.myapplication.Bean.HistoryBean;
+import com.example.myapplication.Dao.HistoryDao;
+import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
 
@@ -54,6 +59,7 @@ public class ServerUploadActivity extends AppCompatActivity
     //选中后的数据
     private boolean isSelectAll;
     private Handler handler;
+    private HistoryDao historyDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,8 @@ public class ServerUploadActivity extends AppCompatActivity
         server_upload = findViewById(R.id.server_upload);
 
         checkedList = new ArrayList<>();
+        RecDataBase recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
+        historyDao = recDataBase.historyDao();
         initData();
         initViews();
 
@@ -129,7 +137,8 @@ public class ServerUploadActivity extends AppCompatActivity
                 RequestBody requestBody = builder.build();
 
                 //todo 修改json_path, 选择合适的路径保存json文档，该文档可以放在和图片一样的路径
-                String json_path="info.json";
+                String savePath = Environment.getDataDirectory().getAbsolutePath()+"/files/";
+                String json_path = savePath + "info.json";
                 try {
                     FileOutputStream fos = new FileOutputStream(json_path);
                     OutputStreamWriter os = new OutputStreamWriter(fos);
@@ -176,10 +185,17 @@ public class ServerUploadActivity extends AppCompatActivity
 
     private void initData(){
         dataArray = new ArrayList<>();
+        List<HistoryBean> list = historyDao.query();
         for(int i=0; i<20; i++){
+            HistoryBean h=list.get(i);
             CheckBean bean = new CheckBean();
             // todo  这里做从本地数据库调取相关信息并保存到bean中
-
+            bean.setEnName(h.getEnName());
+            bean.setCode(h.getCode());
+            bean.setDatetime(h.getDateTime());
+            bean.setFilename(h.getFileName());
+            bean.setFilepath(h.getPath());
+            bean.setName(h.getName());
 
             // 放到dataArray里，dataArray是会显示出来的列表
             dataArray.add(bean);

@@ -3,23 +3,51 @@ package com.example.myapplication.Bean;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity
-public class HistoryBean {
+public class HistoryBean implements Serializable {
     @PrimaryKey(autoGenerate = true)
-
-
     private int id;
     private String path;
     private String code;
     private String enName;
     private String name;
-    private String cate;
+    private int num;
+    private String dateTime;
+    private String fileName;
+    private int if_familiar;
+    private int if_star;
+
+    public int getIf_familiar() {
+        return if_familiar;
+    }
+
+    public void setIf_familiar(int if_familiar) {
+        this.if_familiar = if_familiar;
+    }
+
+    public int getIf_star() {
+        return if_star;
+    }
+
+    public void setIf_star(int if_star) {
+        this.if_star = if_star;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
 
     public void setPath(String path) {
         this.path = path;
     }
 
-    public String getPath(){
+    public String getPath() {
         return path;
     }
 
@@ -55,12 +83,20 @@ public class HistoryBean {
         this.name = name;
     }
 
-    public String getCate() {
-        return cate;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public void setCate(String cate) {
-        this.cate = cate;
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
 
@@ -71,7 +107,9 @@ public class HistoryBean {
                 ", code='" + code + '\'' +
                 ", enName='" + enName + '\'' +
                 ", name='" + name + '\'' +
-                ", cate='" + cate + '\'' +
+                ", num='" + num + '\'' +
+                ", dateTime='" + dateTime + '\'' +
+                ", fileName='" + fileName + '\'' +
                 '}';
     }
 }

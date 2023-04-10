@@ -1,5 +1,5 @@
 package com.example.myapplication.ui.me;
-
+import static com.example.myapplication.ui.me.MeFragment.DomainURL;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "http://172.26.14.175:5000/auth/register";
+                String url = DomainURL+"/auth/register";
 
                 OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
                 FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
@@ -123,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
         btn_send_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "http://172.26.14.175:5000/auth//captcha/email?email="+et_email.getText();
+                String url = DomainURL+"/auth/captcha/email?email="+et_email.getText();
 
                 OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
                 Request request = new Request.Builder()//创建Request 对象。

@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.me;
 
+import static com.example.myapplication.ui.me.MeFragment.DomainURL;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -57,7 +58,7 @@ public class ForgetPwActivity extends AppCompatActivity {
         btn_verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "http://172.26.14.175:5000/auth/forget_pw";
+                String url = DomainURL+"/auth/forget_pw";
                 CookieJarImpl cookieJar = new CookieJarImpl(ForgetPwActivity.this);
                 OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build(); //创建OkHttpClient对象。
                 FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
@@ -79,7 +80,7 @@ public class ForgetPwActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                String url = "http://172.26.14.175:5000/auth//captcha/email?email="+et_email_forget.getText();
+                String url = DomainURL+"/auth//captcha/email?email="+et_email_forget.getText();
                 OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
                 Request request = new Request.Builder()//创建Request 对象。
                         .url(url)

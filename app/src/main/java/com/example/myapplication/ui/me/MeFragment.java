@@ -1,52 +1,60 @@
 package com.example.myapplication.ui.me;
 
-import android.app.DownloadManager;
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
+import androidx.core.content.FileProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
 import com.example.myapplication.databinding.FragmentMeBinding;
-import com.example.myapplication.Utils.HttpUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Cookie;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class MeFragment extends Fragment {
-
-    final static String DomainURL = "http://172.26.14.175:5000";
+    private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
+    private Uri uri;
+    final static String DomainURL = "http://192.168.5.213:5000";
     private FragmentMeBinding binding;
-    private Button btn, btn_display;
+    private Button btn_login, btn_display, btn_edit_info;
     private TextView text;
+    private ImageView user_photo;
     private JSONObject res;
     private SharedPreferences preferences;
 
@@ -54,10 +62,12 @@ public class MeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        btn = root.findViewById(R.id.btn_login);
+        btn_login = root.findViewById(R.id.btn_login);
         text = root.findViewById(R.id.status);
+        user_photo = root.findViewById(R.id.user_photo);
 
         btn_display = root.findViewById(R.id.btn_display);
+        btn_edit_info = root.findViewById(R.id.btn_edit_info);
 
         btn_display.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,18 +75,36 @@ public class MeFragment extends Fragment {
                 startActivity(new Intent(MainActivity.getContext(), ServerHistActivity.class));
             }
         });
+        btn_edit_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(btn_login.getText()=="logout") {
+                    startActivity(new Intent(MainActivity.getContext(), EditInfoActivity.class));
+                }else{
+                    if(Looper.myLooper()==null)
+                        Looper.prepare();
+                    Toast.makeText(MainActivity.getContext(), "Please login.", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            }
+        });
 
-        String url = "http://172.26.14.175:5000/auth/login";
+        String url = DomainURL+"/auth/login";
 
         preferences = getActivity().getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         // 从本地调取基本用户信息先进行显示
-        String user = preferences.getString("user_id", "NO USER");
+        String user = preferences.getString("nickname", "NO USER");
+        String photo_path = preferences.getString("photo", "");
         text.setText(user);
+        if(photo_path!=""){
+            Bitmap bitmap = BitmapFactory.decodeFile(photo_path);
+            user_photo.setImageBitmap(bitmap);
+        }
         if(user!="NO USER"){
-            btn.post(new Runnable() {
+            btn_login.post(new Runnable() {
                 @Override
                 public void run() {
-                    btn.setText("logout");
+                    btn_login.setText("logout");
                 }
             });
         }
@@ -91,13 +119,8 @@ public class MeFragment extends Fragment {
         // 寻找对应的cookie
         List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
 
-
         // 如果找到了cookie
         if(!cookie.isEmpty()){
-            // 创建一个带有header的request
-//            Request r_with_header = new Request.Builder().url(url)
-//                    .header(cookie.get(0).name(),cookie.get(0).value())
-//                    .build();
             request.newBuilder().addHeader(cookie.get(0).name(),cookie.get(0).value());
 
             client.newCall(request).enqueue(new Callback() {
@@ -105,7 +128,8 @@ public class MeFragment extends Fragment {
                 public void onFailure(Call call, IOException e) {
                     if(Looper.myLooper()==null)
                         Looper.prepare();
-                    Toast.makeText(MainActivity.getContext(), "Server Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.getContext(), "No Internet connection or " +
+                            "there is a server error", Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 }
                 @Override
@@ -116,16 +140,16 @@ public class MeFragment extends Fragment {
                         // 如果处于登陆状态，cookie没过期
                         if (res.getBoolean("logon")) {
                             // 如果名字有更新，用新名字显示
-                            String user_id = res.getString("user_id");
+                            String nickname = res.getString("nickname");
                             text.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    text.setText(user_id);
+                                    text.setText(nickname);
                                 }
                             });
                             // 存储新名字到本地SharedPreference
                             SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("user_id", user_id);
+                            editor.putString("nickname", nickname);
                             editor.commit();
 
                         // cookie过期
@@ -133,6 +157,8 @@ public class MeFragment extends Fragment {
                             // 更改显示的用户，并清除user_id数据
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.remove("user_id");
+                            editor.remove("nickname");
+                            editor.remove("photo");
                             editor.commit();
                             text.post(new Runnable() {
                                 @Override
@@ -140,10 +166,16 @@ public class MeFragment extends Fragment {
                                     text.setText("NO USER");
                                 }
                             });
-                            btn.post(new Runnable() {
+                            btn_login.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                        btn.setText("login");
+                                    btn_login.setText("login");
+                                }
+                            });
+                            user_photo.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //todo: 头像改为默认头像
                                 }
                             });
 
@@ -161,52 +193,22 @@ public class MeFragment extends Fragment {
             });
         }
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 去登录
-                if(btn.getText().equals("login")) {
+                if(btn_login.getText().equals("login")) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
-
                 // 退出登录
                 else{
-                    String logout_url = "http://172.26.14.175:5000/auth/logout";
-                    Request logout_req = new Request.Builder()
-                            .url(logout_url)
-                            .build();
-                    client.newCall(logout_req).enqueue(new Callback(){
+                    new Thread(new Runnable() {
                         @Override
-                        public void onFailure(Call call, IOException e) {
-                            if(Looper.myLooper()==null)
-                                Looper.prepare();
-                            Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
-                                "the Internet connection", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
+                        public void run() {
+                            LogoutProcess(client);
                         }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            // 清除用户登陆显示
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.remove("user_id");
-                            editor.commit();
-                            text.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    text.setText("NO USER");
-                                }
-                            });
-
-                            btn.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    btn.setText("login");
-                                }
-                            });
-                        }
-                    });
+                    }).start();
                 }
             }
         });
@@ -219,4 +221,53 @@ public class MeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    private void LogoutProcess(OkHttpClient client){
+        String logout_url = DomainURL+"/auth/logout";
+        Request logout_req = new Request.Builder()
+                .url(logout_url)
+                .build();
+        Response response = null;
+        try {
+            response = client.newCall(logout_req).execute();
+            if(response.isSuccessful()) {
+                // 清除用户登陆显示
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.remove("user_id");
+                editor.remove("nickname");
+                editor.remove("photo");
+                editor.commit();
+                text.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        text.setText("NO USER");
+                    }
+                });
+                user_photo.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //todo 退出后更新为默认头像
+                    }
+                });
+
+                btn_login.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        btn_login.setText("login");
+                    }
+                });
+            }
+            else{
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
+                        "the Internet connection", Toast.LENGTH_SHORT).show();
+                Looper.loop();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

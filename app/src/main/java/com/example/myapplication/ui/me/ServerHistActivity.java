@@ -6,11 +6,13 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -21,6 +23,9 @@ import android.widget.Toast;
 
 import com.example.myapplication.Adapter.CheckAdapter;
 import com.example.myapplication.Bean.CheckBean;
+import com.example.myapplication.Bean.HistoryBean;
+import com.example.myapplication.Dao.HistoryDao;
+import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
 import com.example.myapplication.Utils.FileUtil;
@@ -48,25 +53,25 @@ import okhttp3.Response;
 
 public class ServerHistActivity extends AppCompatActivity implements CheckAdapter.CheckItemListener {
 
-
+    /**
+     * 这里是收藏界面，回头再改名
+     */
     private CheckAdapter mCheckAdapter;
     private RecyclerView check_rcy;
 
     //全选操作
     private CheckBox check_all_cb;
-
     //列表数据
     private List<CheckBean> dataArray, checkedList;
-
     //选中后的数据
     private boolean isSelectAll;
-
     private Bitmap bitmap;
-
     private TextView server_hist_delete, server_hist_download;
-
     private Handler handler;
-
+    private JSONObject json_list;
+    private List<Cookie> cookie;
+    private OkHttpClient client;
+    private HistoryDao historyDao;
 
 
     @Override
@@ -75,6 +80,9 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         setContentView(R.layout.activity_server_hist);
         server_hist_delete = findViewById(R.id.server_hist_delete);
         server_hist_download = findViewById(R.id.server_hist_download);
+
+        RecDataBase recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
+        historyDao = recDataBase.historyDao();
 
         handler = new Handler(Looper.getMainLooper()){
             @Override
@@ -85,24 +93,34 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             }
         };
 
+        CookieJarImpl cookieJar = new CookieJarImpl(ServerHistActivity.this);
+        client = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+
 
         checkedList = new ArrayList<>();
         initData();
         initViews();
 
-
-        // 下载按钮触发
+        /**下载按钮触发。这里就是同步到本地！！会覆盖本地的收藏夹**/
         server_hist_download.setOnClickListener(new View.OnClickListener() {
+
+            //todo 加一个同步提示
             @Override
             public void onClick(View view) {
-                // 获取下载目录
                 JSONObject json = new JSONObject();
-                for(int i=0;i<checkedList.size();i++){
-
+                for(int i=0;i<dataArray.size();i++){
                     // 把获取的文件信息储存在json对象中
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            json.append(Integer.toString(i), checkedList.get(i).getFilename().toString());
+                            String name = dataArray.get(i).getFilename();
+                            //todo: 根据文件名查询本地数据库，图片是否已经存在，若不存在再加入下载列表
+                            if(true){
+                                json.append(Integer.toString(i), name);
+                            }
                         }
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
@@ -111,26 +129,17 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
                 // 发送下载请求
                 String url = DomainURL + "/hist/get_zip";
-
-                CookieJarImpl cookieJar = new CookieJarImpl(ServerHistActivity.this);
-                OkHttpClient client = new OkHttpClient.Builder()
-                        .connectTimeout(10, TimeUnit.SECONDS)
-                        .writeTimeout(5, TimeUnit.SECONDS)
-                        .readTimeout(5, TimeUnit.SECONDS)
-                        .cookieJar(cookieJar).build();//创建OkHttpClient对象。
-
                 RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(json));
-
                 Request request = new Request.Builder()
                         .url(url)
                         .post(body)
                         .build();
 
-                // 寻找对应的cookie
-                List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
-
+                cookie = client.cookieJar().loadForRequest(request.url());
                 request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
 
+                // savePath: 服务器的图片会打包成zip下载到本地的位置
+                String savePath = Environment.getDataDirectory().getAbsolutePath()+"/files";
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override
@@ -144,20 +153,18 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         byte[] buf = new byte[4096];
                         int len = 0;
                         FileOutputStream fos = null;
-                        // 储存下载文件的目录，目前只是测试用的路径
-                        // todo: savePath: 服务器的图片会打包成zip下载到本地的位置，改成需要的路径
-                        String savePath = getExternalFilesDir("Load_from_server").getAbsolutePath();
+
                         try {
                             is = response.body().byteStream();
-                            long total = response.body().contentLength();
+//                    long total = response.body().contentLength();
 
                             File file = new File(savePath,"pack.zip");
                             fos = new FileOutputStream(file);
-                            long sum = 0;
+//                    long sum = 0;
                             while ((len = is.read(buf)) != -1) {
                                 fos.write(buf, 0, len);
-                                sum += len;
-                                int progress = (int) (sum * 1.0f / total * 100);
+//                        sum += len;
+//                        int progress = (int) (sum * 1.0f / total * 100);
                                 // 下载中
                             }
                             fos.flush();
@@ -166,21 +173,36 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         }
 
                         String zipPath = savePath+"\\pack.zip";
-                        // todo 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
+                        //文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
                         FileUtil.unzip(zipPath, savePath);
 
-                        // todo: 遍历checkedList，把每个被选中的条目信息保存到本地数据库
-                        // todo：每个CheckBean里有相关内容，但不要保存bitmap，用上面解压的图片来保存图片信息
-
-
-                        if(Looper.myLooper()==null)
-                            Looper.prepare();
-                        Toast.makeText(ServerHistActivity.this,
-                                "Successfully download",Toast.LENGTH_SHORT).show();
-                        Looper.loop();
                     }
                 });
 
+                // todo: 本地的收藏夹清空
+                // todo: 遍历dataArray，把每个被选中的条目信息保存到本地数据库，如果已经存在，则只把收藏设置为1
+                // todo：每个CheckBean里有相关内容，但不要保存bitmap，用上面解压的图片来保存图片信息
+                for(int i=0;i<checkedList.size()-1;i++){
+                    CheckBean bean =checkedList.get(i);
+                    if(bean.isChecked()){
+                        HistoryBean historyBean=new HistoryBean();
+                        historyBean.setName(bean.getName());
+                        historyBean.setPath(savePath+"/photos/"+bean.getName());
+                        historyBean.setDateTime(bean.getDatetime());
+                        historyBean.setCode(bean.getCode());
+                        historyBean.setEnName(bean.getEnName());
+                        historyBean.setFileName(bean.getFilename());
+                        historyDao.insertHistory(historyBean);
+                    }
+                }
+
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerHistActivity.this,
+                        "Successfully download",Toast.LENGTH_SHORT).show();
+                Looper.loop();
+
+                checkedList.clear(); // 清空被选择的所有项目
 
             }
         });
@@ -202,30 +224,16 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
                 // 发送下载请求
                 String url = DomainURL + "/hist/delete";
-
-                CookieJarImpl cookieJar = new CookieJarImpl(ServerHistActivity.this);
-                OkHttpClient client = new OkHttpClient.Builder()
-                        .connectTimeout(10, TimeUnit.SECONDS)
-                        .writeTimeout(5, TimeUnit.SECONDS)
-                        .readTimeout(5, TimeUnit.SECONDS)
-                        .cookieJar(cookieJar).build();//创建OkHttpClient对象。
-
                 RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(json));
-
                 Request request = new Request.Builder()
                         .url(url)
                         .post(body)
+                        .addHeader(cookie.get(0).name(), cookie.get(0).value())
                         .build();
-
-                // 寻找对应的cookie
-                List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
-
-                request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-
                         System.out.println("fail to connect to server");
                     }
 
@@ -266,12 +274,11 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-
                     }
                 });
-
             }
         });
+
     }
 
 
@@ -290,7 +297,6 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
         // 如果全选
         check_all_cb.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View view) {
                 isSelectAll = !isSelectAll;
@@ -310,24 +316,11 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
     private void initData(){
         dataArray = new ArrayList<>();
-        allPicInfoReq();
-
-    }
-
-
-    private void allPicInfoReq(){
-
         String url = DomainURL + "/hist/list";
-
-        CookieJarImpl cookieJar = new CookieJarImpl(this);
-        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
-        // 为了正常格式的url创建的request对象
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-
-        // 寻找对应的cookie
-        List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
+        cookie = client.cookieJar().loadForRequest(request.url());
         request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
 
         client.newCall(request).enqueue(new Callback() {
@@ -339,9 +332,9 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    JSONObject res = new JSONObject(response.body().string());
-                    for(int i=0; i<res.length(); i++){
-                        JSONObject item = (JSONObject) res.get(Integer.toString(i));
+                    json_list = new JSONObject(response.body().string());
+                    for(int i=0; i<json_list.length(); i++){
+                        JSONObject item = (JSONObject) json_list.get(Integer.toString(i));
                         CheckBean bean = new CheckBean();
 
                         bean.setId(item.getInt("id"));
@@ -365,22 +358,17 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                 }
             }
         });
+
     }
 
-    // 暂时没用 可能需要调整
     private void picloadReq(CheckBean bean){
         String url = DomainURL+"/hist/download/name?name="+bean.getFilename();
 
-        CookieJarImpl cookieJar = new CookieJarImpl(this);
-        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
         // 为了正常格式的url创建的request对象
         Request request = new Request.Builder()
                 .url(url)
+                .addHeader(cookie.get(0).name(), cookie.get(0).value())
                 .build();
-
-        // 寻找对应的cookie
-        List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
-        request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -399,7 +387,6 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             }
         });
     }
-
 
     @Override
     public void itemChecked(CheckBean checkBean, boolean isChecked) {
