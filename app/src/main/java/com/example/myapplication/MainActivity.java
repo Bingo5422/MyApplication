@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         // 语音合成APPID
         SpeechUtility.createUtility(context, SpeechConstant.APPID +"=ad6c8325");
 
+        // 语音合成APPID
+        SpeechUtility.createUtility(context, SpeechConstant.APPID +"=ad6c8325");
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
