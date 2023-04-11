@@ -6,15 +6,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.myapplication.Adapter.HistoryAdapter;
+import com.example.myapplication.Adapter.SlideRecyclerView;
 import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.R;
+import com.example.myapplication.Utils.VoiceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,53 +31,68 @@ public class HistoryActivity extends AppCompatActivity {
     private static final String TAG = "HistoryActivity";
 
 
-    private RecyclerView list;
+    private SlideRecyclerView list;
     private HistoryAdapter adapter;
     private RecDataBase recDataBase;
     private HistoryDao historyDao;
+    private ImageView hisBack;
+    private List<HistoryBean> dataList = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        hisBack=findViewById(R.id.his_back);
 
-        list=findViewById(R.id.his_list);
-        recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
+        hisBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        list = findViewById(R.id.his_list);
+        recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
+
 
 
         //设置布局管理器
         list.setLayoutManager(new LinearLayoutManager(this));
         //设置分割线
-        DividerItemDecoration mDivider = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        DividerItemDecoration mDivider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         list.addItemDecoration(mDivider);
-
 
         //设置适配器
         adapter = new HistoryAdapter();
+        dataList.addAll(historyDao.query());
+        adapter.setList(dataList);
+        adapter.setDao(historyDao);
         list.setAdapter(adapter);
 
-        loadHistory();
-
-
-
-    }
-
-    public void loadHistory(){
-        new Thread(){
+        adapter.setListener(new HistoryAdapter.Listener() {
             @Override
-            public void run() {
-                super.run();
-                List<HistoryBean> l=historyDao.query();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.setList(l);
-                    }
-                });
+            public void onClickListener(HistoryBean bean) {
+                String chinese = bean.getName();
+                VoiceUtil.voice(HistoryActivity.this, chinese);
             }
-        }.start();
+
+            @Override
+            public void onDelClickListener(HistoryBean bean, int index) {
+                new AlertDialog.Builder(HistoryActivity.this).setMessage("Do Your Really Want To Delete This Item?")
+                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                historyDao.deleteById(bean.getId());
+                                dataList.remove(index);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }).show();
+            }
+        });
+
     }
+
 
 }

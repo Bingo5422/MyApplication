@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="Empty Answers:"
+        android:visibility="invisible"
         android:textColor="#03177E"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -51,6 +52,7 @@
 
     <TextView
         android:id="@+id/tvSuccessRate"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -71,6 +73,7 @@
         android:background="#D80000"
         android:text="Play Again"
         android:textColor="#FFFFFF"
+        android:visibility="invisible"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

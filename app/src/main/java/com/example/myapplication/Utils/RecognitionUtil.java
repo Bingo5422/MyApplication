@@ -5,13 +5,13 @@ import android.util.Log;
 import com.example.myapplication.Bean.RecognitionBean;
 import com.example.myapplication.R;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apaches.commons.codec.binary.Base64;
+import org.apaches.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,9 +27,9 @@ public class RecognitionUtil {
     // webapi 接口地址
     private static final String URL = "http://tupapi.xfyun.cn/v1/currency";
     // 应用ID
-    private static final String APPID = "ad6c8325";
+    private static final String APPID = "c87833ad";
     // 接口密钥
-    private static final String API_KEY = "76474f0cfad5d03adccf24105f4f278f";
+    private static final String API_KEY = "a568207d5b7850097b8f64d3d40c124d";
     // 图片名称
     private static final String IMAGE_NAME = "temp.jpg";
     // 图片url

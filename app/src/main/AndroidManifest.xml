@@ -28,6 +28,10 @@
         <activity
             android:name=".ui.me.ServerUploadActivity"
             android:exported="true" /> <!-- <activity -->
+        <activity
+            android:name=".ui.notifications.FriendsListActivity"
+            android:exported="false" />
+        <!-- <activity -->
         <!-- android:name=".MainActivity" -->
         <!-- android:exported="false" -->
         <!-- android:label="@string/title_activity_me" /> -->
@@ -47,9 +51,24 @@
             android:name=".ui.me.ServerHistActivity"
             android:exported="true" />
         <activity
+            android:name=".ui.CollectListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.TestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.WordDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.WordListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.Test2Activity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -67,7 +86,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.myapplication.provider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
@@ -75,7 +94,7 @@
 
         <activity
             android:name=".ui.dashboard.ResultActivity"
-            android:exported="false" >
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

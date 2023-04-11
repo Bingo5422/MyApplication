@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -74,6 +75,8 @@ public class HomeFragment extends Fragment{
 
 
                 File file = getFileName();
+
+                Log.d(TAG, "!!!!!!!!" + file.getAbsolutePath());
                 //Call the system camera
                 Intent intent_cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 //Generate a uri based on picPath
@@ -134,7 +137,7 @@ public class HomeFragment extends Fragment{
         super.onActivityResult(requestCode, resultCode, data);
 
         //判断是否为当前请求
-        if (requestCode == 1) {
+        if (requestCode == 1 && resultCode== Activity.RESULT_OK) {
 
             PhotoUtil.compressPhoto(file, 4);
             String absolutePath = file.getAbsolutePath();

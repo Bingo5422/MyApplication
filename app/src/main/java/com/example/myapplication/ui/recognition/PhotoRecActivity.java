@@ -22,12 +22,15 @@ import com.example.myapplication.Dao.RecognitionDao;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.RecBack;
 import com.example.myapplication.Utils.RecognitionUtil;
+import com.example.myapplication.Utils.VoiceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class PhotoRecActivity extends AppCompatActivity {
@@ -37,12 +40,13 @@ public class PhotoRecActivity extends AppCompatActivity {
     private String photoPath;
     private TextView recStart;
     private TextView recShow;
-    private Button recHistory;
+    private ImageView recVoice;
 
     private RecDataBase recDataBase;
     private RecognitionDao recDao;
     private HistoryDao historyDao;
     private RecognitionBean bean;
+    private Button recBack;
 
     private static final String TAG = "PhotoRecActivity";
 
@@ -55,6 +59,14 @@ public class PhotoRecActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_rec);
         recPhoto=findViewById(R.id.rec_photo);
         recShow=findViewById(R.id.Rec_result);
+        recVoice=findViewById(R.id.Rec_voice);
+        recBack=findViewById(R.id.title_back);
+        recBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
         Intent intent = getIntent();
@@ -71,6 +83,9 @@ public class PhotoRecActivity extends AppCompatActivity {
         historyDao = recDataBase.historyDao();
 
         loadExcel();
+
+
+        //识别结果
         recStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +125,17 @@ public class PhotoRecActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+
+        //读单词
+        recVoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bean!=null){
+                    String chinese = bean.getName();
+                    VoiceUtil.voice(PhotoRecActivity.this,chinese);
+                }
             }
         });
 
@@ -171,11 +197,21 @@ public class PhotoRecActivity extends AppCompatActivity {
                 super.run();
                 HistoryBean historyBean = new HistoryBean();
 
+                String time = showTime();
+                String fileName=getFileName();
+
+
+                Log.d(TAG, "time: "+time);
+                Log.d(TAG, "fileName: "+fileName);
+
                 historyBean.setPath(photoPath);
                 historyBean.setId(bean.getId());
                 historyBean.setCode(bean.getCode());
                 historyBean.setEnName(bean.getEnName());
                 historyBean.setName(bean.getName());
+                historyBean.setDateTime(time);
+                historyBean.setFileName(fileName);
+
 
                 historyDao.insertHistory(historyBean);
 
@@ -183,6 +219,19 @@ public class PhotoRecActivity extends AppCompatActivity {
         }.start();
 
         Log.d(TAG, "saveResult: 插入历史数据成功");
+    }
+
+    public String showTime(){
+        Date date = new Date();
+        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
+
+
+        return dateFormat.format(date);
+    }
+
+    public String getFileName(){
+        String[] strs = photoPath.split("/");
+        return strs[7];
     }
 
 

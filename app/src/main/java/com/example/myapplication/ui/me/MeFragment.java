@@ -50,9 +50,9 @@ import okhttp3.Response;
 public class MeFragment extends Fragment {
     private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
     private Uri uri;
-    final static String DomainURL = "http://192.168.5.213:5000";
+    final static String DomainURL = "http://172.26.14.175:5000";
     private FragmentMeBinding binding;
-    private Button btn_login, btn_display, btn_edit_info;
+    private Button btn_login, btn_display, btn_edit_info, btn_synchro;
     private TextView text;
     private ImageView user_photo;
     private JSONObject res;
@@ -68,6 +68,7 @@ public class MeFragment extends Fragment {
 
         btn_display = root.findViewById(R.id.btn_display);
         btn_edit_info = root.findViewById(R.id.btn_edit_info);
+        btn_synchro = root.findViewById(R.id.btn_synchro);
 
         btn_display.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +87,15 @@ public class MeFragment extends Fragment {
                     Toast.makeText(MainActivity.getContext(), "Please login.", Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 }
+            }
+        });
+
+        btn_synchro.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ServerUploadActivity.class);
+                startActivity(intent);
             }
         });
 

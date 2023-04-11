@@ -97,7 +97,7 @@ public class FileUtil {
 				if( entry.isDirectory()){
 					name = entry.getName();
 					name = name.substring(0, name.length() - 1);
-					File fileObject = new File(outputDir + name);
+					File fileObject = new File(outputDir+"/"+name);
 					fileObject.mkdir();
 				}
 			}
