@@ -54,6 +54,7 @@ public class PhotoRecActivity extends AppCompatActivity {
 
     private static final String TAG = "PhotoRecActivity";
     private static SharedPreferences sp;
+    private SharedPreferences ex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +89,15 @@ public class PhotoRecActivity extends AppCompatActivity {
 
         historyDao = recDataBase.historyDao();
 
-        loadExcel();
+        ex = getSharedPreferences("Excel", Context.MODE_PRIVATE);
+        String isLoad = ex.getString("isLoad","");
+
+        if(!isLoad.equals("1")){
+            loadExcel();
+        }
+
+        Log.d(TAG, "已经加载过excel了" );
+
 
 
         //识别结果
@@ -334,6 +343,10 @@ public class PhotoRecActivity extends AppCompatActivity {
                     }
 
                     Log.d(TAG, "run: 超大的Excel已经添加到数据库了...");
+                    ex = getSharedPreferences("Excel",MODE_PRIVATE);
+                    SharedPreferences.Editor editor =ex.edit();
+                    editor.putString("isLoad","1");
+                    editor.commit();
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
