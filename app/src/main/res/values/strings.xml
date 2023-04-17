@@ -95,4 +95,12 @@
         <item>en_us</item>
     </string-array>
 
+    <string-array name="lan">
+        <item>Chinese</item>
+        <item>Japanese</item>
+        <item>Spanish</item>
+        <item>Korean</item>
+        <item>French</item>
+    </string-array>
+
 </resources>

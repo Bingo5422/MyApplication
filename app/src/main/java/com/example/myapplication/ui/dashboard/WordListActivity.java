@@ -49,7 +49,8 @@ public class WordListActivity extends AppCompatActivity {
         historyDao = recDataBase.historyDao();
         adapter.setDao(historyDao);
         if (form == 1) {
-            dataList.addAll(historyDao.queryNumLow3());
+            dataList.addAll(historyDao.queryNumLow3());//生词本
+
         } else if (form == 2) {
             dataList.addAll(historyDao.queryNumUp3());
         }

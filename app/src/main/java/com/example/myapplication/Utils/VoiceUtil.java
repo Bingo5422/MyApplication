@@ -4,11 +4,9 @@ package com.example.myapplication.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myapplication.MainActivity;
-import com.example.myapplication.R;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeechConstant;
@@ -16,7 +14,7 @@ import com.iflytek.cloud.SpeechSynthesizer;
 
 import java.io.File;
 
-public class VoiceUtil {
+public abstract class VoiceUtil {
 
     private static File pcmFile;
     private static SpeechSynthesizer mTts;
@@ -24,9 +22,13 @@ public class VoiceUtil {
     private static String mEngineType = SpeechConstant.TYPE_CLOUD;
 
     // 默认发音人: xiaoyan,aisxping,aisjinger,aisbabyxu  aisjiuxu(男)
-    private static String voicer = "aisbabyxu";
 
+    
+    private static String voicer;
     private static final String TAG = "VoiceUtil";
+
+
+
 
     static {
         // 初始化合成对象，并初始化监听
@@ -48,14 +50,15 @@ public class VoiceUtil {
 
 
 
+
     // 开始合成
     // 收到onCompleted 回调时，合成结束、生成合成音频
     // 合成的音频格式：只支持pcm格式
-    public static void voice(Context context,String texts){
+    public  static void voice(Context context, String texts,String voicer){
         pcmFile = new File(context.getExternalCacheDir().getAbsolutePath(), "tts_pcmFile.pcm");
         pcmFile.delete();
         // 设置参数
-        setParam();
+        setParam(voicer);
         // 合成并播放
         //int code = mTts.startSpeaking(texts, mTtsListener);
         int code = mTts.startSpeaking(texts, null);
@@ -71,7 +74,8 @@ public class VoiceUtil {
         }
     }
 
-    private static void setParam() {
+
+    private static void setParam(String voicer) {
         // 清空参数
         mTts.setParameter(SpeechConstant.PARAMS, null);
         // 根据合成引擎设置相应参数
@@ -105,6 +109,7 @@ public class VoiceUtil {
         mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH,
                 MainActivity.getContext().getExternalFilesDir("msc").getAbsolutePath() + "/tts.pcm");
     }
+
 
 
 }

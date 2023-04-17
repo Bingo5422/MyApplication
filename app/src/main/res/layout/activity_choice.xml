@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.recognition.ChoiceActivity">
+
+    <LinearLayout
+        android:id="@+id/cho_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <ImageView
+            android:id="@+id/cho_back"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/one_dir_arrow"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="16dp"
+            android:textStyle="bold"
+            android:text="选择"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/camera"
+        android:layout_width="wrap_content"
+        android:text="打开相机"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/album"
+        android:layout_width="wrap_content"
+        android:text="打开相册"
+        android:layout_height="wrap_content"/>
+
+
+
+</LinearLayout>

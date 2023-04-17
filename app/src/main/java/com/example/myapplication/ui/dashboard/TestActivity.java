@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.dashboard;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -39,7 +41,7 @@ public class TestActivity extends AppCompatActivity {
     private int total = 10;
 
     private HistoryBean correctFlag;
-
+    static SharedPreferences sp;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class TestActivity extends AppCompatActivity {
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
         binding = ActivityTestBinding.inflate(getLayoutInflater());
+        sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
+
         setContentView(binding.getRoot());
         binding.btnA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,24 +109,6 @@ public class TestActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
 
-//                    question = 0;
-//                    empty = 0;
-//                    correct = 0;
-//                    wrong = 0;
-//                    binding.tvEmpty.setText("Empty: " + empty);
-//                    binding.tvCorrect.setText("Correct: " + correct);
-//                    binding.tvWrong.setText("Wrong: " + wrong);
-//
-//                    binding.btnA.setClickable(true);
-//                    binding.btnB.setClickable(true);
-//                    binding.btnC.setClickable(true);
-//                    binding.btnD.setClickable(true);
-//
-//                    binding.btnA.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnB.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnC.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnD.setBackgroundColor(getResources().getColor(R.color.button));
-
                 }
 
                 buttonControl = false;
@@ -145,7 +131,7 @@ public class TestActivity extends AppCompatActivity {
                 questionsList.clear();
                 questionsList.addAll(historyDao.queryNumLow3());
 
-                if(questionsList.isEmpty()){
+                if (questionsList.isEmpty()) {
                     return;
                 }
 
@@ -193,10 +179,33 @@ public class TestActivity extends AppCompatActivity {
             options.add(flg);
         }
 
-        binding.btnA.setText(options.get(0).getName());
-        binding.btnB.setText(options.get(1).getName());
-        binding.btnC.setText(options.get(2).getName());
-        binding.btnD.setText(options.get(3).getName());
+        String lan = sp.getString("lan", "Chinese");
+        if (lan.equals("Spanish")) {
+            binding.btnA.setText(options.get(0).getSpaName());
+            binding.btnB.setText(options.get(1).getSpaName());
+            binding.btnC.setText(options.get(2).getSpaName());
+            binding.btnD.setText(options.get(3).getSpaName());
+        } else if (lan.equals("Japanese")) {
+            binding.btnA.setText(options.get(0).getJpName());
+            binding.btnB.setText(options.get(1).getJpName());
+            binding.btnC.setText(options.get(2).getJpName());
+            binding.btnD.setText(options.get(3).getJpName());
+        } else if (lan.equals("Korean")) {
+            binding.btnA.setText(options.get(0).getKorName());
+            binding.btnB.setText(options.get(1).getKorName());
+            binding.btnC.setText(options.get(2).getKorName());
+            binding.btnD.setText(options.get(3).getKorName());
+        }else if (lan.equals("French")) {
+            binding.btnA.setText(options.get(0).getFraName());
+            binding.btnB.setText(options.get(1).getFraName());
+            binding.btnC.setText(options.get(2).getFraName());
+            binding.btnD.setText(options.get(3).getFraName());
+        }else {
+            binding.btnA.setText(options.get(0).getName());
+            binding.btnB.setText(options.get(1).getName());
+            binding.btnC.setText(options.get(2).getName());
+            binding.btnD.setText(options.get(3).getName());
+        }
 
 
         binding.llEmpty.setVisibility(View.GONE);
@@ -204,7 +213,19 @@ public class TestActivity extends AppCompatActivity {
 
     public void answerControl(Button btn) {
         String buttonText = btn.getText().toString();
-        String correctAnswer = correctFlag.getName();
+        String correctAnswer = "";
+        String lan = sp.getString("lan", "Chinese");
+        if (lan.equals("Spanish")) {
+            correctAnswer = correctFlag.getSpaName();
+        } else if (lan.equals("Japanese")) {
+            correctAnswer = correctFlag.getJpName();
+        } else if (lan.equals("Korean")) {
+            correctAnswer = correctFlag.getKorName();
+        }else if (lan.equals("French")) {
+            correctAnswer = correctFlag.getFraName();
+        }else {
+            correctAnswer = correctFlag.getName();
+        }
 
         if (buttonText.equals(correctAnswer)) {
             correct++;

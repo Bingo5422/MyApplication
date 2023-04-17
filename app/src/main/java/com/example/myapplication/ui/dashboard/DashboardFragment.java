@@ -59,6 +59,14 @@ public class DashboardFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+        binding.btnTest6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), DetailActivity.class));
+            }
+        });
         return binding.getRoot();
     }
 

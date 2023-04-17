@@ -2,6 +2,7 @@ package com.example.myapplication.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -27,9 +28,9 @@ import java.util.List;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     private List<HistoryBean> list;
-    HistoryDao historyDao;
+   private HistoryDao historyDao;
 
-
+    private SharedPreferences sp;
     public interface Listener{
         void onClickListener(HistoryBean bean);
         void onDelClickListener(HistoryBean bean,int index);
@@ -68,7 +69,21 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
 
         holder.enName.setText(bean.getEnName());
-        holder.name.setText(bean.getName());
+
+        sp = holder.itemView.getContext().getSharedPreferences("sp", Context.MODE_PRIVATE);
+        String lan = sp.getString("lan", "Chinese");
+        if (lan.equals("Spanish")) {
+            holder.name.setText(bean.getSpaName());
+        } else if (lan.equals("Japanese")) {
+            holder.name.setText(bean.getJpName());
+        } else if (lan.equals("Korean")) {
+            holder.name.setText(bean.getKorName());
+        } else if (lan.equals("French")) {
+            holder.name.setText(bean.getFraName());
+        } else {
+            holder.name.setText(bean.getName());
+        }
+
         String path = bean.getPath();
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         holder.image.setImageBitmap(bitmap);

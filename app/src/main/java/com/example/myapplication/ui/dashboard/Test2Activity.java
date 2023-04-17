@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.dashboard;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,11 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import com.example.myapplication.Bean.HistoryBean;
+import com.example.myapplication.Bean.RecordBean;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
+import com.example.myapplication.Dao.RecordDao;
 import com.example.myapplication.databinding.ActivityTest2Binding;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 
@@ -25,6 +30,7 @@ public class Test2Activity extends AppCompatActivity {
 
     private ActivityTest2Binding binding;
     private HistoryDao historyDao;
+    private RecordDao recordDao;
     private RecDataBase recDataBase;
     private List<HistoryBean> questionsList = new ArrayList<>();
     private List<HistoryBean> wrongOptionsList = new ArrayList<>();
@@ -39,13 +45,17 @@ public class Test2Activity extends AppCompatActivity {
 
     private HistoryBean correctFlag;
 
+    static SharedPreferences sp;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
+        recordDao = recDataBase.recordDao();
+
         binding = ActivityTest2Binding.inflate(getLayoutInflater());
+        sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
         setContentView(binding.getRoot());
         binding.btnA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +108,16 @@ public class Test2Activity extends AppCompatActivity {
 //                    binding.btnD.setBackgroundColor(getResources().getColor(R.color.button));
                 } else if (question == total) {
 
+                    Calendar c = Calendar.getInstance();
+                    int year = c.get(Calendar.YEAR);
+                    int month = c.get(Calendar.MONTH) + 1;
+                    int day = c.get(Calendar.DAY_OF_MONTH);
+                    RecordBean bean = new RecordBean();
+                    bean.setAddDate(year + "-" + month + "-" + day);
+                    bean.setType(1);
+
+                    recordDao.addToRecord(bean);
+
                     Intent intent = new Intent(Test2Activity.this, ResultActivity.class);
                     intent.putExtra("correct", correct);
                     intent.putExtra("wrong", wrong);
@@ -127,7 +147,7 @@ public class Test2Activity extends AppCompatActivity {
                 questionsList.clear();
                 questionsList.addAll(historyDao.queryNumLow3());
 
-                if(questionsList.isEmpty()){
+                if (questionsList.isEmpty()) {
                     return;
                 }
 
@@ -159,7 +179,7 @@ public class Test2Activity extends AppCompatActivity {
 
         correctFlag = questionsList.get(question);
 
-        binding.ivFlag.setText(correctFlag.getName());
+        binding.ivFlag.setText(correctFlag.getEnName());
 
         wrongOptionsList.clear();
         wrongOptionsList.addAll(historyDao.queryRand3(questionsList.get(question).getName()));
@@ -175,10 +195,34 @@ public class Test2Activity extends AppCompatActivity {
             options.add(flg);
         }
 
-        binding.btnA.setText(options.get(0).getEnName());
-        binding.btnB.setText(options.get(1).getEnName());
-        binding.btnC.setText(options.get(2).getEnName());
-        binding.btnD.setText(options.get(3).getEnName());
+        String lan = sp.getString("lan", "Chinese");
+        if (lan.equals("Spanish")) {
+            binding.btnA.setText(options.get(0).getSpaName());
+            binding.btnB.setText(options.get(1).getSpaName());
+            binding.btnC.setText(options.get(2).getSpaName());
+            binding.btnD.setText(options.get(3).getSpaName());
+        } else if (lan.equals("Japanese")) {
+            binding.btnA.setText(options.get(0).getJpName());
+            binding.btnB.setText(options.get(1).getJpName());
+            binding.btnC.setText(options.get(2).getJpName());
+            binding.btnD.setText(options.get(3).getJpName());
+        } else if (lan.equals("Korean")) {
+            binding.btnA.setText(options.get(0).getKorName());
+            binding.btnB.setText(options.get(1).getKorName());
+            binding.btnC.setText(options.get(2).getKorName());
+            binding.btnD.setText(options.get(3).getKorName());
+        }else if (lan.equals("French")) {
+            binding.btnA.setText(options.get(0).getFraName());
+            binding.btnB.setText(options.get(1).getFraName());
+            binding.btnC.setText(options.get(2).getFraName());
+            binding.btnD.setText(options.get(3).getFraName());
+        }else {
+            binding.btnA.setText(options.get(0).getName());
+            binding.btnB.setText(options.get(1).getName());
+            binding.btnC.setText(options.get(2).getName());
+            binding.btnD.setText(options.get(3).getName());
+        }
+
 
         binding.btnA.setBackground(Drawable.createFromPath(options.get(0).getPath()));
         binding.btnB.setBackground(Drawable.createFromPath(options.get(1).getPath()));
@@ -191,7 +235,19 @@ public class Test2Activity extends AppCompatActivity {
 
     public void answerControl(Button btn) {
         String buttonText = btn.getText().toString();
-        String correctAnswer = correctFlag.getEnName();
+        String correctAnswer = "";
+        String lan = sp.getString("lan", "Chinese");
+        if (lan.equals("Spanish")) {
+            correctAnswer = correctFlag.getSpaName();
+        } else if (lan.equals("Japanese")) {
+            correctAnswer = correctFlag.getJpName();
+        } else if (lan.equals("Korean")) {
+            correctAnswer = correctFlag.getKorName();
+        }else if (lan.equals("French")) {
+            correctAnswer = correctFlag.getFraName();
+        }else {
+            correctAnswer = correctFlag.getName();
+        }
 
         if (buttonText.equals(correctAnswer)) {
             correct++;
