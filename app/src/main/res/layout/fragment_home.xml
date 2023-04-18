@@ -14,20 +14,24 @@
 
         <ImageView
             android:id="@+id/rec_history"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@mipmap/arrows" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/ic_history" />
         <ImageView
             android:id="@+id/menu_select"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@android:drawable/ic_menu_agenda"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_language"/>
     </RelativeLayout>
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
@@ -40,8 +44,7 @@
             android:id="@+id/main_camera"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="150dp"
             android:background="@mipmap/camera_icon" />
 
         <TextView
