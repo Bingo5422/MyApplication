@@ -3,11 +3,13 @@ package com.example.myapplication.ui.me;
 import static com.example.myapplication.ui.me.MeFragment.DomainURL;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -73,6 +75,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
     private List<Cookie> cookie;
     private OkHttpClient client;
     private HistoryDao historyDao;
+    private AlertDialog dialog;
 
 
     @Override
@@ -90,8 +93,13 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         handler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
-                if(msg.what==1){
+                if(msg.what==1){ //更新列表
                     mCheckAdapter.notifyDataSetChanged();
+                }
+                if(msg.what==2){ //更新alert dialog
+                    if(dialog.isShowing()){
+                        dialog.setMessage("Deleting");
+                    }
                 }
             }
         };
@@ -122,7 +130,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         //根据文件名查询本地数据库，图片是否已经存在，若不存在再加入下载列表
                         List<HistoryBean> b =  historyDao.queryByFilename(filename);
                         if(b.isEmpty()){
-                            json.put(Integer.toString(i), filename);
+                            json.put(filename, 1);
                         }
 
                     } catch (JSONException e) {
@@ -155,20 +163,13 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         int len = 0;
                         FileOutputStream fos = null;
                         // savePath: 服务器的图片会打包成zip下载到本地的位置，改成需要的路径
-//                        String savePath = Environment.getDataDirectory().getAbsolutePath()+"/files";
-//                        String savePath = Environment.getDataDirectory().getAbsolutePath()+"/files";
-//                        String savePath = getFilesDir().getAbsolutePath();
                         String savePath = ServerHistActivity.this.getFilesDir().getAbsolutePath();
-//                        String savePath = getPackageResourcePath();
                         try {
                             is = response.body().byteStream();
-//                    long total = response.body().contentLength();
 
                             File file = new File(savePath,"pack.zip");
-//                            if(!file.exists())
-//                                file.mkdirs();
                             fos = new FileOutputStream(file);
-//                    long sum = 0;
+
                             while ((len = is.read(buf)) != -1) {
                                 fos.write(buf, 0, len);
 //                        sum += len;
@@ -228,74 +229,106 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             @Override
             public void onClick(View view) {
 
-                JSONObject json = new JSONObject();
-                for(int i=0;i<checkedList.size();i++){
-                    // 把获取的文件信息储存在json对象中
-                    try {
-                        json.append(Integer.toString(i), checkedList.get(i).getFilename());
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                // 发送下载请求
-                String url = DomainURL + "/hist/delete";
-                RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(json));
-                Request request = new Request.Builder()
-                        .url(url)
-                        .post(body)
-                        .addHeader(cookie.get(0).name(), cookie.get(0).value())
-                        .build();
-
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        System.out.println("fail to connect to server");
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            JSONObject res_json = new JSONObject(response.body().string());
-                            if(res_json.getBoolean("if_success")){
-                                List<CheckBean> deleteBean=new ArrayList<>();
-                                //在原本的数据列表中删除对应的bean
-                                for(int i=0;i<checkedList.size();i++){
-                                    CheckBean cb = checkedList.get(i);
-                                    for(int j=0;j<dataArray.size();j++){
-                                        if(cb.getFilename()==dataArray.get(j).getFilename()){
-//                                            dataArray.remove(j);
-                                            deleteBean.add(dataArray.get(j));
-                                        }
-                                    }
-                                }
-                                dataArray.removeAll(deleteBean);
-                                // 清空被选择的项目
-                                checkedList.clear();
-
-                                // 更新ui
+                dialog = new AlertDialog.Builder(ServerHistActivity.this)
+                        .setTitle("Warn")//设置对话框的标题
+                        .setMessage("Are you sure to delete? The operation cannot be undone.")//设置对话框的内容
+                        //设置对话框的按钮
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                                 Message message = handler.obtainMessage();
-                                message.what = 1;
+                                message.what = 2;
                                 handler.sendMessage(message);
 
-                                if(Looper.myLooper()==null)
-                                    Looper.prepare();
-                                Toast.makeText(ServerHistActivity.this,
-                                        "Delete Successfully",Toast.LENGTH_SHORT).show();
-                                Looper.loop();
+                                JSONObject json = new JSONObject();
+                                for(int i=0;i<checkedList.size();i++){
+                                    // 把获取的文件信息储存在json对象中
+                                    try {
+                                        json.append(Integer.toString(i), checkedList.get(i).getFilename());
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+
+                                // 发送下载请求
+                                String url = DomainURL + "/hist/delete";
+                                RequestBody body = RequestBody.create(MediaType.parse("application/json"),
+                                        String.valueOf(json));
+                                Request request = new Request.Builder()
+                                        .url(url)
+                                        .post(body)
+                                        .addHeader(cookie.get(0).name(), cookie.get(0).value())
+                                        .build();
+
+                                client.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        dialog.dismiss();
+                                        if(Looper.myLooper()==null)
+                                            Looper.prepare();
+                                        Toast.makeText(ServerHistActivity.this,
+                                                "Delete Successfully",Toast.LENGTH_SHORT).show();
+                                        Looper.loop();
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+
+                                        try {
+                                            JSONObject res_json = new JSONObject(response.body().string());
+                                            if(res_json.getBoolean("if_success")){
+                                                List<CheckBean> deleteBean=new ArrayList<>();
+                                                //在原本的数据列表中删除对应的bean
+                                                for(int i=0;i<checkedList.size();i++){
+                                                    CheckBean cb = checkedList.get(i);
+                                                    for(int j=0;j<dataArray.size();j++){
+                                                        if(cb.getFilename()==dataArray.get(j).getFilename()){
+//                                            dataArray.remove(j);
+                                                            deleteBean.add(dataArray.get(j));
+                                                        }
+                                                    }
+                                                }
+                                                dataArray.removeAll(deleteBean);
+                                                // 清空被选择的项目
+                                                checkedList.clear();
+
+                                                // 更新ui
+                                                Message message = handler.obtainMessage();
+                                                message.what = 1;
+                                                handler.sendMessage(message);
+
+                                                dialog.dismiss();
+
+                                                if(Looper.myLooper()==null)
+                                                    Looper.prepare();
+                                                Toast.makeText(ServerHistActivity.this,
+                                                        "Delete Successfully",Toast.LENGTH_SHORT).show();
+                                                Looper.loop();
+                                            }
+                                            else{
+                                                dialog.dismiss();
+                                                Toast.makeText(ServerHistActivity.this,
+                                                        res_json.getString("message"),Toast.LENGTH_SHORT).show();
+                                                Looper.loop();
+                                            }
+                                        } catch (JSONException e) {
+                                            throw new RuntimeException(e);
+                                        }
+
+                                    }
+                                });
                             }
-                            else{
-                                Toast.makeText(ServerHistActivity.this,
-                                        res_json.getString("message"),Toast.LENGTH_SHORT).show();
-                                Looper.loop();
-                            }
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        }).create();
+                dialog.show();
 
 
-                    }
-                });
+
             }
         });
 

@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/item_server_photo"
-        android:layout_width="150dp"
-        android:layout_height="120dp"
+        android:layout_width="80dp"
+        android:layout_height="64dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,26 +26,26 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_filename_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:text="filename" />
-
-        <TextView
             android:id="@+id/item_enName_tv"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:layout_marginBottom="5dp"
+            android:textSize="15sp"
             android:text="enName" />
+
+        <TextView
+            android:id="@+id/item_filename_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=" " />
+
 
         <TextView
             android:id="@+id/item_datetime_tv"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="20sp"
             android:text="datetime" />
 
     </LinearLayout>
@@ -62,9 +62,8 @@
             android:id="@+id/item_cb"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="45dp"
             android:layout_marginRight="20dp"
-            android:gravity="center_vertical"/>
+            android:gravity="center_horizontal"/>
 
     </LinearLayout>
 

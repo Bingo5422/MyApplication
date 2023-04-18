@@ -73,7 +73,15 @@ public class MeFragment extends Fragment {
         btn_display.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.getContext(), ServerHistActivity.class));
+                if(btn_login.getText()=="logout") {
+                    startActivity(new Intent(MainActivity.getContext(), ServerHistActivity.class));
+                }else{
+                    if(Looper.myLooper()==null)
+                        Looper.prepare();
+                    Toast.makeText(MainActivity.getContext(), "Please login.", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+
             }
         });
         btn_edit_info.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +102,16 @@ public class MeFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ServerUploadActivity.class);
-                startActivity(intent);
+                if(btn_login.getText()=="logout") {
+                    Intent intent = new Intent(getActivity(), ServerUploadActivity.class);
+                    startActivity(intent);
+                }else{
+                    if(Looper.myLooper()==null)
+                        Looper.prepare();
+                    Toast.makeText(MainActivity.getContext(), "Please login.", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+
             }
         });
 
@@ -186,6 +202,7 @@ public class MeFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     //todo: 头像改为默认头像
+                                    user_photo.setImageResource(R.mipmap.default_portrait);
                                 }
                             });
 
@@ -257,6 +274,7 @@ public class MeFragment extends Fragment {
                     @Override
                     public void run() {
                         //todo 退出后更新为默认头像
+                        user_photo.setImageResource(R.mipmap.default_portrait);
                     }
                 });
 
@@ -275,7 +293,12 @@ public class MeFragment extends Fragment {
                 Looper.loop();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            if(Looper.myLooper()==null)
+                Looper.prepare();
+            Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
+                    "the Internet connection", Toast.LENGTH_SHORT).show();
+            Looper.loop();
         }
     }
 

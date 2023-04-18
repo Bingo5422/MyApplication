@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     tools:context=".ui.home.HomeFragment" >
 
     <ImageView
@@ -29,7 +28,7 @@
         <ImageView
             android:id="@+id/main_camera"
             android:layout_width="250dp"
-            android:layout_height="230dp"
+            android:layout_height="250dp"
             android:layout_gravity="center"
             android:layout_marginTop="120dp"
             android:background="@mipmap/camera_icon" />

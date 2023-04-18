@@ -50,7 +50,7 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
     public void onBindViewHolder( final ViewHolder holder, final int position) {
         final CheckBean bean = mData.get(position);
         holder.item_server_photo.setImageBitmap(bean.getPic());
-        holder.item_filename_tv.setText(bean.getFilename());
+//        holder.item_filename_tv.setText(bean.getFilename());
         holder.item_enName_tv.setText(bean.getEnName());
         holder.item_datetime_tv.setText(bean.getDatetime());
         holder.item_cb.setChecked(bean.isChecked());

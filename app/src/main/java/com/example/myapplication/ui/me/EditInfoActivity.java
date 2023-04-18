@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.MainActivity;
@@ -62,6 +63,7 @@ public class EditInfoActivity extends AppCompatActivity {
 
     private LinearLayout ll_edit_photo, ll_edit_name;
     private ImageView iv_edit_user_photo;
+    private TextView tv_edit_nickname;
     private OkHttpClient client;
 
     @Override
@@ -72,6 +74,7 @@ public class EditInfoActivity extends AppCompatActivity {
         ll_edit_photo = findViewById(R.id.ll_edit_photo);
         ll_edit_name = findViewById(R.id.ll_edit_name);
         iv_edit_user_photo = findViewById(R.id.iv_edit_user_photo);
+        tv_edit_nickname = findViewById(R.id.tv_edit_nickname);
 
 
         CookieJarImpl cookieJar = new CookieJarImpl(EditInfoActivity.this);
@@ -84,6 +87,8 @@ public class EditInfoActivity extends AppCompatActivity {
         setInfo();  //设置初始值
 
         ll_edit_photo.setOnClickListener(clickListener);
+
+        ll_edit_name.setOnClickListener(clickListener);
 
 
 
@@ -130,7 +135,7 @@ public class EditInfoActivity extends AppCompatActivity {
             if (view == ll_edit_photo) {
                 choiceFromAlbum();
             } else if (view == ll_edit_name) {
-
+                startActivity(new Intent(EditInfoActivity.this, EditNameActivity.class));
             }
         }
     };
@@ -214,12 +219,14 @@ public class EditInfoActivity extends AppCompatActivity {
     private void setInfo(){
         SharedPreferences preferences = this.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         // 从本地调取基本用户信息先进行显示
-//        String user = preferences.getString("nickname", "NO USER");
+        String user = preferences.getString("nickname", "new user");
+        tv_edit_nickname.setText(user);
         String photo_path = preferences.getString("photo", "");
         if(photo_path!=""){
             Bitmap bitmap = BitmapFactory.decodeFile(photo_path);
             iv_edit_user_photo.setImageBitmap(bitmap);
         }
+
     }
 
     private void Upload_Photo_Request(OkHttpClient client, Context context) {
