@@ -11,13 +11,102 @@ public class HistoryBean implements Serializable {
     private int id;
     private String path;
     private String code;
+    private String comName;
     private String enName;
+    private String jpName;
+    private String spaName;
     private String name;
     private int num;
     private String dateTime;
     private String fileName;
     private int if_familiar;
     private int if_star;
+    private String newName;
+    private String addDate;
+    private String addTime;
+    private int addUserId = 0;
+
+    private String korName;
+    private String FraName;
+
+    public String getKorName() {
+        return korName;
+    }
+
+    public void setKorName(String korName) {
+        this.korName = korName;
+    }
+
+    public void setFraName(String fraName) {
+        FraName = fraName;
+    }
+    public String getFraName() {
+        return FraName;
+    }
+
+    public String getAddDate() {
+        return addDate;
+    }
+
+    public void setAddDate(String addDate) {
+        this.addDate = addDate;
+    }
+
+    public String getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(String addTime) {
+        this.addTime = addTime;
+    }
+
+    public int getAddUserId() {
+        return addUserId;
+    }
+
+    public void setAddUserId(int addUserId) {
+        this.addUserId = addUserId;
+    }
+
+    public String getComName() {
+        return comName;
+    }
+
+    public void setComName(String comName) {
+        this.comName = comName;
+    }
+
+    public String getEnName() {
+        return enName;
+    }
+
+    public void setEnName(String enName) {
+        this.enName = enName;
+    }
+
+    public String getJpName() {
+        return jpName;
+    }
+
+    public void setJpName(String jpName) {
+        this.jpName = jpName;
+    }
+
+    public String getSpaName() {
+        return spaName;
+    }
+
+    public void setSpaName(String spaName) {
+        this.spaName = spaName;
+    }
+
+    public String getNewName() {
+        return newName;
+    }
+
+    public void setNewName(String newName) {
+        this.newName = newName;
+    }
 
     public int getIf_familiar() {
         return if_familiar;
@@ -67,13 +156,6 @@ public class HistoryBean implements Serializable {
         this.code = code;
     }
 
-    public String getEnName() {
-        return enName;
-    }
-
-    public void setEnName(String enName) {
-        this.enName = enName;
-    }
 
     public String getName() {
         return name;
@@ -105,7 +187,6 @@ public class HistoryBean implements Serializable {
         return "HistoryBean{" +
                 "id=" + id +
                 ", code='" + code + '\'' +
-                ", enName='" + enName + '\'' +
                 ", name='" + name + '\'' +
                 ", num='" + num + '\'' +
                 ", dateTime='" + dateTime + '\'' +

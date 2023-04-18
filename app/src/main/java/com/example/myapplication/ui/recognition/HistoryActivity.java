@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,13 +39,17 @@ public class HistoryActivity extends AppCompatActivity {
     private HistoryDao historyDao;
     private ImageView hisBack;
     private List<HistoryBean> dataList = new ArrayList<>();
-
+    private static SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         hisBack=findViewById(R.id.his_back);
+
+        sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
+
+
 
         hisBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,11 +77,30 @@ public class HistoryActivity extends AppCompatActivity {
         adapter.setDao(historyDao);
         list.setAdapter(adapter);
 
+
         adapter.setListener(new HistoryAdapter.Listener() {
             @Override
             public void onClickListener(HistoryBean bean) {
-                String chinese = bean.getName();
-                VoiceUtil.voice(HistoryActivity.this, chinese);
+                if(bean!=null){
+                    String lan = sp.getString("lan", "Chinese");
+                    if (lan.equals("Spanish")) {
+                        String spanish = bean.getSpaName();
+                        VoiceUtil.voice(HistoryActivity.this, spanish,"x2_SpEs_Aurora");
+                    } else if (lan.equals("Japanese")) {
+                        String japanese = bean.getSpaName();
+                        VoiceUtil.voice(HistoryActivity.this, japanese,"x2_JaJp_ZhongCun");
+                    } else if (lan.equals("Korean")) {
+                        String korean = bean.getKorName();
+                        VoiceUtil.voice(HistoryActivity.this, korean,"zhimin");
+                    } else if (lan.equals("French")) {
+                        String french = bean.getFraName();
+                        VoiceUtil.voice(HistoryActivity.this, french,"x2_FrRgM_Lisa");
+                    } else {
+                        String chinese = bean.getName();
+                        VoiceUtil.voice(HistoryActivity.this, chinese,"aisxping");
+                    }
+                }
+
             }
 
             @Override

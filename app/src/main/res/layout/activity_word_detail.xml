@@ -13,7 +13,6 @@
         android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="Hello"
-        android:textColor="@color/black"
         android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,11 +34,21 @@
         android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="SHOW PARAPHRASE"
-        android:textSize="20sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/voice"
+        app:layout_constraintRight_toLeftOf="@+id/btnShow"
+        app:layout_constraintBottom_toBottomOf="@+id/btnShow"
+        android:src="@mipmap/voice"
+        android:layout_marginLeft="40dp"
+        android:layout_width="30dp"
+        tools:text="voice"
+        android:layout_height="45dp"/>
 
 
     <LinearLayout

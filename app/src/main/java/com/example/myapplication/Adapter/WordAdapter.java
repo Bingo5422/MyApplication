@@ -1,6 +1,8 @@
 package com.example.myapplication.Adapter;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder> {
 
     private List<HistoryBean> list = new ArrayList<>();
     HistoryDao historyDao;
+    static SharedPreferences sp;
 
     public void setDao(HistoryDao historyDao) {
         this.historyDao = historyDao;
@@ -46,13 +49,27 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder> {
     //绑定数据
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistoryBean bean = list.get(position);
+        sp = holder.itemView.getContext().getSharedPreferences("sp", Context.MODE_PRIVATE);
+        String lan = sp.getString("lan", "Chinese");
+        if (lan.equals("Spanish")) {
+            holder.name.setText(bean.getSpaName());
+        } else if (lan.equals("Japanese")) {
+            holder.name.setText(bean.getJpName());
+        } else if (lan.equals("Korean")) {
+            holder.name.setText(bean.getKorName());
+        }else if (lan.equals("French")) {
+            holder.name.setText(bean.getFraName());
+        }else {
+            holder.name.setText(bean.getName());
+        }
+
         holder.enName.setText(bean.getEnName());
-        holder.name.setText(bean.getName());
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), WordDetailActivity.class);
-                intent.putExtra("word",bean);
+                intent.putExtra("word", bean);
                 v.getContext().startActivity(intent);
             }
         });

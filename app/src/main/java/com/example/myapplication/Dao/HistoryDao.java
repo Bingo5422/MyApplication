@@ -41,8 +41,13 @@ public interface HistoryDao {
 
     @Query("UPDATE HistoryBean set if_star=:if_star WHERE id=:id ")
     void updateStar(int id, int if_star);
+
     @Query("UPDATE HistoryBean set if_star=:if_star WHERE filename=:filename")
     void updateStar_byFilename(int if_star, String filename);
+
     @Query("DELETE from HistoryBean WHERE id=:id")
     void deleteById(int id);
+
+    @Query("SELECT count(*) FROM HistoryBean where addDate!=:today")
+    int countToDayNewWord(String today);
 }

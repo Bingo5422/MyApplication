@@ -76,4 +76,20 @@
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnTest6"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnTest4"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#D80000"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:text="VIEW DETAIL"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
