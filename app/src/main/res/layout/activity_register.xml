@@ -10,7 +10,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="-102dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,55 +20,136 @@
 
             <ImageView
                 android:id="@+id/iv_back_to_login"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@mipmap/one_dir_arrow"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin" />
+                android:src="@drawable/baseline_keyboard_arrow_left_24" />
         </RelativeLayout>
 
-
-
-        <EditText
-            android:id="@+id/et_email"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Please enter your email address"
-            android:inputType="textEmailAddress" />
-
-        <EditText
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Please enter your password"
-            android:inputType="text"/>
-
-        <EditText
-            android:id="@+id/et_confirm_pw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Please enter your password again"
-            android:inputType="textEmailAddress" />
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:text="Register"
+            android:textColor="@color/deep_grey"
+            android:textSize="20sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="30dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:text="Email:" />
+
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:hint="Please enter your email address"
+                android:inputType="textEmailAddress"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="30dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:text="Password:" />
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:hint="Please enter your password"
+                android:inputType="text"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="30dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_gravity="top"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:text="Confirm Password:" />
+
+            <EditText
+                android:id="@+id/et_confirm_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:hint="Please enter your password again"
+                android:inputType="textEmailAddress"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="30dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:text="Captcha:" />
 
             <EditText
                 android:id="@+id/et_captcha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Please enter the verification code"
-                android:inputType="textEmailAddress" />
+                android:layout_gravity="bottom"
+                android:layout_weight="2"
+                android:hint="Please enter the captcha"
+                android:inputType="textEmailAddress"
+                android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btn_send_code"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25sp"
                 android:layout_gravity="center"
-                android:text="send code"
-                android:background="@color/text_green" />
+                android:layout_weight="2"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/button_border"
+                android:text="send code" />
 
         </LinearLayout>
 
@@ -74,15 +157,15 @@
             android:id="@+id/tv_error_info"
             android:layout_width="match_parent"
             android:layout_height="30sp"
-            android:textSize="20sp"
-            android:textColor="@color/error_red"/>
+            android:textColor="@color/error_red"
+            android:textSize="20sp" />
 
         <Button
+            android:layout_marginTop="30dp"
             android:id="@+id/btn_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/text_green"
             android:text="register"
             android:textSize="15sp" />
 

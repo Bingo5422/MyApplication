@@ -15,4 +15,5 @@
     <color name="text_green">#FF7EB2AD</color>
     <color name="error_red">#FFFF0000</color>
     <color name="button">#FFD80000</color>
+    <color name="transparent">#00000000</color>
 </resources>

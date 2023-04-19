@@ -14,6 +14,43 @@ public class CheckBean implements Serializable {
     private String filepath;
     private String code;
     private String enName;
+    private String jpName;
+
+    public String getJpName() {
+        return jpName;
+    }
+
+    public void setJpName(String jpName) {
+        this.jpName = jpName;
+    }
+
+    public String getKorName() {
+        return korName;
+    }
+
+    public void setKorName(String korName) {
+        this.korName = korName;
+    }
+
+    public String getFraName() {
+        return FraName;
+    }
+
+    public void setFraName(String fraName) {
+        FraName = fraName;
+    }
+
+    public String getSpaName() {
+        return spaName;
+    }
+
+    public void setSpaName(String spaName) {
+        this.spaName = spaName;
+    }
+
+    private String korName;
+    private String FraName;
+    private String spaName;
     private String name;
 
     private String datetime;

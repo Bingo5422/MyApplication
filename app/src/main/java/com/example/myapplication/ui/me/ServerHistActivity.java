@@ -199,6 +199,11 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                                 historyBean.setDateTime(bean.getDatetime());
                                 historyBean.setCode(bean.getCode());
                                 historyBean.setEnName(bean.getEnName());
+                                historyBean.setNum(bean.getProficiency());
+                                historyBean.setFraName(bean.getFraName());
+                                historyBean.setJpName(bean.getJpName());
+                                historyBean.setSpaName(bean.getSpaName());
+                                historyBean.setKorName(bean.getKorName());
                                 historyBean.setFileName(bean.getFilename());
                                 historyBean.setIf_star(1);
                                 historyDao.insertHistory(historyBean);
@@ -395,6 +400,10 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                         bean.setCode(item.getString("code"));
                         bean.setEnName(item.getString("enName"));
                         bean.setName(item.getString("name"));
+                        bean.setFraName(item.getString("FraName"));
+                        bean.setJpName(item.getString("jpName"));
+                        bean.setKorName(item.getString("korName"));
+                        bean.setSpaName(item.getString("spaName"));
                         bean.setDatetime(item.getString("datetime"));
                         bean.setProficiency(item.getInt("proficiency"));
                         dataArray.add(bean);

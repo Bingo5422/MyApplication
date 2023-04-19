@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.MyApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+<!--        <item name="android:windowNoTitle">true</item>-->
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/text_green</item>
         <item name="colorPrimaryVariant">@color/light_grey</item>

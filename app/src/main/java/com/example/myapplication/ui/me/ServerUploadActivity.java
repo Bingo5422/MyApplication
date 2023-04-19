@@ -172,6 +172,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 obj.put("code", bean.getCode());
                 obj.put("filename", bean.getFileName());
                 obj.put("enName", bean.getEnName());
+                obj.put("jpName", bean.getJpName());
+                obj.put("korName", bean.getKorName());
+                obj.put("FraName", bean.getFraName());
+                obj.put("spaName", bean.getSpaName());
                 obj.put("name", bean.getName());
                 obj.put("datetime", bean.getDateTime());
                 obj.put("proficiency", bean.getNum());
@@ -199,65 +203,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
             }
 
-            //对本地文件进行循环
-//            if(type=="star"){ //如果是同步收藏夹
-//                for(int i=0;i<localList.size();i++){
-//                    HistoryBean bean = localList.get(i);
-//                    //全部加入上传体
-//                    File file = new File(bean.getPath());
-//                    multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),
-//                            (RequestBody.create(MediaType.parse("image/*jpg"), file)));
-//
-//                    JSONObject obj = new JSONObject();
-//
-//                    obj.put("id", bean.getId());
-//                    obj.put("code", bean.getCode());
-//                    obj.put("filename", bean.getFileName());
-//                    obj.put("enName", bean.getEnName());
-//                    obj.put("name", bean.getName());
-//                    obj.put("datetime", bean.getDateTime());
-//                    obj.put("proficiency", bean.getNum());
-//                    // 备份生词本所有的收藏都设置为空，如果有需要则自己重新同步收藏
-//                    obj.put("if_star",bean.getIf_star());
-//                    //加到info.json里
-////                    info.put(Integer.toString(fileNum), obj);
-//                    fileNum++;
-//
-//                    //判断哪些是多于出来的
-//                    if(server_list.has(bean.getFileName())) {
-//                        server_list.remove(bean.getFileName());
-//                    }
-//                }
-//            }
-//            else{ // 如果是上传生词本
-//                for(int i=0;i<localList.size();i++){
-//                    HistoryBean bean = localList.get(i);
-//                    if(!server_list.has(bean.getFileName())) {
-//                        // 如果服务器没有，才往里加入
-//                        File file = new File(bean.getPath());
-//                        multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),
-//                                (RequestBody.create(MediaType.parse("image/*jpg"), file)));
-//
-//                        JSONObject obj = new JSONObject();
-//
-//                        obj.put("id", bean.getId());
-//                        obj.put("code", bean.getCode());
-//                        obj.put("enName", bean.getEnName());
-//                        obj.put("name", bean.getName());
-//                        obj.put("datetime", bean.getDateTime());
-//                        obj.put("proficiency", bean.getNum());
-//                        // 备份生词本所有的收藏都设置为空，如果有需要则自己重新同步收藏
-//                        obj.put("if_star", 0);
-//                        //加到info.json里
-//                        info.put(Integer.toString(fileNum), obj);
-//                        fileNum++;
-//                    }
-//                    //判断哪些是多于出来的
-//                    if(server_list.has(bean.getFileName())) {
-//                        server_list.remove(bean.getFileName());
-//                    }
-//                }
-//            }
 
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -455,10 +400,14 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                         historyBean.setDateTime(item.getString("datetime"));
                         historyBean.setCode(item.getString("code"));
                         historyBean.setEnName(item.getString("enName"));
+                        historyBean.setKorName(item.getString("korName"));
+                        historyBean.setSpaName(item.getString("spaName"));
+                        historyBean.setJpName(item.getString("jpName"));
+                        historyBean.setFraName(item.getString("FraName"));
                         historyBean.setFileName(item.getString("filename"));
                         historyBean.setIf_star(item.getInt("if_star"));
                         historyBean.setNum(item.getInt("proficiency"));
-                        //todo 新增了其他语言名称，也要添加
+
                         historyDao.insertHistory(historyBean);
 
 
@@ -595,6 +544,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                             historyBean.setDateTime(item.getString("datetime"));
                             historyBean.setCode(item.getString("code"));
                             historyBean.setEnName(item.getString("enName"));
+                            historyBean.setFraName(item.getString("FraName"));
+                            historyBean.setKorName(item.getString("korName"));
+                            historyBean.setJpName(item.getString("jpName"));
+                            historyBean.setSpaName(item.getString("spaName"));
                             historyBean.setFileName(item.getString("filename"));
                             historyBean.setIf_star(1);
                             historyDao.insertHistory(historyBean);
