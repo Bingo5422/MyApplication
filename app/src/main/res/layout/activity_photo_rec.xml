@@ -5,69 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/creamy_white"
     tools:context=".ui.recognition.PhotoRecActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
     <Button
         android:id="@+id/title_back"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:background="@mipmap/one_dir_arrow"/>
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/baseline_keyboard_arrow_left_24"/>
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="4"
-        android:gravity="center"
-        android:text="Photo Identification"
-        android:textSize="24sp"
-        android:textColor="#AF9B90"
-        android:textStyle="bold"/>
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Photo Identification"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textColor="#AF9B90"-->
+<!--        android:textStyle="bold"/>-->
 
     </LinearLayout>
 
+
+
     <ImageView
         android:id="@+id/rec_photo"
-        android:layout_marginStart="25dp"
         android:layout_width="240dp"
         android:layout_height="320dp"
-        android:layout_gravity="center"
-        />
-
+        android:layout_gravity="center"/>
     <Button
-        android:textAllCaps="false"
         android:id="@+id/rec_start"
-        android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
-        android:text="Start Identification"
+        android:textAllCaps="false"
+        android:paddingHorizontal="20dp"
+        android:text="Identify"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="#AF9B90"
-        android:background="#278E84"
-        android:textSize="18sp"/>
+        android:background="@drawable/button_border_green"
+        android:textColor="@color/text_green"
+        android:textSize="15sp"/>
 
     <LinearLayout
         android:id="@+id/Rec_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
         android:orientation="horizontal"
-        android:layout_gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/Rec_start"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:gravity="center_vertical">
+        android:layout_marginTop="20dp"
+        android:background="@drawable/white_round"
+        android:layout_marginHorizontal="30dp"
+        android:paddingTop="20dp">
 
         <ImageView
             android:id="@+id/Rec_voice"
             android:src="@mipmap/voice"
-            android:layout_marginLeft="40dp"
-            android:layout_width="30dp"
+            android:layout_width="20dp"
+            android:layout_marginLeft="20dp"
             tools:text="voice"
             android:layout_height="30dp"/>
 
@@ -76,14 +75,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:textSize="22sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             tools:text="result"
             />
 
     </LinearLayout>
-
-
-
 </LinearLayout>
 

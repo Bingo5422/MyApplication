@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -121,40 +122,46 @@ public class RegisterActivity extends AppCompatActivity {
 
         // 发送验证码
         btn_send_code.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                String url = DomainURL+"/auth/captcha/email?email="+et_email.getText();
 
-                OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
-                Request request = new Request.Builder()//创建Request 对象。
-                        .url(url)
-                        .build();
-                client.newCall(request).enqueue(new Callback(){
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Looper.prepare();
-                        Toast.makeText(MainActivity.getContext(), "Server Error." +
-                                " Please check the Internet connection", Toast.LENGTH_SHORT).show();
-                        Looper.loop();
-                    }
+                if (et_email.length()!=0) {
+                    String url = DomainURL + "/auth/captcha/email?email=" + et_email.getText();
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        JSONObject res_json2;
-                        String res = response.body().string();
-                        try {
-                            res_json2 = new JSONObject(res);
-                            if(res_json2.getBoolean("if_send")){
-                                Looper.prepare();
-                                Toast.makeText(MainActivity.getContext(), "Email sent.", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
-                            }
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                    OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
+                    Request request = new Request.Builder()//创建Request 对象。
+                            .url(url)
+                            .build();
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Looper.prepare();
+                            Toast.makeText(MainActivity.getContext(), "Server Error." +
+                                    " Please check the Internet connection", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
                         }
 
-                    }
-                });
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            JSONObject res_json2;
+                            String res = response.body().string();
+                            try {
+                                res_json2 = new JSONObject(res);
+                                if (res_json2.getBoolean("if_send")) {
+                                    Looper.prepare();
+                                    Toast.makeText(MainActivity.getContext(), "Email sent.", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                }
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+                    });
+                }else{
+                    tv_error_info.setText("Please finish the form.");
+                }
             }
         });
 

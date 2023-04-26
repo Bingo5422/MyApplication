@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -41,7 +42,8 @@ import okhttp3.Response;
 public class MeFragment extends Fragment {
     private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
     private Uri uri;
-    final static String DomainURL = "http://172.26.14.175:5000";
+//    final static String DomainURL = "http://172.26.14.175:5000";
+    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
     private Button btn_login, btn_display, btn_edit_info, btn_synchro;
     private TextView text;
@@ -127,7 +129,11 @@ public class MeFragment extends Fragment {
         }
 
         CookieJarImpl cookieJar = new CookieJarImpl(getActivity());
-        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
+        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .build();//创建OkHttpClient对象。
         // 为了正常格式的url创建的request对象
         Request request = new Request.Builder()
                 .url(url)

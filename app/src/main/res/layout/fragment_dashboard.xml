@@ -3,93 +3,139 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#D6D6D6">
-    <Button
-        android:id="@+id/btnTest"
-        android:layout_margin="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="#D80000"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:text="Recall pictures!"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-    <Button
-        android:id="@+id/btnTest2"
-        android:layout_margin="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnTest"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="#D80000"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:text="Recall words!"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-    <Button
-        android:id="@+id/btnTest3"
-        android:layout_margin="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnTest2"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="#D80000"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:text="NEW WORDS NOTEBOOK"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-    <Button
-        android:id="@+id/btnTest4"
-        android:layout_margin="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnTest3"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="#D80000"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:text="VOCABULARY NOTEBOOK"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnTest5"
-        android:layout_margin="20dp"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnTest4"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="#D80000"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:text="WORDS COLLECT"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/btnTest6"
-        android:layout_margin="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnTest4"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="#D80000"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:text="VIEW DETAIL"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Review Now!"
+                android:textColor="@color/black"
+                android:layout_marginTop="50dp"
+                android:paddingLeft="30dp"
+                android:textSize="30sp"/>
+
+            <LinearLayout
+                android:id="@+id/ll_review"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintDimensionRatio="2:1"
+                app:layout_constraintTop_toBottomOf="@id/tv_review"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/btnTest2"
+                    android:layout_margin="10dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/recall_words_bg"
+                    android:paddingTop="40dp"
+                    android:paddingLeft="15dp"
+                    android:text="Recall\nwords!"
+                    android:gravity="left"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btnTest"
+                    android:layout_margin="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/recall_pics_bg"
+                    android:text="Recall\npictures!"
+                    android:textSize="15sp"
+                    android:gravity="left"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="40dp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_find_learning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/ll_review"
+                android:text="Find your learning"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/deep_grey"
+                android:layout_marginTop="30dp" />
+
+            <Button
+                android:id="@+id/btnTest3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_find_learning"
+                android:background="@drawable/new_words_nb"
+                app:layout_constraintDimensionRatio="6:1"
+                android:text="New Words Notebook"
+                android:textAllCaps="false"
+                android:textColor="@color/deep_grey"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnTest4"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="6:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnTest3"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/familiar_words_nb"
+                android:text="Familiar Words Notebook"
+                android:textAllCaps="false"
+                android:textColor="@color/deep_grey"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnTest5"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/btnTest4"
+                android:background="@drawable/favorites_bg"
+                app:layout_constraintDimensionRatio="6:1"
+                android:text="Favorites"
+                android:textAllCaps="false"
+                android:textColor="@color/deep_grey"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnTest6"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/btnTest5"
+                android:background="@drawable/learning_details"
+                app:layout_constraintDimensionRatio="6:1"
+                android:text="View Details"
+                android:textAllCaps="false"
+                android:textColor="@color/deep_grey"
+                android:textSize="12sp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

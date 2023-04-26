@@ -32,9 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
-            android:text="Register"
+            android:text="REGISTER"
             android:textColor="@color/deep_grey"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,20 +44,20 @@
             android:paddingHorizontal="30dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:gravity="center"
+                android:layout_weight="4"
+                android:gravity="left"
+                android:layout_gravity="bottom"
                 android:text="Email:" />
 
             <EditText
                 android:id="@+id/et_email"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_weight="2"
+                android:layout_weight="10"
                 android:gravity="center"
-                android:hint="Please enter your email address"
                 android:inputType="textEmailAddress"
                 android:textSize="10sp" />
 
@@ -70,20 +70,19 @@
             android:paddingHorizontal="30dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:gravity="center"
+                android:layout_weight="4"
+                android:gravity="left"
                 android:text="Password:" />
 
             <EditText
                 android:id="@+id/et_password"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_weight="2"
+                android:layout_weight="10"
                 android:gravity="center"
-                android:hint="Please enter your password"
                 android:inputType="text"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -95,21 +94,20 @@
             android:paddingHorizontal="30dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="40sp"
                 android:layout_gravity="top"
-                android:layout_weight="5"
-                android:gravity="center"
+                android:layout_weight="4"
+                android:gravity="left"
                 android:text="Confirm Password:" />
 
             <EditText
                 android:id="@+id/et_confirm_pw"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_weight="2"
+                android:layout_weight="10"
                 android:gravity="center"
-                android:hint="Please enter your password again"
                 android:inputType="textEmailAddress"
                 android:textSize="10sp" />
 
@@ -120,44 +118,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="30dp"
             android:paddingTop="10dp"
             android:paddingHorizontal="30dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_weight="5"
-                android:gravity="center"
+                android:layout_weight="4"
+                android:gravity="left"
                 android:text="Captcha:" />
 
             <EditText
                 android:id="@+id/et_captcha"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_weight="2"
-                android:hint="Please enter the captcha"
+                android:layout_weight="5"
                 android:inputType="textEmailAddress"
                 android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btn_send_code"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="25sp"
                 android:layout_gravity="center"
-                android:layout_weight="2"
+                android:layout_weight="5"
                 android:layout_marginLeft="10dp"
-                android:background="@drawable/button_border"
+                android:background="@drawable/button_border_green"
                 android:text="send code" />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_error_info"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="30sp"
+            android:gravity="bottom"
             android:textColor="@color/error_red"
+            android:paddingLeft="30dp"
             android:textSize="20sp" />
 
         <Button

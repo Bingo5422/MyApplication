@@ -4,40 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_grey"
     tools:context=".ui.me.ServerUploadActivity">
 
     <LinearLayout
         android:id="@+id/server_ul_title"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        android:gravity="left|center_vertical"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="match_parent"
-            android:textSize="15sp"
-            android:text="Synchronization"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_keyboard_arrow_left_24"/>
 
     </LinearLayout>
+
 
     <LinearLayout
         app:layout_constraintTop_toBottomOf="@id/server_ul_title"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_height="0dp"
         android:layout_width="match_parent"
+        android:layout_marginHorizontal="30dp"
         android:orientation="vertical"
         android:paddingTop="10sp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Synchronization"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_gravity="center"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Uploads"
+            android:layout_marginTop="30dp"
             android:textSize="20sp"
             android:textColor="@color/text_green"/>
 
@@ -48,14 +57,15 @@
             android:textAllCaps="false"
             android:text="Upload all stars to the server"
             android:textColor="@color/deep_grey"
-            android:background="@color/creamy_white"
+            android:background="@drawable/btn_white_round"
             android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/btn_upload_unfamiliar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/creamy_white"
+            android:background="@drawable/btn_white_round"
+            android:layout_marginTop="1dp"
             android:textColor="@color/deep_grey"
             android:textAllCaps="false"
             android:text="Upload all unfamiliar words to the server"
@@ -75,7 +85,7 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:textColor="@color/deep_grey"
-            android:background="@color/creamy_white"
+            android:background="@drawable/btn_white_round"
             android:text="Download Stars to local"/>
 
         <Button
@@ -85,7 +95,8 @@
             android:textAllCaps="false"
             android:textColor="@color/deep_grey"
             android:text="download unfamiliars to local"
-            android:background="@color/creamy_white"/>
+            android:layout_marginTop="1dp"
+            android:background="@drawable/btn_white_round"/>
 
 
     </LinearLayout>

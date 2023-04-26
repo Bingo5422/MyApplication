@@ -19,9 +19,9 @@
 
             <ImageView
                 android:id="@+id/iv_login_back"
-                android:src="@mipmap/one_dir_arrow"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:src="@drawable/baseline_keyboard_arrow_left_24"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_alignParentLeft="true"
@@ -109,9 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/deep_grey"
             android:text="login"
-            android:textColor="@color/white"
             android:textSize="15sp"
             android:layout_marginTop="20dp"/>
 

@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/creamy_white"
     tools:context=".ui.me.MeFragment" >
 
     <LinearLayout
@@ -17,45 +18,75 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:background="@color/text_green"
+            android:background="@color/transparent"
             android:text="login"
+            android:textColor="@color/text_green"
             android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/user_photo"
-            android:layout_marginTop="80dp"
-            android:layout_width="80sp"
-            android:layout_height="80sp"
+            android:layout_marginTop="50dp"
+            android:layout_width="70sp"
+            android:layout_height="70sp"
             android:layout_gravity="center"
             android:src="@mipmap/default_portrait"/>
 
         <TextView
+            android:paddingTop="15dp"
             android:id="@+id/status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="30sp"
             android:text="no user"
             android:gravity="center"/>
+
         <Button
             android:id="@+id/btn_edit_info"
-            android:layout_width="wrap_content"
+            android:drawableLeft="@drawable/baseline_edit_24"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="50dp"
+            android:paddingLeft="30dp"
+            android:layout_marginTop="30dp"
             android:layout_height="wrap_content"
-            android:text="edit_info"
+            android:gravity="left|center"
+            android:drawablePadding="10dp"
+            android:text="Edit Info"
+            android:textAllCaps="false"
+            android:background="@drawable/btn_white_round"
             android:layout_gravity="center"/>
+
 
         <Button
             android:id="@+id/btn_display"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="view server star folder"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="30dp"
+            android:background="@drawable/btn_white_round"
+            android:drawableLeft="@drawable/ic_star"
+            android:gravity="left|center"
+            android:drawablePadding="10dp"
+            android:text="Server Favorites"
+            android:textAllCaps="false"
             android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/btn_synchro"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="synchronize folders"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="1dp"
+            android:paddingLeft="30dp"
+            android:background="@drawable/btn_white_round"
+            android:drawableLeft="@drawable/ic_synchro"
+            android:gravity="left|center"
+            android:textAllCaps="false"
+            android:drawablePadding="10dp"
+            android:text="Server Synchronization"
             android:layout_gravity="center"/>
+
+
 
 
     </LinearLayout>
