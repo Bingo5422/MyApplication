@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -97,10 +98,16 @@ public class TestActivity extends AppCompatActivity {
                     binding.btnC.setClickable(true);
                     binding.btnD.setClickable(true);
 
-                    binding.btnA.setBackgroundColor(getResources().getColor(R.color.button));
-                    binding.btnB.setBackgroundColor(getResources().getColor(R.color.button));
-                    binding.btnC.setBackgroundColor(getResources().getColor(R.color.button));
-                    binding.btnD.setBackgroundColor(getResources().getColor(R.color.button));
+                    //这里改了一下按钮背景
+                    binding.btnA.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
+                    binding.btnB.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
+                    binding.btnC.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
+                    binding.btnD.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
+
+//                    binding.btnA.setBackgroundColor(getResources().getColor(R.color.button));
+//                    binding.btnB.setBackgroundColor(getResources().getColor(R.color.button));
+//                    binding.btnC.setBackgroundColor(getResources().getColor(R.color.button));
+//                    binding.btnD.setBackgroundColor(getResources().getColor(R.color.button));
                 } else if (question == total) {
 
                     Intent intent = new Intent(TestActivity.this, ResultActivity.class);
@@ -229,26 +236,32 @@ public class TestActivity extends AppCompatActivity {
 
         if (buttonText.equals(correctAnswer)) {
             correct++;
-            btn.setBackgroundColor(Color.GREEN);
+            btn.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
+//            btn.setBackgroundColor(Color.GREEN);
             HistoryBean bean = questionsList.get(question);
             int num = bean.getNum();
             historyDao.updateNum(bean.getId(), num + 1);
             bean.setNum(num + 1);
         } else {
             wrong++;
-            btn.setBackgroundColor(Color.BLUE);
+            btn.setBackground(getResources().getDrawable(R.drawable.test_wrong_btn));
+            //btn.setBackgroundColor(Color.RED); //这里改了错误时候的颜色 原来是color.blue
 
             if (binding.btnA.getText().toString().equals(correctAnswer)) {
-                binding.btnA.setBackgroundColor(Color.GREEN);
+                binding.btnA.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
+//                binding.btnA.setBackgroundColor(Color.GREEN);
             }
             if (binding.btnB.getText().toString().equals(correctAnswer)) {
-                binding.btnB.setBackgroundColor(Color.GREEN);
+                binding.btnB.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
+//                binding.btnB.setBackgroundColor(Color.GREEN);
             }
             if (binding.btnC.getText().toString().equals(correctAnswer)) {
-                binding.btnC.setBackgroundColor(Color.GREEN);
+                binding.btnC.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
+//                binding.btnC.setBackgroundColor(Color.GREEN);
             }
             if (binding.btnD.getText().toString().equals(correctAnswer)) {
-                binding.btnD.setBackgroundColor(Color.GREEN);
+                binding.btnD.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
+//                binding.btnD.setBackgroundColor(Color.GREEN);
             }
         }
         binding.btnA.setClickable(false);

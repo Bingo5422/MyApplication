@@ -44,7 +44,7 @@
         android:id="@+id/btnStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/button"
+        android:background="@color/text_green"
         android:text="START LEANING"
         android:textColor="@color/white"
         android:textSize="20sp"

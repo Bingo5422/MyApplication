@@ -9,41 +9,48 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_forget_pw_back"
-            android:src="@mipmap/one_dir_arrow"
+            android:src="@drawable/baseline_keyboard_arrow_left_24"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/white"
             android:textSize="15sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Forgot Password"
+            android:textSize="20sp"
+            android:layout_marginVertical="15dp"
+            android:layout_marginBottom="30dp"
+            android:gravity="center"/>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingHorizontal="30dp"
         android:paddingTop="30sp">
 
         <TextView
-            android:layout_width="120sp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="Email:"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textColor="@color/black"/>
 
         <EditText
             android:id="@+id/et_email_forget"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1"
-            android:hint="Please enter your email address"
+            android:layout_weight="3"
             android:inputType="textEmailAddress"
             android:textColor="@color/brown"
             android:textSize="15sp" />
@@ -53,22 +60,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingHorizontal="30dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_forget_send_code"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="send code"
-            android:background="@color/text_green" />
+            android:layout_weight="1"
+            android:text="Code: "
+            android:gravity="center"
+            android:textColor="@color/black"/>
 
         <EditText
             android:id="@+id/et_forget_captcha"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
             android:layout_height="wrap_content"
-            android:hint="Please enter the verification code"
             android:inputType="textEmailAddress" />
+
+        <Button
+            android:id="@+id/btn_forget_send_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:text="send code"
+            android:background="@drawable/button_border_green" />
 
     </LinearLayout>
 

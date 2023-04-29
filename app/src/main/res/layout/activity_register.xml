@@ -49,6 +49,7 @@
                 android:layout_weight="4"
                 android:gravity="left"
                 android:layout_gravity="bottom"
+                android:textColor="@color/black"
                 android:text="Email:" />
 
             <EditText
@@ -57,9 +58,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="10"
-                android:gravity="center"
                 android:inputType="textEmailAddress"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
@@ -73,7 +73,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
+                android:textColor="@color/black"
                 android:gravity="left"
+                android:layout_gravity="bottom"
                 android:text="Password:" />
 
             <EditText
@@ -82,9 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="10"
-                android:gravity="center"
-                android:inputType="text"
-                android:textSize="10sp" />
+                android:inputType="textPassword"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -98,7 +99,8 @@
                 android:layout_height="40sp"
                 android:layout_gravity="top"
                 android:layout_weight="4"
-                android:gravity="left"
+                android:textColor="@color/black"
+                android:gravity="left|bottom"
                 android:text="Confirm Password:" />
 
             <EditText
@@ -107,9 +109,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="10"
-                android:gravity="center"
-                android:inputType="textEmailAddress"
-                android:textSize="10sp" />
+                android:inputType="textPassword"
+                android:textSize="15sp" />
 
         </LinearLayout>
 
@@ -127,8 +128,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="4"
+                android:textColor="@color/black"
                 android:gravity="left"
-                android:text="Captcha:" />
+                android:text="Code:" />
 
             <EditText
                 android:id="@+id/et_captcha"
@@ -137,7 +139,7 @@
                 android:layout_gravity="bottom"
                 android:layout_weight="5"
                 android:inputType="textEmailAddress"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
             <Button
                 android:id="@+id/btn_send_code"

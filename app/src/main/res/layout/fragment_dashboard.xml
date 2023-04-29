@@ -45,7 +45,8 @@
                     android:background="@drawable/recall_words_bg"
                     android:paddingTop="40dp"
                     android:paddingLeft="15dp"
-                    android:text="Recall\nwords!"
+                    android:text="Recall Words!\n(easy)"
+                    android:textAllCaps="false"
                     android:gravity="left"
                     android:textSize="15sp" />
 
@@ -56,7 +57,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:background="@drawable/recall_pics_bg"
-                    android:text="Recall\npictures!"
+                    android:text="Recall Pictures!\n(hard)"
+                    android:textAllCaps="false"
                     android:textSize="15sp"
                     android:gravity="left"
                     android:paddingLeft="15dp"

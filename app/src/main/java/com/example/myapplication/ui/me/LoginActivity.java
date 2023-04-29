@@ -11,6 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,9 +50,10 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private Button btn_login;
-    private ImageView iv_login_back;
+    private ImageView iv_login_back, iv_if_visible;
     private EditText et_email, et_password;
     private TextView tv_register, tv_forget;
+    boolean if_visible;
 
 
 
@@ -63,6 +67,9 @@ public class LoginActivity extends AppCompatActivity {
         et_password = findViewById(R.id.et_password_login);
         tv_register = findViewById(R.id.tv_go_register);
         tv_forget = findViewById(R.id.tv_forget);
+        iv_if_visible = findViewById(R.id.iv_if_visible);
+
+         if_visible = false;
 
         String url = DomainURL+"/auth/login";
 
@@ -171,6 +178,25 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LoginActivity.this, ForgetPwActivity.class));
+            }
+        });
+
+        // 密码可见/不可见
+        iv_if_visible.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                if(!if_visible){
+                    iv_if_visible.setImageResource(R.drawable.baseline_visibility_24);
+//                    et_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    if_visible = true;
+                }else{
+                    iv_if_visible.setImageResource(R.drawable.baseline_visibility_off_24);
+//                    et_password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    if_visible = false;
+                }
             }
         });
 

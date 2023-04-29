@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#D6D6D6">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tvWrong"
@@ -13,7 +12,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         android:text="Wrong: 0"
-        android:textColor="#D80000"
+        android:textColor="@color/error_red"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,7 +25,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
         android:text="Correct: 0"
-        android:textColor="#D80000"
+        android:textColor="@color/text_green"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +38,7 @@
         android:layout_marginTop="10dp"
         android:visibility="invisible"
         android:text="Empty: 0"
-        android:textColor="#D80000"
+        android:textColor="@color/brown"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tvWrong"
@@ -53,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Question:"
-        android:textColor="#D80000"
+        android:textColor="@color/deep_grey"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,9 +63,9 @@
     <ImageView
         android:id="@+id/ivFlag"
         android:layout_width="210dp"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,10 +88,10 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="#D80000"
+            android:background="@drawable/test_options_btn"
             android:text="Button"
             android:textAlignment="center"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <Button
@@ -100,10 +99,10 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="#D80000"
+            android:background="@drawable/test_options_btn"
             android:text="Button"
             android:textAlignment="center"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <Button
@@ -111,10 +110,10 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="#D80000"
+            android:background="@drawable/test_options_btn"
             android:text="Button"
             android:textAlignment="center"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <Button
@@ -122,10 +121,10 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="#D80000"
+            android:background="@drawable/test_options_btn"
             android:text="Button"
             android:textAlignment="center"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
             android:textSize="18sp" />
     </LinearLayout>
 
@@ -144,7 +143,7 @@
         android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/creamy_white"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

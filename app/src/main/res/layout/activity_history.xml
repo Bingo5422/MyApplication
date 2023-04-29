@@ -20,16 +20,14 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@mipmap/one_dir_arrow"/>
+            android:src="@drawable/baseline_keyboard_arrow_left_24"/>
         <TextView
             android:layout_width="0dp"
             android:layout_weight="5"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:textColor="@color/black"
             android:layout_marginLeft="16dp"
-            android:textStyle="bold"
-            android:text="识别历史"/>
+            android:text="Identification history"/>
     </LinearLayout>
 
     <com.example.myapplication.Adapter.SlideRecyclerView
