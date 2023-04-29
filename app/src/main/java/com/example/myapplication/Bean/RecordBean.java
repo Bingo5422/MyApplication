@@ -12,11 +12,12 @@ public class RecordBean implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String addDate;
+    private String addDate;//
     private String addTime;
     private int addUserId = 0;
     private int type = 0;
     private int hisId;
+
 
     public int getType() {
         return type;

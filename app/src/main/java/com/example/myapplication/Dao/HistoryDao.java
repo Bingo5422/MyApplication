@@ -50,4 +50,7 @@ public interface HistoryDao {
 
     @Query("SELECT count(*) FROM HistoryBean where addDate!=:today")
     int countToDayNewWord(String today);
+
+    @Query("SELECT * FROM HistoryBean where addDate =:addDate")
+    boolean queryByDate(String addDate);
 }

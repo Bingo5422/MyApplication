@@ -1,5 +1,5 @@
 
-package com.example.myapplication.Adapter;
+package com.example.myapplication.ui.recognition;
 
 import android.content.Context;
 import android.graphics.Rect;

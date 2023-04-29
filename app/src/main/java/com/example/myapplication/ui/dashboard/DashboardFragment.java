@@ -9,11 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+
 import com.example.myapplication.databinding.FragmentDashboardBinding;
-import com.example.myapplication.ui.CollectListActivity;
-import com.example.myapplication.ui.dashboard.Test2Activity;
-import com.example.myapplication.ui.dashboard.TestActivity;
-import com.example.myapplication.ui.dashboard.WordListActivity;
 
 public class DashboardFragment extends Fragment {
 
@@ -55,7 +52,7 @@ public class DashboardFragment extends Fragment {
         binding.btnTest5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), CollectListActivity.class);
+                Intent intent = new Intent(view.getContext(), com.example.myapplication.ui.dashboard.CollectListActivity.class);
                 startActivity(intent);
             }
         });

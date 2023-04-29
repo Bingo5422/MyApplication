@@ -1,10 +1,13 @@
 package com.example.myapplication;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -27,6 +30,8 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    public static final String CHANNEL_ID = "default";
+
     private static Context context;
 
     public static Context getContext() {
@@ -40,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
+
+        //创建通知渠道
+        createNotificationChannel();
 
         // 语音合成APPID
         SpeechUtility.createUtility(context, SpeechConstant.APPID + "=54d1647f");
@@ -122,6 +130,19 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Default Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.setDescription("Default notification channel for the app");
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+    }
 
     @Override
     protected void onPause() {

@@ -57,9 +57,9 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder> {
             holder.name.setText(bean.getJpName());
         } else if (lan.equals("Korean")) {
             holder.name.setText(bean.getKorName());
-        }else if (lan.equals("French")) {
+        } else if (lan.equals("French")) {
             holder.name.setText(bean.getFraName());
-        }else {
+        } else {
             holder.name.setText(bean.getName());
         }
 
@@ -70,6 +70,8 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), WordDetailActivity.class);
                 intent.putExtra("word", bean);
+                intent.putExtra("form", form);
+                intent.putExtra("index", position);
                 v.getContext().startActivity(intent);
             }
         });
@@ -100,6 +102,12 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder> {
     //数据条数
     public int getItemCount() {
         return list.size();
+    }
+
+    int form = 0;
+
+    public void setForm(int form) {
+        this.form = form;
     }
 
 

@@ -18,7 +18,7 @@ public interface RecordDao {
     @Query("SELECT count(*) FROM RecordBean where addDate=:today and type=1")
     int countTranTimes(String today);
 
-    @Query("SELECT DISTINCT addDate FROM RecordBean")
+    @Query("SELECT count(DISTINCT (addDate))  FROM RecordBean")
     int countLoginDays();
 
 }

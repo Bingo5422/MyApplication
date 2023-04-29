@@ -15,6 +15,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.PhotoUtil;
@@ -31,6 +34,7 @@ public class ChoiceActivity extends AppCompatActivity {
     private Button album;
     private File file;
     private static final String TAG = "ChoiceActivity";
+    private String currentApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,18 @@ public class ChoiceActivity extends AppCompatActivity {
         back=findViewById(R.id.cho_back);
         camera=findViewById(R.id.camera);
         album=findViewById(R.id.album);
+
+
+        currentApi = "Baidu";
+        final RadioGroup radgroup = (RadioGroup) findViewById(R.id.group1);
+        radgroup.setOnCheckedChangeListener(((group, checkedId) -> {
+            RadioButton radioButton = (RadioButton) findViewById(checkedId);
+            currentApi = (String)radioButton.getText();
+            Toast.makeText(getApplicationContext(),"The current api is："+currentApi,Toast.LENGTH_SHORT).show();
+        }));
+
+        Log.d(TAG, "当前api是" +currentApi);
+
 
         picPath = this.getFilesDir().getAbsolutePath() + File.separator + "photos";
         File temp = new File(picPath);
@@ -119,6 +135,7 @@ public class ChoiceActivity extends AppCompatActivity {
             String absolutePath = file.getAbsolutePath();
             Intent intent = new Intent(ChoiceActivity.this, PhotoRecActivity.class);
             intent.putExtra("path", absolutePath);
+            intent.putExtra("api",currentApi);
             startActivity(intent);
 
         }
@@ -137,12 +154,19 @@ public class ChoiceActivity extends AppCompatActivity {
                 cursor.close();
 
 
-                file = new File(path);
-                PhotoUtil.compressPhoto(file, 4);
-                String absolutePath = file.getAbsolutePath();
-                Log.d(TAG, "???"+absolutePath);
+               File selectFile = new File(path);
+               Log.d(TAG, "压缩前的大小 == "+ selectFile.length());
+               String fileName = getFileName(path);
+
+               //内存权限导致
+                String tempPath = getCacheDir() + File.separator + "image" + File.separator + fileName;
+                File resultFile = PhotoUtil.compressPhoto(selectFile, 4, tempPath);
+                String absolutePath = resultFile.getAbsolutePath();
+                Log.d(TAG, "压缩后的大小 == "+ resultFile.length());
+                Log.d(TAG, "在相册打开"+absolutePath);
                 Intent intent = new Intent(ChoiceActivity.this, PhotoRecActivity.class);
                 intent.putExtra("path", absolutePath);
+                intent.putExtra("api",currentApi);
                 startActivity(intent);
             } catch (Exception e) {
                 // TODO Auto-generatedcatch block
@@ -153,5 +177,12 @@ public class ChoiceActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public String getFileName(String path) {
+
+        File tempFile =new File( path.trim());
+        String fileName = tempFile.getName();
+        return fileName;
     }
 }

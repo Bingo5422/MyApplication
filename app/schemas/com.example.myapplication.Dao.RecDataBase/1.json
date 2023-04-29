@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3260332198dafece76877b4918e6ada2",
+    "identityHash": "cf9f611a3637a41154092db3e21d10d6",
     "entities": [
       {
         "tableName": "RecognitionBean",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `enName` TEXT, `jpName` TEXT, `spaName` TEXT, `korName` TEXT, `FraName` TEXT, `name` TEXT, `cate` TEXT, `newName` TEXT, `newContent` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `enName` TEXT, `name` TEXT, `cate` TEXT, `newName` TEXT, `newContent` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -23,30 +23,6 @@
           {
             "fieldPath": "enName",
             "columnName": "enName",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "jpName",
-            "columnName": "jpName",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "spaName",
-            "columnName": "spaName",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "korName",
-            "columnName": "korName",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "FraName",
-            "columnName": "FraName",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -298,7 +274,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3260332198dafece76877b4918e6ada2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cf9f611a3637a41154092db3e21d10d6')"
     ]
   }
 }

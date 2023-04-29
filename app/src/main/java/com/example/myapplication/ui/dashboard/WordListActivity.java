@@ -48,9 +48,9 @@ public class WordListActivity extends AppCompatActivity {
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
         adapter.setDao(historyDao);
+        adapter.setForm(form);
         if (form == 1) {
             dataList.addAll(historyDao.queryNumLow3());//生词本
-
         } else if (form == 2) {
             dataList.addAll(historyDao.queryNumUp3());
         }
