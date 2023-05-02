@@ -1,7 +1,17 @@
 package com.example.myapplication.ui.home;
 
+import static android.content.Context.ALARM_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,10 +24,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -31,11 +48,14 @@ import com.example.myapplication.ui.recognition.PhotoRecActivity;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.UUID;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
+    private AlarmManager alarmManager;  //闹钟管理器
+    private PendingIntent pendingIntent;
     private ImageView main_camera = null;
     private ImageView main_history = null;
     private String picPath;
@@ -43,11 +63,17 @@ public class HomeFragment extends Fragment {
     private int checkedItem = 0;
     private static final String TAG = "HomeFragment";
     private SharedPreferences sp;
+
+    private int item=0;
     String[] stringArray;
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         sp = getActivity().getSharedPreferences("sp", Context.MODE_PRIVATE);
         String lan = sp.getString("lan", "");
         stringArray = getResources().getStringArray(R.array.lan);
@@ -56,16 +82,11 @@ public class HomeFragment extends Fragment {
                 checkedItem = i;
             }
         }
-//        file = new File(picPath, "temp.jpg");
-//        //创建文件
-//        if (!file.exists()) {
-//            try {
-//                file.createNewFile();
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+
+
     }
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        HomeViewModel homeViewModel =
@@ -94,25 +115,6 @@ public class HomeFragment extends Fragment {
 
                 Intent intent_choice = new Intent(getContext(), ChoiceActivity.class);
                 startActivity(intent_choice);
-
-
-//                File file = getFileName();
-//
-//                Log.d(TAG, "!!!!!!!!" + file.getAbsolutePath());
-//                //Call the system camera
-//                Intent intent_cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                //Generate a uri based on picPath
-//                Uri uri;
-//                if (Build.VERSION.SDK_INT >= 24) {
-//                    uri = FileProvider.getUriForFile(getContext(),"com.example.myapplication.provider", file);
-//                } else {
-//                    uri = Uri.fromFile(file);
-//                }
-//                //Set the location where the image is saved
-//                intent_cam.putExtra(MediaStore.EXTRA_OUTPUT,uri);
-//                //Launch
-//                startActivityForResult(intent_cam,1);
-
             }
         });
 
@@ -128,6 +130,35 @@ public class HomeFragment extends Fragment {
         });
 
 
+        //获取闹钟管理器
+        alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        binding.timer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setClock(view);
+            }
+        });
+
+        binding.calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CalendarActivity.class);
+                startActivity(intent);
+                Log.d(TAG, "跳到日历界面");
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
 //        final TextView textView = binding.textHome;
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -136,11 +167,39 @@ public class HomeFragment extends Fragment {
     //这上面是初始化fragment自带的代码
 
 
+    public void setClock(View view){
+        //获取当前系统时间
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        //弹出闹钟框
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Calendar c = Calendar.getInstance();    //获取日期对象
+                c.set(Calendar.HOUR_OF_DAY, hourOfDay); //设置闹钟小时数
+                c.set(Calendar.MINUTE, minute); //设置闹钟分钟数
+                Intent intent = new Intent(getContext(), TimeReceiver.class);
+                //创建pendingIntent
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0X102, intent,0);
+                //设置闹钟
+                alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+                Toast.makeText(getContext(), "闹钟设置成功", Toast.LENGTH_SHORT).show();
+            }
+        },hour,minute,true);
+        timePickerDialog.show();
+    }
+
+
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
 
 
 }

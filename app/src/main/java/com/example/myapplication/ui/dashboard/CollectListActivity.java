@@ -1,4 +1,4 @@
-package com.example.myapplication.ui;
+package com.example.myapplication.ui.dashboard;
 
 import android.os.Bundle;
 import android.view.View;
@@ -45,6 +45,7 @@ public class CollectListActivity extends AppCompatActivity {
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
         adapter.setDao(historyDao);
+        adapter.setForm(3);
         dataList.addAll(historyDao.queryCollect());
         adapter.setList(dataList);
         binding.tvCount.setText(dataList.size() + "");

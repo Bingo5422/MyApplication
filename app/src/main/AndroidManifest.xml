@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SET_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +23,12 @@
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.home.CalendarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.TimeActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.recognition.ChoiceActivity"
             android:exported="false" />
@@ -54,7 +63,7 @@
             android:name=".ui.me.ServerHistActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.CollectListActivity"
+            android:name=".ui.dashboard.CollectListActivity"
             android:exported="false" />
         <activity
             android:name=".ui.dashboard.TestActivity"
@@ -110,6 +119,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <receiver
+            android:name=".ui.home.TimeReceiver"
+            android:process=":remote" />
     </application>
 
 </manifest>

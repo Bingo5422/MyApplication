@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.myapplication.MainActivity;
 
@@ -91,6 +92,47 @@ public class PhotoUtil {
             fos.flush();
             fos.close();
         } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return targetFile;
+    }
+
+    public static File compressPhoto(File file, int scale,String targetFilePath) {
+        //String photo_path = MainActivity.getContext().getFilesDir() + File.separator + "photos" + File.separator + "temp.jpg";
+        File targetFile = new File(targetFilePath);
+        try {
+            if (!targetFile.exists()) {
+                if (!targetFile.getParentFile().exists()){
+                    targetFile.getParentFile().mkdirs();
+                }
+
+                targetFile.createNewFile();
+            }
+        } catch (IOException e) {
+            Log.d("PhotoUtil", "compressPhoto: create file exception");
+            throw new RuntimeException(e);
+        }
+
+        int degree = imgDegree(file.getAbsolutePath());
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+        bitmap = rotateImage(bitmap, degree);
+        Bitmap resultBitmap = Bitmap.createBitmap(bitmap.getWidth() / scale, bitmap.getHeight() / scale, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(resultBitmap);
+        RectF rectF = new RectF(0, 0, resultBitmap.getWidth(), resultBitmap.getHeight());
+        canvas.drawBitmap(bitmap, null, rectF, null);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        resultBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+
+        try {
+            FileOutputStream fos = new FileOutputStream(targetFile);
+            fos.write(bos.toByteArray());//覆盖
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            Log.d("PhotoUtil", "compressPhoto: zip exception");
             e.printStackTrace();
             return null;
         }

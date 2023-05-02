@@ -103,4 +103,9 @@
         <item>French</item>
     </string-array>
 
+    <string-array name="api">
+        <item>Xunfei</item>
+        <item>Baidu</item>
+    </string-array>
+
 </resources>

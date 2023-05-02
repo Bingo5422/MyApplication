@@ -79,4 +79,22 @@
             android:textSize="20sp" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/iv_pre"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/one_dir_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/two_dir_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
