@@ -35,7 +35,7 @@
             android:layout_toLeftOf="@+id/menu_select"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_language"/>
+            android:src="@drawable/ic_alarm"/>
 
         <ImageView
             android:id="@+id/calendar"
@@ -44,7 +44,7 @@
             android:layout_toLeftOf="@+id/timer"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_language"/>
+            android:src="@drawable/ic_calendar"/>
 
     </RelativeLayout>
 

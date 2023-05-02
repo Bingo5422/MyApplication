@@ -90,6 +90,11 @@ public class FileUtil {
 			ZipEntry entry;
 			ZipFile zipfile = new ZipFile(filePath);
 
+			File photofile = new File(outputDir);
+			if (!photofile.exists()) {
+				photofile.mkdir();
+			}
+
 			Enumeration dir = zipfile.entries();
 			while (dir.hasMoreElements()){
 				entry = (ZipEntry) dir.nextElement();

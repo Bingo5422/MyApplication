@@ -133,7 +133,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         createMessageNotificationChannel(channel_msg);
         NotificationCompat.Builder notify_builder =
                 new NotificationCompat.Builder(ServerUploadActivity.this, channel_msg);
-        notify_builder.setSmallIcon(R.drawable.ic_launcher_background) // //小图标
+        notify_builder.setSmallIcon(R.drawable.ic_synchro) // //小图标
                 .setContentTitle(content_title)  //通知标题
                 .setAutoCancel(true);  //点击通知后关闭通知
 
@@ -406,7 +406,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 createMessageNotificationChannel("message4");
                 NotificationCompat.Builder notify_builder2 =
                         new NotificationCompat.Builder(ServerUploadActivity.this, "message4");
-                notify_builder2.setSmallIcon(R.drawable.ic_launcher_background) // //小图标
+                notify_builder2.setSmallIcon(R.drawable.ic_synchro) // //小图标
                         .setContentTitle("Downloading unfamiliar words")  //通知标题
                         .setAutoCancel(true);  //点击通知后关闭通知
 
@@ -566,7 +566,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         // 创建渠道和notification用于展示下载进度
         createMessageNotificationChannel("message1");
         NotificationCompat.Builder notify_builder = new NotificationCompat.Builder(ServerUploadActivity.this, "message1");
-        notify_builder.setSmallIcon(R.drawable.ic_launcher_background) // //小图标
+        notify_builder.setSmallIcon(R.drawable.ic_synchro) // //小图标
                 .setContentTitle("Downloading your favorites")  //通知标题
                 .setAutoCancel(true);  //点击通知后关闭通知
 

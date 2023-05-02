@@ -56,8 +56,9 @@
         android:id="@+id/server_his_toolbar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginRight="30dp"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:gravity="right|center"
         app:layout_constraintBottom_toBottomOf="parent">
 
 
@@ -72,16 +73,16 @@
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/server_hist_download"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Download"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:gravity="center" />
+<!--    <TextView-->
+<!--        android:id="@+id/server_hist_download"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Download"-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        android:layout_marginRight="20dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        android:gravity="center" />-->
 
 
     <androidx.recyclerview.widget.RecyclerView

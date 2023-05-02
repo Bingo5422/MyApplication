@@ -83,7 +83,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_hist);
         server_hist_delete = findViewById(R.id.server_hist_delete);
-        server_hist_download = findViewById(R.id.server_hist_download);
+//        server_hist_download = findViewById(R.id.server_hist_download);
 
         RecDataBase recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase")
                 .allowMainThreadQueries().build();
@@ -116,118 +116,119 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         initData();
         initViews();
 
-        /**下载按钮触发。这里就是同步到本地！！会覆盖本地的收藏夹**/
-        server_hist_download.setOnClickListener(new View.OnClickListener() {
-
-            //todo 加一个同步提示
-            @Override
-            public void onClick(View view) {
-                JSONObject json = new JSONObject();
-                for(int i=0;i<dataArray.size();i++){
-                    // 把获取的文件信息储存在json对象中
-                    try {
-                        String filename = dataArray.get(i).getFilename();
-                        //根据文件名查询本地数据库，图片是否已经存在，若不存在再加入下载列表
-                        List<HistoryBean> b =  historyDao.queryByFilename(filename);
-                        if(b.isEmpty()){
-                            json.put(filename, 1);
-                        }
-
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                // 发送下载请求，是一个包含文件名的json文档
-                String url = DomainURL + "/hist/download_zip";
-                RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(json));
-                Request request = new Request.Builder()
-                        .url(url)
-                        .post(body)
-                        .build();
-
-                cookie = client.cookieJar().loadForRequest(request.url());
-                request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
-
-
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        System.out.println("fail to connect to server");
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        InputStream is = null;
-                        byte[] buf = new byte[4096];
-                        int len = 0;
-                        FileOutputStream fos = null;
-                        // savePath: 服务器的图片会打包成zip下载到本地的位置，改成需要的路径
-                        String savePath = ServerHistActivity.this.getFilesDir().getAbsolutePath();
-                        try {
-                            is = response.body().byteStream();
-
-                            File file = new File(savePath,"pack.zip");
-                            fos = new FileOutputStream(file);
-
-                            while ((len = is.read(buf)) != -1) {
-                                fos.write(buf, 0, len);
-//                        sum += len;
-//                        int progress = (int) (sum * 1.0f / total * 100);
-                                // 下载中
-                            }
-                            fos.flush();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        String zipPath = savePath + "/pack.zip";
-                        // 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
-                        FileUtil.unzip(zipPath, savePath+"/photos");
-
-                        // 本地的收藏夹清空
-                        historyDao.clearAllStars();
-                        // 遍历dataArray，把每个被选中的条目信息保存到本地数据库，如果已经存在，则只把收藏设置为1
-                        // 每个CheckBean里有相关内容，但不要保存bitmap，用上面解压的图片来保存图片信息
-                        for(int i=0;i<dataArray.size();i++){
-                            CheckBean bean = dataArray.get(i);
-                            // 如果本地没有对应的数据，存相关信息
-                            if(historyDao.queryByFilename(bean.getFilename()).isEmpty()) {
-                                HistoryBean historyBean = new HistoryBean();
-                                historyBean.setName(bean.getName());
-                                historyBean.setPath(savePath + "/photos/" + bean.getFilename());
-                                historyBean.setDateTime(bean.getDatetime());
-                                historyBean.setCode(bean.getCode());
-                                historyBean.setEnName(bean.getEnName());
-                                historyBean.setNum(bean.getProficiency());
-                                historyBean.setFraName(bean.getFraName());
-                                historyBean.setJpName(bean.getJpName());
-                                historyBean.setSpaName(bean.getSpaName());
-                                historyBean.setKorName(bean.getKorName());
-                                historyBean.setFileName(bean.getFilename());
-                                historyBean.setIf_star(1);
-                                historyDao.insertHistory(historyBean);
-                            }
-                            // 如果本地有，则设置为收藏
-                            else{
-                                historyDao.updateStar_byFilename(1, bean.getFilename());
-                            }
-                        }
-
-                        if(Looper.myLooper()==null)
-                            Looper.prepare();
-                        Toast.makeText(ServerHistActivity.this,
-                                "Successfully synchronized to local star folder.",Toast.LENGTH_SHORT).show();
-                        Looper.loop();
-
-
-                    }
-                });
-
-//                checkedList.clear(); // 清空被选择的所有项目
-
-            }
-        });
+// download部分取消
+//        /**下载按钮触发。这里就是同步到本地！！会覆盖本地的收藏夹**/
+//        server_hist_download.setOnClickListener(new View.OnClickListener() {
+//
+//            //todo 加一个同步提示
+//            @Override
+//            public void onClick(View view) {
+//                JSONObject json = new JSONObject();
+//                for(int i=0;i<dataArray.size();i++){
+//                    // 把获取的文件信息储存在json对象中
+//                    try {
+//                        String filename = dataArray.get(i).getFilename();
+//                        //根据文件名查询本地数据库，图片是否已经存在，若不存在再加入下载列表
+//                        List<HistoryBean> b =  historyDao.queryByFilename(filename);
+//                        if(b.isEmpty()){
+//                            json.put(filename, 1);
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//
+//                // 发送下载请求，是一个包含文件名的json文档
+//                String url = DomainURL + "/hist/download_zip";
+//                RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(json));
+//                Request request = new Request.Builder()
+//                        .url(url)
+//                        .post(body)
+//                        .build();
+//
+//                cookie = client.cookieJar().loadForRequest(request.url());
+//                request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
+//
+//
+//                client.newCall(request).enqueue(new Callback() {
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//                        System.out.println("fail to connect to server");
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//                        InputStream is = null;
+//                        byte[] buf = new byte[4096];
+//                        int len = 0;
+//                        FileOutputStream fos = null;
+//                        // savePath: 服务器的图片会打包成zip下载到本地的位置，改成需要的路径
+//                        String savePath = ServerHistActivity.this.getFilesDir().getAbsolutePath();
+//                        try {
+//                            is = response.body().byteStream();
+//
+//                            File file = new File(savePath,"pack.zip");
+//                            fos = new FileOutputStream(file);
+//
+//                            while ((len = is.read(buf)) != -1) {
+//                                fos.write(buf, 0, len);
+////                        sum += len;
+////                        int progress = (int) (sum * 1.0f / total * 100);
+//                                // 下载中
+//                            }
+//                            fos.flush();
+//                        } catch (IOException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//
+//                        String zipPath = savePath + "/pack.zip";
+//                        // 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
+//                        FileUtil.unzip(zipPath, savePath+"/photos");
+//
+//                        // 本地的收藏夹清空
+//                        historyDao.clearAllStars();
+//                        // 遍历dataArray，把每个被选中的条目信息保存到本地数据库，如果已经存在，则只把收藏设置为1
+//                        // 每个CheckBean里有相关内容，但不要保存bitmap，用上面解压的图片来保存图片信息
+//                        for(int i=0;i<dataArray.size();i++){
+//                            CheckBean bean = dataArray.get(i);
+//                            // 如果本地没有对应的数据，存相关信息
+//                            if(historyDao.queryByFilename(bean.getFilename()).isEmpty()) {
+//                                HistoryBean historyBean = new HistoryBean();
+//                                historyBean.setName(bean.getName());
+//                                historyBean.setPath(savePath + "/photos/" + bean.getFilename());
+//                                historyBean.setDateTime(bean.getDatetime());
+//                                historyBean.setCode(bean.getCode());
+//                                historyBean.setEnName(bean.getEnName());
+//                                historyBean.setNum(bean.getProficiency());
+//                                historyBean.setFraName(bean.getFraName());
+//                                historyBean.setJpName(bean.getJpName());
+//                                historyBean.setSpaName(bean.getSpaName());
+//                                historyBean.setKorName(bean.getKorName());
+//                                historyBean.setFileName(bean.getFilename());
+//                                historyBean.setIf_star(1);
+//                                historyDao.insertHistory(historyBean);
+//                            }
+//                            // 如果本地有，则设置为收藏
+//                            else{
+//                                historyDao.updateStar_byFilename(1, bean.getFilename());
+//                            }
+//                        }
+//
+//                        if(Looper.myLooper()==null)
+//                            Looper.prepare();
+//                        Toast.makeText(ServerHistActivity.this,
+//                                "Successfully synchronized to local star folder.",Toast.LENGTH_SHORT).show();
+//                        Looper.loop();
+//
+//
+//                    }
+//                });
+//
+////                checkedList.clear(); // 清空被选择的所有项目
+//
+//            }
+//        });
 
         server_hist_delete.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
