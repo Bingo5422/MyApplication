@@ -198,7 +198,6 @@ public class MeFragment extends Fragment {
                             user_photo.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    //todo: 头像改为默认头像
                                     user_photo.setImageResource(R.mipmap.default_portrait);
                                 }
                             });

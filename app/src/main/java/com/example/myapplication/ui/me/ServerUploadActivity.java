@@ -4,10 +4,13 @@ import static com.example.myapplication.ui.me.MeFragment.DomainURL;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +32,8 @@ import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
 import com.example.myapplication.Utils.FileUtil;
+import com.example.myapplication.Utils.OkHttpProgress.ProgressHelper;
+import com.example.myapplication.Utils.OkHttpProgress.ProgressRequestListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +81,8 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
     private String savePath, info_path, download_path, delete_info_path;
     private int fileNum;
 
+    private NotificationManager notificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,11 +115,49 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    private void Upload(OkHttpClient client, String url, MultipartBody body){
+    private void Upload(OkHttpClient client, String url, MultipartBody body, String type){
+        /********从这开始都是新加的********/
+        String channel_msg = null;
+        String content_title = null;
+        final int notify_id;
+        if(type=="star"){
+            channel_msg = "message2";
+            content_title = "Uploading your favorites";
+            notify_id = 222;
+        }else{
+            channel_msg = "message3";
+            content_title = "Uploading unfamiliar words";
+            notify_id = 333;
+        }
+        // 创建渠道和notification用于展示下载进度
+        createMessageNotificationChannel(channel_msg);
+        NotificationCompat.Builder notify_builder =
+                new NotificationCompat.Builder(ServerUploadActivity.this, channel_msg);
+        notify_builder.setSmallIcon(R.drawable.ic_launcher_background) // //小图标
+                .setContentTitle(content_title)  //通知标题
+                .setAutoCancel(true);  //点击通知后关闭通知
+
+        // 带监听器request实现
+        ProgressRequestListener progressListener = new ProgressRequestListener() {
+            @Override
+            public void onRequestProgress(long bytesWrite, long contentLength, boolean done) {
+                int progress = (int) ((100 * bytesWrite) / contentLength);
+                notify_builder.setProgress(100, progress, false);
+                notify_builder.setContentText(progress + "%");
+                notificationManager.notify(notify_id, notify_builder.build());
+            }
+        };
+
         Request request = new Request.Builder()
                 .url(url)
-                .post(body)
+                .post(ProgressHelper.addProgressRequestListener(body, progressListener))
                 .build();
+        /***********到这结束**********/
+
+//        Request request = new Request.Builder()
+//                .url(url)
+//                .post(body)
+//                .build();
 
         cookie = client.cookieJar().loadForRequest(request.url());
         request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
@@ -132,6 +177,12 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 try {
                     res_msg = new JSONObject(response.body().string().toString());
                     if(res_msg.getBoolean("if_success")){
+
+                        /********从这开始都是新加的********/
+                        notify_builder.setContentText("Complete");
+                        notificationManager.notify(notify_id, notify_builder.build());
+                        /********到这结束********/
+
                         if(Looper.myLooper()==null)
                             Looper.prepare();
                         Toast.makeText(ServerUploadActivity.this,
@@ -271,8 +322,9 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 multipartBuilder.addFormDataPart(Integer.toString(fileNum),"delete.json",
                         (RequestBody.create(MediaType.parse("application/json;charset=utf-8"), delete_file)));
 
+
                 // 发送上传请求
-                Upload(client, DomainURL + "/hist/upload?upload="+type, multipartBuilder.build());
+                Upload(client, DomainURL + "/hist/upload?upload="+type, multipartBuilder.build(), type);
 
             }
         });
@@ -346,7 +398,17 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 InputStream is = null;
                 byte[] buf = new byte[4096];
                 int len = 0;
+                int sum = 0;
                 FileOutputStream fos = null;
+                float total = response.body().contentLength();
+
+                // 创建渠道和notification用于展示下载进度
+                createMessageNotificationChannel("message4");
+                NotificationCompat.Builder notify_builder2 =
+                        new NotificationCompat.Builder(ServerUploadActivity.this, "message4");
+                notify_builder2.setSmallIcon(R.drawable.ic_launcher_background) // //小图标
+                        .setContentTitle("Downloading unfamiliar words")  //通知标题
+                        .setAutoCancel(true);  //点击通知后关闭通知
 
                 try {
                     is = response.body().byteStream();
@@ -356,11 +418,16 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
                     while ((len = is.read(buf)) != -1) {
                         fos.write(buf, 0, len);
-//                        sum += len;
-//                        int progress = (int) (sum * 1.0f / total * 100);
+                        sum += len;
+                        int progress = (int) (sum * 1.0f / total * 100);
+                        notify_builder2.setProgress(100, progress, false);
+                        notify_builder2.setContentText(progress + "%");
+                        notificationManager.notify(444, notify_builder2.build());
                         // 下载中
                     }
                     fos.flush();
+                    notify_builder2.setContentText("Complete");
+                    notificationManager.notify(444, notify_builder2.build());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -496,6 +563,13 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         cookie = client.cookieJar().loadForRequest(request.url());
         request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
 
+        // 创建渠道和notification用于展示下载进度
+        createMessageNotificationChannel("message1");
+        NotificationCompat.Builder notify_builder = new NotificationCompat.Builder(ServerUploadActivity.this, "message1");
+        notify_builder.setSmallIcon(R.drawable.ic_launcher_background) // //小图标
+                .setContentTitle("Downloading your favorites")  //通知标题
+                .setAutoCancel(true);  //点击通知后关闭通知
+
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -508,7 +582,9 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 InputStream is = null;
                 byte[] buf = new byte[4096];
                 int len = 0;
+                int sum = 0;
                 FileOutputStream fos = null;
+                float total = response.body().contentLength();
 
                 try {
                     is = response.body().byteStream();
@@ -518,11 +594,20 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
                     while ((len = is.read(buf)) != -1) {
                         fos.write(buf, 0, len);
-//                        sum += len;
-//                        int progress = (int) (sum * 1.0f / total * 100);
+                        sum += len;
+                        int progress = (int) (sum * 1.0f / total * 100);
                         // 下载中
+                        //todo: 进度条显示
+                        notify_builder.setProgress(100, progress, false);
+                        notify_builder.setContentText(progress + "%");
+                        notificationManager.notify(111, notify_builder.build());
+
                     }
                     fos.flush();
+                    notify_builder.setContentText("Complete");
+                    notificationManager.notify(111, notify_builder.build());
+                    is.close();
+
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -598,6 +683,27 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
+
+    // 创建通知渠道
+    private void createMessageNotificationChannel(String msg_channel) {
+        //Build.VERSION.SDK_INT 代表操作系统的版本号
+        //Build.VERSION_CODES.O 版本号为26 对应的Android8.0版本
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = this.getString(R.string.app_name);
+//            NotificationChannel channel = new NotificationChannel(
+//                    MESSAGES_CHANNEL,
+//                    name,
+//                    NotificationManager.IMPORTANCE_HIGH
+//            );
+            NotificationChannel channel = new NotificationChannel(
+                    msg_channel,
+                    name,
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            notificationManager = this.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
     @Override
     public void onClick(View view) {

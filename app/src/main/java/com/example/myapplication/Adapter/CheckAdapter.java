@@ -84,7 +84,7 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
             super(itemView);
             item_enName_tv = itemView.findViewById(R.id.item_enName_tv);
             item_datetime_tv = itemView.findViewById(R.id.item_datetime_tv);
-            item_filename_tv = itemView.findViewById(R.id.item_filename_tv);
+//            item_filename_tv = itemView.findViewById(R.id.item_filename_tv);
             item_cb = itemView.findViewById(R.id.item_cb);
             item_content_ll = itemView.findViewById(R.id.item_content_ll);
             item_server_photo = itemView.findViewById(R.id.item_server_photo);

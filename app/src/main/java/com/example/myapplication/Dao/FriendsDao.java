@@ -2,6 +2,7 @@ package com.example.myapplication.Dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.myapplication.Bean.FriendsBean;
@@ -16,6 +17,16 @@ public interface FriendsDao {
     @Query("SELECT * FROM FriendsBean")
     List<FriendsBean> query();
     // @Query("insert into FriendsBean (id,name) values(001,tony)")
+
+//
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        void addFriend(FriendsBean friend);
+//
+        @Query("SELECT * FROM FriendsBean WHERE id = :Id")
+        FriendsBean getId(int Id);
+    @Query("SELECT COUNT(*) FROM FriendsBean")
+    int getFriendCount();
+
 
     @Insert
     void insert(FriendsBean bean);

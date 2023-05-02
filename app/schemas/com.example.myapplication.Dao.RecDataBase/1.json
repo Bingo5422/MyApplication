@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3260332198dafece76877b4918e6ada2",
+    "identityHash": "7e06d5dace8c39e85981989e1c754d4f",
     "entities": [
       {
         "tableName": "RecognitionBean",
@@ -214,7 +214,7 @@
       },
       {
         "tableName": "FriendsBean",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `path` TEXT, `name` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `path` TEXT, `name` TEXT, `email` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -231,6 +231,12 @@
           {
             "fieldPath": "name",
             "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -298,7 +304,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3260332198dafece76877b4918e6ada2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e06d5dace8c39e85981989e1c754d4f')"
     ]
   }
 }

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -70,6 +71,11 @@
         <activity
             android:name=".ui.dashboard.DetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.notifications.AddFriendActivity"
+            android:exported="true"/>
+        <activity android:name=".ui.notifications.ChatActivity"
+            android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

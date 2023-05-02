@@ -3,16 +3,23 @@ package com.example.myapplication.ui.notifications;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.myapplication.Adapter.FriendsAdapter;
+import com.example.myapplication.Adapter.HistoryAdapter;
 import com.example.myapplication.Bean.FriendsBean;
+import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Dao.FriendsDao;
+import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.R;
 
@@ -28,7 +35,7 @@ public class FriendsListActivity extends AppCompatActivity {
     private RecyclerView list;
     private FriendsAdapter adapter;
     private RecDataBase recDataBase;
-
+    private List<FriendsBean> l;
     private FriendsDao friendsDao;
     private FriendsBean friendsBean;
 
@@ -43,7 +50,7 @@ public class FriendsListActivity extends AppCompatActivity {
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").build();
         friendsDao = recDataBase.friendsDao();
         friendsBean = new FriendsBean();
-        insert();
+//        insert();
 
 
 
@@ -55,28 +62,38 @@ public class FriendsListActivity extends AppCompatActivity {
 
 
         //设置适配器
-        adapter = new FriendsAdapter();
-        list.setAdapter(adapter);
+
+//        adapter = new FriendsAdapter(l, new FriendsAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(FriendsBean friend) {
+//                // 点击某个好友后进入聊天页面
+//                Intent intent = new Intent(FriendsListActivity.this, ChatActivity.class);
+//                intent.putExtra("friendId", friendsBean.getId());
+//                startActivity(intent);
+//            }
+//        });
+//        list.setAdapter(adapter);
 
 
         loadHistory();
 
 
-    }
-    public void insert(){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Random r = new Random();
-                friendsBean.setId(r.nextInt(1000000));
-                friendsBean.setName("Tony");
-                friendsBean.setPath("");
-                friendsDao.insert(friendsBean);
-            }
-        }.start();
 
     }
+//    public void insert(){
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                super.run();
+//                Random r = new Random();
+//                friendsBean.setId(r.nextInt(1000000));
+//                friendsBean.setName("Tony");
+//                friendsBean.setPath("");
+//                friendsDao.insert(friendsBean);
+//            }
+//        }.start();
+//
+//    }
 
 
 
@@ -86,7 +103,7 @@ public class FriendsListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                List<FriendsBean> l= friendsDao.query();
+              l= friendsDao.query();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
