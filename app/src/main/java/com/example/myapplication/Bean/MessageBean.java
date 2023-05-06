@@ -1,14 +1,19 @@
 package com.example.myapplication.Bean;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity(tableName = "chat_records")
 public class MessageBean {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey(autoGenerate = false)
+    @NonNull
+    private String id;
 
     @ColumnInfo(name = "from_user")
     private String fromUser;
@@ -26,12 +31,13 @@ public class MessageBean {
     private String content;
 
     @ColumnInfo(name = "send_time")
-    private long sendTime;
+    private String sendTime;
 
 
 
 
-    public MessageBean(String fromUser, String toUser, String content, long sendTime, Boolean challenge) {
+    public MessageBean(String id, String fromUser, String toUser, String content, String sendTime, Boolean challenge) {
+        this.id = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.content = content;
@@ -44,11 +50,11 @@ public class MessageBean {
 
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -76,11 +82,11 @@ public class MessageBean {
         this.content = content;
     }
 
-    public long getSendTime() {
+    public String getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(long sendTime) {
+    public void setSendTime(String sendTime) {
         this.sendTime = sendTime;
     }
 }

@@ -17,7 +17,7 @@ public abstract class MessageBeanDatabase extends RoomDatabase {
     public static synchronized MessageBeanDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                            MessageBeanDatabase.class, "message_database")
+                            MessageBeanDatabase.class, "message_db")
                     .fallbackToDestructiveMigration()
                     .build();
         }

@@ -178,7 +178,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         FriendsBean bean = list.get(position);
-        holder.id.setText(bean.getId()+"");
+        holder.id.setText(bean.getEmail()+"");
         holder.name.setText(bean.getName());
 
 //        String path = bean.getPath();
@@ -228,7 +228,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
         void bind(FriendsBean friend) {
             mFriend = friend;
-            id.setText(friend.getId());
+            id.setText(friend.getEmail());
             name.setText(friend.getName());
         }
 

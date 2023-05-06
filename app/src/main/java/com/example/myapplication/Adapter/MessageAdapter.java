@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.myapplication.Bean.FriendsBean;
 import com.example.myapplication.Bean.MessageBean;
 import com.example.myapplication.R;
 import androidx.cardview.widget.CardView;
@@ -23,7 +24,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<MessageBean> mMessageList;
 
+    public void setList(List<MessageBean> list) {
+        this.mMessageList = list;
+        notifyDataSetChanged();//刷新
+    }
+
     public MessageAdapter(List<MessageBean> messageList, Context context) {
+        //知道自己是谁
         preferences = context.getSharedPreferences("USER_INFO", MODE_PRIVATE);
         userId =  preferences.getString("user_id", "");
         mMessageList = messageList;
