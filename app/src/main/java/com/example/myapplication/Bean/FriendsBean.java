@@ -1,11 +1,12 @@
 package com.example.myapplication.Bean;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Random;
 
-@Entity
+@Entity(indices = {@Index(value = {"email","name"},unique = true)})
 public class FriendsBean {
     @PrimaryKey(autoGenerate = true)
     private int id;

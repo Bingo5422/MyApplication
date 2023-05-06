@@ -43,7 +43,8 @@ public class MeFragment extends Fragment {
     private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
     private Uri uri;
 //    final static String DomainURL = "http://172.26.14.175:5000";
-    final static String DomainURL = "http://xintong.pythonanywhere.com";
+    final static String DomainURL = "http://192.168.117.21:5000";
+//    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
     private Button btn_login, btn_display, btn_edit_info, btn_synchro;
     private TextView text;
