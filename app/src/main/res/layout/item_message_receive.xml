@@ -3,23 +3,23 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/background"
-    android:gravity="center_vertical"
+    android:gravity="left"
     android:orientation="vertical"
     android:padding="8dp">
+
+    <TextView
+        android:id="@+id/time_text_view"
+        android:layout_width="8dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/deep_grey"
+        android:textSize="12sp" />
+
 
     <TextView
         android:id="@+id/message_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/deep_grey"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/time_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="5dp"
         android:textColor="@color/black"
-        android:textSize="12sp" />
-
+        android:textSize="16sp" />
 </LinearLayout>

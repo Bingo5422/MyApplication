@@ -29,7 +29,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="12sp"
             tools:text="ID"/>
         <TextView
             android:id="@+id/fri_name"

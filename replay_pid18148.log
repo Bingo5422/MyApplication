@@ -209,7 +209,7 @@ instanceKlass org/gradle/api/internal/artifacts/ivyservice/modulecache/ModuleSou
 instanceKlass org/gradle/api/internal/artifacts/ivyservice/modulecache/ModuleMetadataSerializer$Writer
 instanceKlass org/gradle/internal/resource/local/DefaultPathKeyFileStore$1
 instanceKlass org/gradle/api/internal/artifacts/ivyservice/modulecache/ModuleMetadataStore$$Lambda$1198
-instanceKlass org/gradle/api/internal/artifacts/ivyservice/modulecache/PersistentModuleMetadataCache$$Lambda$1197
+instanceKlass org/gradle/api/internal/artifacts/ivyservice/modulecache/PersistentModuleMetadataCache$$Lambda$1117
 instanceKlass org/gradle/internal/component/model/MutableModuleSources$$Lambda$1196
 instanceKlass org/gradle/api/internal/artifacts/ivyservice/ivyresolve/CachingModuleComponentRepository$1
 instanceKlass org/gradle/api/internal/artifacts/repositories/resolver/ExternalResourceResolverDescriptorParseContext$$Lambda$1195
@@ -9362,7 +9362,7 @@ instanceKlass com/google/common/collect/CollectCollectors$$Lambda$201
 instanceKlass com/google/common/collect/CollectCollectors$$Lambda$200
 instanceKlass com/google/common/collect/CollectCollectors$$Lambda$199
 instanceKlass com/google/common/collect/CollectCollectors$$Lambda$198
-instanceKlass com/google/common/collect/CollectCollectors$$Lambda$197
+instanceKlass com/google/common/collect/CollectCollectors$$Lambda$117
 instanceKlass com/google/common/collect/CollectCollectors$$Lambda$196
 instanceKlass com/google/common/collect/CollectCollectors
 instanceKlass org/gradle/internal/watch/registry/impl/AbstractFileWatcherUpdater$$Lambda$195
