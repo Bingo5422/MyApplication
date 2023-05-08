@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.me;
 
+import static com.example.myapplication.MainActivity.DomainURL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,13 +45,16 @@ public class MeFragment extends Fragment {
     private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
     private Uri uri;
 //    final static String DomainURL = "http://172.26.14.175:5000";
-    final static String DomainURL = "http://xintong.pythonanywhere.com";
+//    final static String DomainURL = "http://192.168.43.208:5000";
+//    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
     private Button btn_login, btn_display, btn_edit_info, btn_synchro;
     private TextView text;
     private ImageView user_photo;
     private JSONObject res;
     private SharedPreferences preferences;
+
+    static OkHttpClient client;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -129,10 +134,10 @@ public class MeFragment extends Fragment {
         }
 
         CookieJarImpl cookieJar = new CookieJarImpl(getActivity());
-        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar)
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
+        client = new OkHttpClient.Builder().cookieJar(cookieJar)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
                 .build();//创建OkHttpClient对象。
         // 为了正常格式的url创建的request对象
         Request request = new Request.Builder()
@@ -182,6 +187,7 @@ public class MeFragment extends Fragment {
                             editor.remove("user_id");
                             editor.remove("nickname");
                             editor.remove("photo");
+                            // todo 清除cookie（？不确定
                             editor.commit();
                             text.post(new Runnable() {
                                 @Override
@@ -269,7 +275,6 @@ public class MeFragment extends Fragment {
                 user_photo.post(new Runnable() {
                     @Override
                     public void run() {
-                        //todo 退出后更新为默认头像
                         user_photo.setImageResource(R.mipmap.default_portrait);
                     }
                 });

@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.notifications;
 
+import static com.example.myapplication.MainActivity.DomainURL;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -69,7 +71,7 @@ public class AddFriendActivity extends AppCompatActivity {
         CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         Request request = new Request.Builder()
-                .url("http://192.168.61.21:5000/addfriends/add/id?id="+friendId)
+                .url(DomainURL + "/addfriends/add/id?id="+friendId)
                 .build();
         client.newCall(request).enqueue(new Callback() {
 

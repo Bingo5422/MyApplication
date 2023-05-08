@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import java.net.CookieStore;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Cookie;
@@ -37,6 +38,23 @@ public class CookieJarImpl implements CookieJar {
             editor.remove(host+"value");
         }
 //         保存cookie, 对应方式为 host url - cookie
+        long expireDate = cookies.get(0).expiresAt();
+        Boolean bool = expireDate > System.currentTimeMillis();
+        long now = System.currentTimeMillis();
+        long one_day_after = now + 86400*1000;
+        Date tomorrow = new Date(one_day_after);
+
+//        long total_second = expireDate/1000;
+//        long total_minutes = total_second/60;
+//
+//        String x = String.valueOf(expireDate);
+//        String x13 = x.substring(0,x.length()-4);
+//        Date x_date = new Date(Long.valueOf(x13));
+//        long to_now = expireDate - now;
+//        long to_now_sec = to_now/1000;
+//
+//        Date datenow = new Date();
+//        Date expire = new Date(expireDate+System.currentTimeMillis());
         //主服务器对应名字
         editor.putString(url.host()+"name", cookies.get(0).name());
         editor.putString(url.host()+"value", cookies.get(0).value());

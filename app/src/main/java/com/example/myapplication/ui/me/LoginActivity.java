@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.me;
 
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -79,11 +81,11 @@ public class LoginActivity extends AppCompatActivity {
             CookieJarImpl cookieJar = new CookieJarImpl(LoginActivity.this);
             @Override
             public void onClick(View view) {
-                OkHttpClient client = new OkHttpClient.Builder()
-                        .connectTimeout(10,TimeUnit.SECONDS)
-                        .readTimeout(5, TimeUnit.SECONDS)
-                        .writeTimeout(5, TimeUnit.SECONDS)
-                        .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+//                OkHttpClient client = new OkHttpClient.Builder()
+//                        .connectTimeout(10,TimeUnit.SECONDS)
+//                        .readTimeout(5, TimeUnit.SECONDS)
+//                        .writeTimeout(5, TimeUnit.SECONDS)
+//                        .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
                 // 登录为阻塞请求
                 new Thread(new Runnable() {
@@ -249,7 +251,6 @@ public class LoginActivity extends AppCompatActivity {
                 byte[] buf = new byte[4096];
                 int len = 0;
 
-                //todo 改为需要的头像存储路径
                 String TargetPath = getExternalFilesDir("Load_from_server").getAbsolutePath();
                 File saveFile = new File(TargetPath, "photo.jpg");
 

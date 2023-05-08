@@ -51,6 +51,7 @@
             android:id="@+id/et_new_nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/brown"
             android:textSize="15sp" />
 

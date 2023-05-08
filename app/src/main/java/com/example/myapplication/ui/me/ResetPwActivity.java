@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.me;
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -54,7 +56,8 @@ public class ResetPwActivity extends AppCompatActivity {
                 String url = DomainURL+"/auth/reset_pw";
 
                 CookieJarImpl cookieJar = new CookieJarImpl(ResetPwActivity.this);
-                OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
+                client.newBuilder().cookieJar(cookieJar).build(); // 新加的一段
+//                OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
                 FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
                 formBody.add("password", et_reset_pw.getText().toString());
                 formBody.add("password_confirm", et_confirm_reset_pw.getText().toString());

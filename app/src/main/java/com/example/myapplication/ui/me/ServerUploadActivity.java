@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.me;
 
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -76,7 +78,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
     private HistoryDao historyDao;
     private List<Cookie> cookie;
     private JSONObject server_list, star_list;
-    private OkHttpClient client;
+//    private OkHttpClient client;
     //修改info_path, delete_info_path 选择合适的路径保存json文档，该文档可以放在和图片一样的路径
     private String savePath, info_path, download_path, delete_info_path;
     private int fileNum;
@@ -154,16 +156,14 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 .build();
         /***********到这结束**********/
 
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .post(body)
-//                .build();
 
         cookie = client.cookieJar().loadForRequest(request.url());
         request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
         client.newCall(request).enqueue(new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
+                notify_builder.setContentText("Failed");
+                notificationManager.notify(notify_id, notify_builder.build());
                 if(Looper.myLooper()==null)
                     Looper.prepare();
                 Toast.makeText(ServerUploadActivity.this,
@@ -179,6 +179,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                     if(res_msg.getBoolean("if_success")){
 
                         /********从这开始都是新加的********/
+                        notify_builder.setProgress(100, 100, false);
                         notify_builder.setContentText("Complete");
                         notificationManager.notify(notify_id, notify_builder.build());
                         /********到这结束********/
@@ -189,6 +190,11 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                                 "Successfully uploaded.",Toast.LENGTH_SHORT).show();
                         Looper.loop();
                     }else{
+                        /********从这开始都是新加的********/
+                        notify_builder.setContentText("Interrupted");
+                        notificationManager.notify(notify_id, notify_builder.build());
+                        /********到这结束********/
+
                         if(Looper.myLooper()==null)
                             Looper.prepare();
                         Toast.makeText(ServerUploadActivity.this,
@@ -244,8 +250,13 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 //服务器没有的图片加入multipartbody准备上传
                 if(!server_list.has(bean.getFileName())) {
                     File file = new File(bean.getPath());
+//                    String f = bean.getFileName();
+//                    String[] s = f.split("\\.");
+                    String filetype = bean.getFileName().split("\\.")[1];
+//                    multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),
+//                            (RequestBody.create(MediaType.parse("image/*jpg"), file)));
                     multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),
-                            (RequestBody.create(MediaType.parse("image/*jpg"), file)));
+                            (RequestBody.create(MediaType.parse("image/*"+filetype), file)));
                     fileNum++;
                 }
                 else{
@@ -698,7 +709,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             NotificationChannel channel = new NotificationChannel(
                     msg_channel,
                     name,
-                    NotificationManager.IMPORTANCE_HIGH
+                    NotificationManager.IMPORTANCE_DEFAULT // 原来是importance high
             );
             notificationManager = this.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -709,11 +720,16 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
 
         CookieJarImpl cookieJar = new CookieJarImpl(ServerUploadActivity.this);
-        client = new OkHttpClient.Builder()
+        client.newBuilder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
                 .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+//        client = new OkHttpClient.Builder()
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(5, TimeUnit.SECONDS)
+//                .readTimeout(5, TimeUnit.SECONDS)
+//                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
         if(view.getId()==R.id.btn_upload_stars){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
@@ -767,13 +783,53 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
         }
         else if(view.getId()==R.id.btn_download_stars){
-            starCompare_and_download();
+            AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
+                    .setTitle("Warn")//设置对话框的标题
+                    .setMessage("This operation will overwrite your local favorites" +
+                            "\nAre you sure you want to continue?")//设置对话框的内容
+                    //设置对话框的按钮
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            starCompare_and_download();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create();
+            dialog.show();
+
         }
         else if(view.getId()==R.id.btn_download_unfamiliar){
-            List<HistoryBean> local_unfamiliar = historyDao.queryNumLow3();
-            localCompare_and_download(client,
-                    DomainURL + "/hist/filename_list_unfamiliar",
-                    local_unfamiliar);
+            AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
+                    .setTitle("Warn")//设置对话框的标题
+                    .setMessage(
+                            "All unfamiliar words downloaded will not be in your favorites." +
+                                    "Please sync your favorites after the download.\n" +
+                                    "Are you sure you want to continue?")//设置对话框的内容
+                    //设置对话框的按钮
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            List<HistoryBean> local_unfamiliar = historyDao.queryNumLow3();
+                            localCompare_and_download(client,
+                                    DomainURL + "/hist/filename_list_unfamiliar",
+                                    local_unfamiliar);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create();
+            dialog.show();
+
         }
     }
 }

@@ -27,7 +27,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+
+
 public class MainActivity extends AppCompatActivity {
+    public final static String DomainURL = "http://xintong.pythonanywhere.com";
+//    public final static String DomainURL = "http://172.26.14.175:5000";
+//    public final static String DomainURL = "http://192.168.43.208:5000";
 
     private ActivityMainBinding binding;
     public static final String CHANNEL_ID = "default";

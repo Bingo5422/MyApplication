@@ -1,12 +1,8 @@
 package com.example.myapplication.ui.me;
 
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
 
 import android.Manifest;
 import android.content.Context;
@@ -21,12 +17,14 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
@@ -43,8 +41,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -64,7 +60,7 @@ public class EditInfoActivity extends AppCompatActivity {
     private LinearLayout ll_edit_photo, ll_edit_name;
     private ImageView iv_edit_user_photo;
     private TextView tv_edit_nickname;
-    private OkHttpClient client;
+//    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,11 +74,15 @@ public class EditInfoActivity extends AppCompatActivity {
 
 
         CookieJarImpl cookieJar = new CookieJarImpl(EditInfoActivity.this);
-        client = new OkHttpClient.Builder()
+        client.newBuilder().cookieJar(cookieJar)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+                .readTimeout(5, TimeUnit.SECONDS).build();
+//        client = new OkHttpClient.Builder()
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(5, TimeUnit.SECONDS)
+//                .readTimeout(5, TimeUnit.SECONDS)
+//                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
         setInfo();  //设置初始值
 

@@ -241,6 +241,8 @@
 
 package com.example.myapplication.ui.notifications;
 
+import static com.example.myapplication.MainActivity.DomainURL;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -399,7 +401,7 @@ public class NotificationsFragment extends Fragment  {
         // CookieJarImpl cookieJar = new CookieJarImpl(NotificationsFragment.getContext());
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         Request request = new Request.Builder()
-                .url("http://192.168.184.21:5000/addfriends/list")
+                .url(DomainURL + "/addfriends/list")
                 .build();
         client.newCall(request).enqueue(new Callback() {
 
@@ -425,7 +427,12 @@ public class NotificationsFragment extends Fragment  {
                         FriendsBean friend = new FriendsBean();
                         friend.setEmail(email);
                         friend.setName(value);
-                        friendsDao.insert(friend);
+                        try{
+                            friendsDao.insert(friend);
+                        }catch (Exception e){
+                            Log.e("Exception",e.toString());
+                        }
+
                     }
                     loadHistory();
                 } catch (JSONException e) {

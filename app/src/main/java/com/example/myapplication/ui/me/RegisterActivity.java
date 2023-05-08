@@ -1,5 +1,8 @@
 package com.example.myapplication.ui.me;
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -68,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String url = DomainURL+"/auth/register";
 
-                OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
+//                OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
                 FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
                 formBody.add("user_email", et_email.getText().toString()); //传递键值对参数
                 formBody.add("password", et_password.getText().toString());
@@ -97,8 +100,9 @@ public class RegisterActivity extends AppCompatActivity {
                         try {
                             res_json = new JSONObject(res);
                             if (res_json.getBoolean("if_success")) {
+                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                 Looper.prepare();
-                                Toast.makeText(MainActivity.getContext(), "Successfully Registered", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.getContext(), "Successfully Registered. Please login.", Toast.LENGTH_SHORT).show();
                                 Looper.loop();
                             } else {
                                 tv_error_info.post(new Runnable() {
@@ -129,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (et_email.length()!=0) {
                     String url = DomainURL + "/auth/captcha/email?email=" + et_email.getText();
 
-                    OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
+//                    OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
                     Request request = new Request.Builder()//创建Request 对象。
                             .url(url)
                             .build();

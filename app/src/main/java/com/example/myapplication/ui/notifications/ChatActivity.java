@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.notifications;
 
+import static com.example.myapplication.MainActivity.DomainURL;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,7 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        String url = "http://192.168.61.21:5000/auth/login";
+        String url = DomainURL + "/auth/login";
 
         // 初始化 RecyclerView 和适配器
         mRecyclerView = findViewById(R.id.recycler_view);
@@ -174,7 +176,7 @@ public class ChatActivity extends AppCompatActivity {
         public static void getmessage(){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://192.168.61.21:5000/challenge/getmessage")
+                .url(DomainURL + "/challenge/getmessage")
                 .build();
         try {
             Response response = client.newCall(request).execute();

@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.me;
 
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +22,7 @@ import com.example.myapplication.Utils.CookieJarImpl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cookie;
 import okhttp3.FormBody;
@@ -53,8 +56,12 @@ public class EditNameActivity extends AppCompatActivity {
     }
     private void SubmitSuccessProcess(){
         CookieJarImpl cookieJar = new CookieJarImpl(EditNameActivity.this);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .cookieJar(cookieJar).build();
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .cookieJar(cookieJar).build();
+        client.newBuilder().cookieJar(cookieJar)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS).build();
 
         FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
         formBody.add("nickname", String.valueOf(et_new_nickname.getText()));//传递键值对参数
@@ -75,7 +82,7 @@ public class EditNameActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("nickname", String.valueOf(et_new_nickname.getText()));
                     editor.commit();
-                    startActivity(new Intent(EditNameActivity.this, MainActivity.class));
+                    startActivity(new Intent(EditNameActivity.this, EditInfoActivity.class));
                     Looper.prepare();
                     Toast.makeText(MainActivity.getContext(), "Submit " +
                             "Successfully", Toast.LENGTH_SHORT).show();
