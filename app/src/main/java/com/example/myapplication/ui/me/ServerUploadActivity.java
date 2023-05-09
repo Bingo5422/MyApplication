@@ -242,6 +242,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
 
                 //服务器没有的图片加入multipartbody准备上传
+                //上传图片
                 if(!server_list.has(bean.getFileName())) {
                     File file = new File(bean.getPath());
                     multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),

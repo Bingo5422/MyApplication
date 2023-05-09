@@ -372,7 +372,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             }
         });
     }
-
+//返回数据-----------------
     private void initData(){
         dataArray = new ArrayList<>();
         String url = DomainURL + "/hist/list";
