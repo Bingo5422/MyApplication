@@ -1,0 +1,100 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.example.myapplication'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.myapplication"
+        minSdk 26
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //解决room报错
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
+    }
+
+
+//    aaptOptions {
+//        cruncherEnabled = false
+//    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        viewBinding true
+    }
+
+    //couldn't find "libmsc.so"
+    sourceSets {
+        main {
+            // 这句话的意思是，jniLibs 下的so库，直接映射到libs目录下
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+dependencies {
+    //Activity result api
+//    implementation 'androidx.activity:activity:1.2.0-beta01'
+//    implementation 'androidx.fragment:fragment:1.3.0-beta01'
+
+    //okhttp
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.navigation:navigation-fragment:2.4.1'
+    implementation 'androidx.navigation:navigation-ui:2.4.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.navigation:navigation-runtime:2.4.1'
+
+    //读Excel
+//    implementation 'commons-codec:commons-codec:1.11'
+    implementation files('libs/poi-3.12-android-a.jar')
+    implementation files('libs/commons-codec.jar')
+    implementation files('libs/poi-ooxml-schemas-3.12-20150511-a.jar')
+    implementation files('libs/Msc.jar')
+    implementation files('libs\\Msc.jar')
+
+
+    //room数据库框架
+    def room_version = "2.4.2"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    //百度识别需要的依赖
+    implementation 'com.google.code.gson:gson:2.8.2'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+
+
+
+}
+

@@ -1,0 +1,14 @@
+<!--<network-security-config>-->
+<!--    &lt;!&ndash;第一种&ndash;&gt;-->
+<!--    <domain-config cleartextTrafficPermitted="true">-->
+<!--        &lt;!&ndash;允许以下网址使用非安全的连接&ndash;&gt;-->
+<!--        <domain includeSubdomains="true">example.com</domain>-->
+<!--    </domain-config>-->
+<!--</network-security-config>-->
+
+<network-security-config>
+    <!--第二种-->
+    <!--默认允许所有网址使用非安全连接-->
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>
+
