@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -57,31 +60,31 @@ public class Test2Activity extends AppCompatActivity {
         binding = ActivityTest2Binding.inflate(getLayoutInflater());
         sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
         setContentView(binding.getRoot());
-        binding.btnA.setOnClickListener(new View.OnClickListener() {
+        binding.ivA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerControl(binding.btnA);
+                answerControl(binding.tvA, (ImageView) view);
             }
         });
 
-        binding.btnB.setOnClickListener(new View.OnClickListener() {
+        binding.ivB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerControl(binding.btnB);
+                answerControl(binding.tvB, (ImageView) view);
             }
         });
 
-        binding.btnC.setOnClickListener(new View.OnClickListener() {
+        binding.ivC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerControl(binding.btnC);
+                answerControl(binding.tvC, (ImageView) view);
             }
         });
 
-        binding.btnD.setOnClickListener(new View.OnClickListener() {
+        binding.ivD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerControl(binding.btnD);
+                answerControl(binding.tvD, (ImageView) view);
             }
         });
 
@@ -97,15 +100,11 @@ public class Test2Activity extends AppCompatActivity {
                 if (buttonControl && question < total) {
                     loadQuestions();
 
-                    binding.btnA.setClickable(true);
-                    binding.btnB.setClickable(true);
-                    binding.btnC.setClickable(true);
-                    binding.btnD.setClickable(true);
+                    binding.ivA.setClickable(true);
+                    binding.ivB.setClickable(true);
+                    binding.ivC.setClickable(true);
+                    binding.ivD.setClickable(true);
 
-//                    binding.btnA.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnB.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnC.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnD.setBackgroundColor(getResources().getColor(R.color.button));
                 } else if (question == total) {
 
                     Calendar c = Calendar.getInstance();
@@ -197,43 +196,43 @@ public class Test2Activity extends AppCompatActivity {
 
         String lan = sp.getString("lan", "Chinese");
         if (lan.equals("Spanish")) {
-            binding.btnA.setText(options.get(0).getSpaName());
-            binding.btnB.setText(options.get(1).getSpaName());
-            binding.btnC.setText(options.get(2).getSpaName());
-            binding.btnD.setText(options.get(3).getSpaName());
+            binding.tvA.setText(options.get(0).getSpaName());
+            binding.tvB.setText(options.get(1).getSpaName());
+            binding.tvC.setText(options.get(2).getSpaName());
+            binding.tvD.setText(options.get(3).getSpaName());
         } else if (lan.equals("Japanese")) {
-            binding.btnA.setText(options.get(0).getJpName());
-            binding.btnB.setText(options.get(1).getJpName());
-            binding.btnC.setText(options.get(2).getJpName());
-            binding.btnD.setText(options.get(3).getJpName());
+            binding.tvA.setText(options.get(0).getJpName());
+            binding.tvB.setText(options.get(1).getJpName());
+            binding.tvC.setText(options.get(2).getJpName());
+            binding.tvD.setText(options.get(3).getJpName());
         } else if (lan.equals("Korean")) {
-            binding.btnA.setText(options.get(0).getKorName());
-            binding.btnB.setText(options.get(1).getKorName());
-            binding.btnC.setText(options.get(2).getKorName());
-            binding.btnD.setText(options.get(3).getKorName());
+            binding.tvA.setText(options.get(0).getKorName());
+            binding.tvB.setText(options.get(1).getKorName());
+            binding.tvC.setText(options.get(2).getKorName());
+            binding.tvD.setText(options.get(3).getKorName());
         }else if (lan.equals("French")) {
-            binding.btnA.setText(options.get(0).getFraName());
-            binding.btnB.setText(options.get(1).getFraName());
-            binding.btnC.setText(options.get(2).getFraName());
-            binding.btnD.setText(options.get(3).getFraName());
+            binding.tvA.setText(options.get(0).getFraName());
+            binding.tvB.setText(options.get(1).getFraName());
+            binding.tvC.setText(options.get(2).getFraName());
+            binding.tvD.setText(options.get(3).getFraName());
         }else {
-            binding.btnA.setText(options.get(0).getName());
-            binding.btnB.setText(options.get(1).getName());
-            binding.btnC.setText(options.get(2).getName());
-            binding.btnD.setText(options.get(3).getName());
+            binding.tvA.setText(options.get(0).getName());
+            binding.tvB.setText(options.get(1).getName());
+            binding.tvC.setText(options.get(2).getName());
+            binding.tvD.setText(options.get(3).getName());
         }
 
 
-        binding.btnA.setBackground(Drawable.createFromPath(options.get(0).getPath()));
-        binding.btnB.setBackground(Drawable.createFromPath(options.get(1).getPath()));
-        binding.btnC.setBackground(Drawable.createFromPath(options.get(2).getPath()));
-        binding.btnD.setBackground(Drawable.createFromPath(options.get(3).getPath()));
+        binding.ivA.setImageDrawable(Drawable.createFromPath(options.get(0).getPath()));
+        binding.ivB.setImageDrawable(Drawable.createFromPath(options.get(1).getPath()));
+        binding.ivC.setImageDrawable(Drawable.createFromPath(options.get(2).getPath()));
+        binding.ivD.setImageDrawable(Drawable.createFromPath(options.get(3).getPath()));
 
 
         binding.llEmpty.setVisibility(View.GONE);
     }
 
-    public void answerControl(Button btn) {
+    public void answerControl(TextView btn, ImageView iv) {
         String buttonText = btn.getText().toString();
         String correctAnswer = "";
         String lan = sp.getString("lan", "Chinese");
@@ -251,32 +250,32 @@ public class Test2Activity extends AppCompatActivity {
 
         if (buttonText.equals(correctAnswer)) {
             correct++;
-            btn.setBackgroundColor(Color.GREEN);
+            iv.setImageDrawable(new ColorDrawable(Color.GREEN));
             HistoryBean bean = questionsList.get(question);
             int num = bean.getNum();
             historyDao.updateNum(bean.getId(), num + 1);
             bean.setNum(num + 1);
         } else {
             wrong++;
-            btn.setBackgroundColor(Color.BLUE);
+            iv.setImageDrawable(new ColorDrawable(Color.BLUE));
 
-            if (binding.btnA.getText().toString().equals(correctAnswer)) {
-                binding.btnA.setBackgroundColor(Color.GREEN);
+            if (binding.tvA.getText().toString().equals(correctAnswer)) {
+                binding.ivA.setImageDrawable(new ColorDrawable(Color.GREEN));
             }
-            if (binding.btnB.getText().toString().equals(correctAnswer)) {
-                binding.btnB.setBackgroundColor(Color.GREEN);
+            if (binding.tvB.getText().toString().equals(correctAnswer)) {
+                binding.ivB.setImageDrawable(new ColorDrawable(Color.GREEN));
             }
-            if (binding.btnC.getText().toString().equals(correctAnswer)) {
-                binding.btnC.setBackgroundColor(Color.GREEN);
+            if (binding.tvC.getText().toString().equals(correctAnswer)) {
+                binding.ivC.setImageDrawable(new ColorDrawable(Color.GREEN));
             }
-            if (binding.btnD.getText().toString().equals(correctAnswer)) {
-                binding.btnD.setBackgroundColor(Color.GREEN);
+            if (binding.tvD.getText().toString().equals(correctAnswer)) {
+                binding.ivD.setImageDrawable(new ColorDrawable(Color.GREEN));
             }
         }
-        binding.btnA.setClickable(false);
-        binding.btnB.setClickable(false);
-        binding.btnC.setClickable(false);
-        binding.btnD.setClickable(false);
+        binding.ivA.setClickable(false);
+        binding.ivB.setClickable(false);
+        binding.ivC.setClickable(false);
+        binding.ivD.setClickable(false);
 
         binding.tvCorrect.setText("Correct: " + correct);
         binding.tvWrong.setText("Wrong: " + wrong);
