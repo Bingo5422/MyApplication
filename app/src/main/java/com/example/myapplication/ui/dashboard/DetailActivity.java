@@ -10,6 +10,7 @@ import androidx.room.Room;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.Dao.RecordDao;
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.databinding.ActivityDetailBinding;
 
 import java.util.Calendar;
@@ -22,7 +23,7 @@ public class DetailActivity extends AppCompatActivity {
     private HistoryDao historyDao;
     private RecordDao recordDao;
     private ActivityDetailBinding binding;
-
+    SharedPreferences sp ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +55,16 @@ public class DetailActivity extends AppCompatActivity {
         int days = recordDao.countLoginDays();
         binding.tvCountDay.setText("" + days);
 
-        SharedPreferences sp = getSharedPreferences("sp", MODE_PRIVATE);
-        long startTime = sp.getLong("startTime", 0);
-        long endTime = sp.getLong("endTime", 0);
+        sp = getSharedPreferences("sp", MODE_PRIVATE);
+        long startTime = sp.getLong(MainActivity.today+"startTime", 0);
+        long endTime = sp.getLong(MainActivity.today+"endTime", 0);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(endTime-startTime);
         binding.tvTodayTime.setText("" + minutes);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sp.edit().putLong(MainActivity.today+"endTime", System.currentTimeMillis()).commit();
     }
 }

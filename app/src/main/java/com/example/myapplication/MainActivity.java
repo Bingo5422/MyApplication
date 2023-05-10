@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 //    public final static String DomainURL = "http://172.26.14.175:5000";
 //    public final static String DomainURL = "http://192.168.43.208:5000";
 
+
     private ActivityMainBinding binding;
     public static final String CHANNEL_ID = "default";
 
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences sp;
     long startTime = -1;
+    public static String today = "";
+    public static final int MAX_COUNT = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,34 +66,12 @@ public class MainActivity extends AppCompatActivity {
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH) + 1;
         int day = c.get(Calendar.DAY_OF_MONTH);
-        String key = year + "-" + month + "-" + day;
 
-        String today = sp.getString(key, "");
-        if (TextUtils.isEmpty(today)) {
-            startTime = sp.getLong("startTime", System.currentTimeMillis());
-            sp.edit().putLong("startTime", startTime).commit();
-            sp.edit().putLong("endTime", 0).commit();
-            sp.edit().putString(key, key).commit();
-        } else {
+        today = year + "-" + month + "-" + day;
 
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar cd = Calendar.getInstance();
-                cd.setTime(sdf.parse(today));
-                cd.add(Calendar.DATE, -1);
-
-                int oldyear = cd.get(Calendar.YEAR);
-                int oldmonth = cd.get(Calendar.MONTH) + 1;
-                int oldday = cd.get(Calendar.DAY_OF_MONTH);
-                String oldkey = oldyear + "-" + oldmonth + "-" + oldday;
-                sp.edit().remove(oldkey).commit();
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-
-
+        startTime = sp.getLong(today+"startTime",System.currentTimeMillis());
+        sp.edit().putLong(today+"startTime", startTime).commit();
+        sp.edit().putLong(today+"endTime", startTime).commit();
         if (
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         ||

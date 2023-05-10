@@ -12,13 +12,14 @@ import com.example.myapplication.Adapter.WordAdapter;
 import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.databinding.ActivityWordBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CollectListActivity extends AppCompatActivity {
-
+    public static final int MAX_COUNT = 50;
     ActivityWordBinding binding;
     WordAdapter adapter;
     List<HistoryBean> dataList = new ArrayList<>();
@@ -48,7 +49,7 @@ public class CollectListActivity extends AppCompatActivity {
         adapter.setForm(3);
         dataList.addAll(historyDao.queryCollect());
         adapter.setList(dataList);
-        binding.tvCount.setText(dataList.size() + "");
+        binding.tvCount.setText(dataList.size() + "/"+ MainActivity.MAX_COUNT);
         adapter.notifyDataSetChanged();
 
     }
