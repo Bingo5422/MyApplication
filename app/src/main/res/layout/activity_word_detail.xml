@@ -18,39 +18,28 @@
         android:textSize="25sp"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvWord2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="Hello"
-        android:textSize="20sp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/tvWord" />
+
 
     <Button
         android:id="@+id/btnShow"
-        android:layout_marginHorizontal="55dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="55dp"
+        android:layout_marginTop="100dp"
         android:layout_marginBottom="100dp"
+        android:background="@drawable/white_round"
+
         android:gravity="center"
         android:text="SHOW PARAPHRASE"
         android:textSize="15sp"
-        android:paddingHorizontal="30dp"
-        android:background="@drawable/white_round"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/voice" />
 
     <ImageView
         android:id="@+id/voice"
-        app:layout_constraintTop_toTopOf="@+id/tvWord"
+        app:layout_constraintTop_toBottomOf="@+id/tvWord"
         android:paddingVertical="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:src="@mipmap/voice"
         android:layout_width="match_parent"
         tools:text="voice"
@@ -82,6 +71,17 @@
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvWord2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Hello"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/voice" />
 
     <ImageView
         android:id="@+id/iv_pre"
