@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.me;
 
+import static com.example.myapplication.MainActivity.DomainURL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,7 +45,7 @@ public class MeFragment extends Fragment {
     private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
     private Uri uri;
 //    final static String DomainURL = "http://172.26.14.175:5000";
-    final static String DomainURL = "http://192.168.113.21:5000";
+//    final static String DomainURL = "http://192.168.113.21:5000";
     static OkHttpClient client;
 //    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
