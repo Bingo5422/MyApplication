@@ -44,6 +44,7 @@ public class MeFragment extends Fragment {
     private Uri uri;
 //    final static String DomainURL = "http://172.26.14.175:5000";
     final static String DomainURL = "http://192.168.113.21:5000";
+    static OkHttpClient client;
 //    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
     private Button btn_login, btn_display, btn_edit_info, btn_synchro;
@@ -130,11 +131,16 @@ public class MeFragment extends Fragment {
         }
 
         CookieJarImpl cookieJar = new CookieJarImpl(getActivity());
-        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar)
+        client = new OkHttpClient.Builder().cookieJar(cookieJar)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
                 .build();//创建OkHttpClient对象。
+//        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar)
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(5, TimeUnit.SECONDS)
+//                .readTimeout(5, TimeUnit.SECONDS)
+//                .build();//创建OkHttpClient对象。
         // 为了正常格式的url创建的request对象
         Request request = new Request.Builder()
                 .url(url)
@@ -283,7 +289,6 @@ public class MeFragment extends Fragment {
                 user_photo.post(new Runnable() {
                     @Override
                     public void run() {
-                        //todo 退出后更新为默认头像
                         user_photo.setImageResource(R.mipmap.default_portrait);
                     }
                 });
