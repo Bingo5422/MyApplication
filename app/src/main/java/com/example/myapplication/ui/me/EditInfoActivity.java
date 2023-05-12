@@ -58,7 +58,7 @@ public class EditInfoActivity extends AppCompatActivity {
     private Uri photoOutputUri = null;
 
     private LinearLayout ll_edit_photo, ll_edit_name;
-    private ImageView iv_edit_user_photo;
+    private ImageView iv_edit_user_photo, edit_info_back;
     private TextView tv_edit_nickname;
 //    private OkHttpClient client;
 
@@ -71,6 +71,14 @@ public class EditInfoActivity extends AppCompatActivity {
         ll_edit_name = findViewById(R.id.ll_edit_name);
         iv_edit_user_photo = findViewById(R.id.iv_edit_user_photo);
         tv_edit_nickname = findViewById(R.id.tv_edit_nickname);
+        edit_info_back = findViewById(R.id.edit_info_back);
+
+        edit_info_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
         CookieJarImpl cookieJar = new CookieJarImpl(EditInfoActivity.this);
@@ -125,6 +133,7 @@ public class EditInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
 //        intent.putExtra("flag", 3);
         startActivity(intent);
+//        finish();
 
     }
 
@@ -296,7 +305,11 @@ public class EditInfoActivity extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    if (Looper.myLooper() == null)
+                        Looper.prepare();
+                    Toast.makeText(EditInfoActivity.this, "Server failed. " +
+                            "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
                 }
 
                 @Override

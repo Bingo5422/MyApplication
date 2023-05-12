@@ -25,9 +25,10 @@
             android:layout_width="0dp"
             android:layout_weight="5"
             android:layout_height="wrap_content"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:layout_marginLeft="16dp"
-            android:text="Identification history"/>
+            android:textColor="@color/deep_grey"
+            android:text="Identification History"/>
     </LinearLayout>
 
     <com.example.myapplication.ui.recognition.SlideRecyclerView

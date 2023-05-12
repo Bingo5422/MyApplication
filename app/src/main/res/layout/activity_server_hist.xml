@@ -7,6 +7,7 @@
     tools:context=".ui.me.ServerHistActivity">
 
     <ImageView
+        android:id="@+id/server_hist_back"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="15dp"

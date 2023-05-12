@@ -23,6 +23,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +85,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
     private int fileNum;
 
     private NotificationManager notificationManager;
+    private ImageView synchro_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +107,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         btn_upload_unfamiliar = findViewById(R.id.btn_upload_unfamiliar);
         btn_download_stars = findViewById(R.id.btn_download_stars);
         btn_download_unfamiliar = findViewById(R.id.btn_download_unfamiliar);
+        synchro_back = findViewById(R.id.synchro_back);
 
 
         btn_upload_stars.setOnClickListener(this);
@@ -114,6 +117,13 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         btn_download_stars.setOnClickListener(this);
 
         btn_download_unfamiliar.setOnClickListener(this);
+
+        synchro_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
     }
 
@@ -164,10 +174,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             public void onFailure(Call call, IOException e) {
                 notify_builder.setContentText("Failed");
                 notificationManager.notify(notify_id, notify_builder.build());
-                if(Looper.myLooper()==null)
+                if (Looper.myLooper()==null)
                     Looper.prepare();
                 Toast.makeText(ServerUploadActivity.this,
-                        "Fail to upload.",Toast.LENGTH_SHORT).show();
+                        "Unable to upload. Please check your internet connection.",Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
 
@@ -311,10 +321,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                if(Looper.myLooper()==null)
+                if (Looper.myLooper()==null)
                     Looper.prepare();
                 Toast.makeText(ServerUploadActivity.this,
-                        "Fail to get server list.",Toast.LENGTH_SHORT).show();
+                        "Unable to upload. Please check your internet connection.",Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
 
@@ -362,14 +372,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 }
             }
             return info;
-//            for (int i = 0; i < localList.size(); i++) {
-//                HistoryBean bean = localList.get(i);
-//
-//                if (server_list.has(bean.getFileName())) {
-//                    // 如果本地有服务器也有该文件，就不下载了
-//                    server_list.remove(bean.getFileName());
-//                }
-//            }
 
 
         } catch (JSONException e) {
@@ -378,12 +380,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             throw new RuntimeException(e);
         }
 
-            // 写download.json到本地
-//            FileOutputStream fos = new FileOutputStream(download_path);
-//            OutputStreamWriter os = new OutputStreamWriter(fos);
-//            BufferedWriter w = new BufferedWriter(os);
-//            w.write(info.toString());
-//            w.close();
     }
 
     private void Download(OkHttpClient client, String url, JSONObject info){
@@ -401,7 +397,11 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("fail to connect to server");
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerUploadActivity.this,
+                        "Unable to download. Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
@@ -523,7 +523,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 if(Looper.myLooper()==null)
                     Looper.prepare();
                 Toast.makeText(ServerUploadActivity.this,
-                        "Fail to get server list.",Toast.LENGTH_SHORT).show();
+                        "Unable to download. Please check your internet connection",Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
 
@@ -585,7 +585,12 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("fail to connect to server");
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerUploadActivity.this,
+                        "Unable to download." +
+                                " Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
@@ -678,7 +683,12 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("wrong");
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerUploadActivity.this,
+                        "Unable to download." +
+                                " Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
@@ -733,9 +743,9 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
         if(view.getId()==R.id.btn_upload_stars){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Warn")//设置对话框的标题
-                    .setMessage("This operation will overwrite all previous records. " +
-                            "\nAre you sure you want to continue?")//设置对话框的内容
+                    .setTitle("Note")//设置对话框的标题
+                    .setMessage("Note: This operation will overwrite your server favorites. " +
+                            "\n\nAre you sure you want to continue?")//设置对话框的内容
                     //设置对话框的按钮
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
@@ -758,10 +768,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         }
         else if(view.getId()==R.id.btn_upload_unfamiliar){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Warn")//设置对话框的标题
-                    .setMessage("This operation will overwrite all previous records and requires " +
-                            "reuploading the favorites (server favorites will be cleared). " +
-                            "\nAre you sure you want to continue?")//设置对话框的内容
+                    .setTitle("Note")//设置对话框的标题
+                    .setMessage("Note: This operation will overwrite your server unfamiliar words and " +
+                            "server favorites will be cleared. " +
+                            "\n\nAre you sure to continue?")//设置对话框的内容
                     //设置对话框的按钮
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
@@ -784,9 +794,9 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         }
         else if(view.getId()==R.id.btn_download_stars){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Warn")//设置对话框的标题
-                    .setMessage("This operation will overwrite your local favorites" +
-                            "\nAre you sure you want to continue?")//设置对话框的内容
+                    .setTitle("Note")//设置对话框的标题
+                    .setMessage("Note: This operation will overwrite your local favorites" +
+                            "\n\nAre you sure to continue?")//设置对话框的内容
                     //设置对话框的按钮
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
@@ -806,10 +816,9 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         }
         else if(view.getId()==R.id.btn_download_unfamiliar){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Warn")//设置对话框的标题
+                    .setTitle("Note")//设置对话框的标题
                     .setMessage(
-                            "All unfamiliar words downloaded will not be in your favorites." +
-                                    "Please sync your favorites after the download.\n" +
+                            "Note: All unfamiliar words downloaded will not be marked as favorites.\n\n" +
                                     "Are you sure you want to continue?")//设置对话框的内容
                     //设置对话框的按钮
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

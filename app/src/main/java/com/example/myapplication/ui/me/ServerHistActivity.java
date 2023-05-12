@@ -22,6 +22,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,6 +79,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 //    private OkHttpClient client;
     private HistoryDao historyDao;
     private AlertDialog dialog;
+    private ImageView server_hist_back;
 
 
     @Override
@@ -86,6 +88,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         setContentView(R.layout.activity_server_hist);
         server_hist_delete = findViewById(R.id.server_hist_delete);
         tv_server_hist_num = findViewById(R.id.tv_server_hist_num);
+        server_hist_back = findViewById(R.id.server_hist_back);
 
         RecDataBase recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase")
                 .allowMainThreadQueries().build();
@@ -124,6 +127,12 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         initData();
         initViews();
 
+        server_hist_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         server_hist_delete.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -131,8 +140,8 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             public void onClick(View view) {
 
                 dialog = new AlertDialog.Builder(ServerHistActivity.this)
-                        .setTitle("Warn")//设置对话框的标题
-                        .setMessage("Are you sure to delete? The operation cannot be undone.")//设置对话框的内容
+                        .setTitle("Note")//设置对话框的标题
+                        .setMessage("Are you sure to delete? This operation cannot be undone.")//设置对话框的内容
                         //设置对话框的按钮
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
@@ -174,7 +183,8 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                                         if(Looper.myLooper()==null)
                                             Looper.prepare();
                                         Toast.makeText(ServerHistActivity.this,
-                                                "Delete Successfully",Toast.LENGTH_SHORT).show();
+                                                "Unable to delete. Please check your " +
+                                                        "internet connection",Toast.LENGTH_SHORT).show();
                                         Looper.loop();
                                     }
 
@@ -280,7 +290,13 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("wrong");
+
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerHistActivity.this,
+                        "The record could not be loaded." +
+                                " Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
@@ -331,9 +347,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("wrong");
-            }
+            public void onFailure(Call call, IOException e) {}
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {

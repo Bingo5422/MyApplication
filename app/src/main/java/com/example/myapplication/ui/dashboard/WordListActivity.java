@@ -58,6 +58,15 @@ public class WordListActivity extends AppCompatActivity {
         binding.tvCount.setText(dataList.size() + "");
         adapter.notifyDataSetChanged();
 
+        binding.wordListBack.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
 
     }
 }

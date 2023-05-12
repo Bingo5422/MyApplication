@@ -61,6 +61,13 @@ public class WordDetailActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
         lan = sp.getString("lan", "Chinese");
 
+        binding.wordDetailBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         binding.btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

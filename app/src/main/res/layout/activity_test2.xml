@@ -90,44 +90,47 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <FrameLayout
-                android:background="@drawable/ic_launcher_background"
+                android:background="@color/transparent"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="5dp">
+                android:layout_margin="2dp">
                 <ImageView
                     android:id="@+id/ivA"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher"/>
+                    android:background="@color/transparent"
+                    android:padding="5dp"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop" />
                 <TextView
                     android:id="@+id/tvA"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="Button"
+                    android:paddingBottom="5dp"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
             </FrameLayout>
 
-
             <FrameLayout
-                android:background="@drawable/ic_launcher_background"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="5dp">
+                android:layout_margin="2dp">
                 <ImageView
                     android:id="@+id/ivB"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher"/>
+                    android:cropToPadding="true"
+                    android:padding="5dp" />
                 <TextView
                     android:id="@+id/tvB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="Button"
+                    android:paddingBottom="5dp"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
             </FrameLayout>
@@ -139,43 +142,45 @@
             android:orientation="horizontal">
 
             <FrameLayout
-                android:background="@drawable/ic_launcher_background"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="5dp">
+                android:layout_margin="2dp">
                 <ImageView
                     android:id="@+id/ivC"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher"/>
+                    android:padding="5dp"
+                    android:cropToPadding="true"/>
                 <TextView
                     android:id="@+id/tvC"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="Button"
+                    android:paddingBottom="5dp"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
             </FrameLayout>
 
             <FrameLayout
-                android:background="@color/error_red"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="5dp">
+                android:layout_margin="2dp">
                 <ImageView
                     android:id="@+id/ivD"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher"/>
+                    android:cropToPadding="true"
+                    android:padding="5dp" />
                 <TextView
                     android:id="@+id/tvD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="Button"
+                    android:paddingBottom="5dp"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
             </FrameLayout>

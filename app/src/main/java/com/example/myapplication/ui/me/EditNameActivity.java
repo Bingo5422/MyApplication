@@ -11,14 +11,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +38,7 @@ import okhttp3.Response;
 public class EditNameActivity extends AppCompatActivity {
     private Button btn_submit_info;
     private EditText et_new_nickname;
+    private ImageView edit_name_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,14 @@ public class EditNameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_name);
         et_new_nickname = findViewById(R.id.et_new_nickname);
         btn_submit_info = findViewById(R.id.btn_submit_info);
+        edit_name_back = findViewById(R.id.edit_name_back);
+
+        edit_name_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         btn_submit_info.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,16 +91,32 @@ public class EditNameActivity extends AppCompatActivity {
             try {
                 response = client.newCall(request).execute();
                 if (response.isSuccessful()) {
-                    SharedPreferences preferences =
-                            EditNameActivity.this.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("nickname", String.valueOf(et_new_nickname.getText()));
-                    editor.commit();
-                    startActivity(new Intent(EditNameActivity.this, EditInfoActivity.class));
-                    Looper.prepare();
-                    Toast.makeText(MainActivity.getContext(), "Submit " +
-                            "Successfully", Toast.LENGTH_SHORT).show();
-                    Looper.loop();
+                    JSONObject res_json = null;
+                    res_json = new JSONObject(response.body().string());
+                    if (res_json.getBoolean("if_success")) {
+                        SharedPreferences preferences =
+                                EditNameActivity.this.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("nickname", String.valueOf(et_new_nickname.getText()));
+                        editor.commit();
+                        startActivity(new Intent(EditNameActivity.this, EditInfoActivity.class));
+                        if (Looper.myLooper() == null)
+                            Looper.prepare();
+                        Toast t = Toast.makeText(MainActivity.getContext(), "Submit " +
+                                "Successfully", Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.CENTER,0,0);
+                        t.show();
+                        Looper.loop();
+                    }else{
+                        if (Looper.myLooper() == null)
+                            Looper.prepare();
+                        Toast t = Toast.makeText(EditNameActivity.this,
+                                res_json.getString("msg"), Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.CENTER,0,0);
+                        t.show();
+                        Looper.loop();
+                    }
+
                 } else {
                     Looper.prepare();
                     Toast.makeText(MainActivity.getContext(), "Submit failed. Please check" +
@@ -94,6 +124,8 @@ public class EditNameActivity extends AppCompatActivity {
                     Looper.loop();
                 }
             } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         }
