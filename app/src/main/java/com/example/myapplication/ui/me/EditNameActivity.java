@@ -118,13 +118,18 @@ public class EditNameActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Looper.prepare();
+                    if (Looper.myLooper() == null)
+                        Looper.prepare();
                     Toast.makeText(MainActivity.getContext(), "Submit failed. Please check" +
-                            "the Internet connection.", Toast.LENGTH_SHORT).show();
+                            " the Internet connection.", Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                if (Looper.myLooper() == null)
+                    Looper.prepare();
+                Toast.makeText(EditNameActivity.this, "Unable to edit name. " +
+                        "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                Looper.loop();
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }

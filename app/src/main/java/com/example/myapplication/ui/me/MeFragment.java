@@ -187,8 +187,15 @@ public class MeFragment extends Fragment {
                             editor.remove("user_id");
                             editor.remove("nickname");
                             editor.remove("photo");
-                            // todo 清除cookie（？不确定
                             editor.commit();
+
+                            SharedPreferences p_cookie = getActivity()
+                                    .getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor e_cookie = p_cookie.edit();
+                            e_cookie.clear();
+                            e_cookie.commit();
+
+
                             text.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -260,6 +267,11 @@ public class MeFragment extends Fragment {
         try {
             response = client.newCall(logout_req).execute();
             if(response.isSuccessful()) {
+                //清除cookie
+                SharedPreferences p_cookie = getActivity().getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
+                SharedPreferences.Editor e_cookie = p_cookie.edit();
+                e_cookie.clear();
+                e_cookie.commit();
                 // 清除用户登陆显示
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove("user_id");
@@ -289,7 +301,7 @@ public class MeFragment extends Fragment {
             else{
                 if(Looper.myLooper()==null)
                     Looper.prepare();
-                Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
+                Toast.makeText(MainActivity.getContext(), "Server Error. Please check " +
                         "the Internet connection", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
@@ -297,7 +309,7 @@ public class MeFragment extends Fragment {
 //            throw new RuntimeException(e);
             if(Looper.myLooper()==null)
                 Looper.prepare();
-            Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
+            Toast.makeText(MainActivity.getContext(), "Server Error. Please check " +
                     "the Internet connection", Toast.LENGTH_SHORT).show();
             Looper.loop();
         }

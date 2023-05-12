@@ -259,6 +259,11 @@ public class EditInfoActivity extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    if (Looper.myLooper()==null)
+                        Looper.prepare();
+                    Toast.makeText(EditInfoActivity.this,
+                            "Unable to upload. Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                    Looper.loop();
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -286,7 +291,11 @@ public class EditInfoActivity extends AppCompatActivity {
                             Looper.loop();
                         }
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        if (Looper.myLooper() == null)
+                            Looper.prepare();
+                        Toast.makeText(context, "Upload photo failed. " +
+                                "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
                     }
                 }
             });

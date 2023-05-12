@@ -613,7 +613,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                         sum += len;
                         int progress = (int) (sum * 1.0f / total * 100);
                         // 下载中
-                        //todo: 进度条显示
                         notify_builder.setProgress(100, progress, false);
                         notify_builder.setContentText(progress + "%");
                         notificationManager.notify(111, notify_builder.build());
