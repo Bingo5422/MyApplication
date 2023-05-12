@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Bean.CalendarBean;
+import com.example.myapplication.Bean.ChallengeBean;
 import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.R;
 
@@ -28,7 +29,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.View
     private Calendar mTodayCalendar = Calendar.getInstance();//当前时间,未修改
 
     private List<HistoryBean> mlist;
-    private List<String> selectedPhotoPath = new ArrayList<>();
+    private List<ChallengeBean> selectedPhotoData = new ArrayList<>();
     private static final String TAG = "ChallengeAdapter";
 
     public void setList(List<HistoryBean> list) {
@@ -50,14 +51,25 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistoryBean bean = mlist.get(position);
+        ChallengeBean challengeBean = new ChallengeBean();
 
-        String path = bean.getPath();
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
+        challengeBean.setFilepath(bean.getPath()) ;
+        challengeBean.setFilename(bean.getFileName());
+
+        challengeBean.setEnName(bean.getEnName());
+        challengeBean.setFraName(bean.getFraName());
+        challengeBean.setJpName(bean.getJpName());
+        challengeBean.setKorName(bean.getKorName());
+        challengeBean.setSpaName(bean.getSpaName());
+        challengeBean.setName(bean.getName());
+
+        challengeBean.setCode(bean.getCode());
+
+        Bitmap bitmap = BitmapFactory.decodeFile(bean.getPath());
         holder.photo.setImageBitmap(bitmap);
 
 
-        String fileName = bean.getFileName();
-        Log.d(TAG, "bean.getFileName()"+fileName);
+
 
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -65,13 +77,13 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.View
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // CheckBox 被选中
-                    selectedPhotoPath.add(fileName);
-                    Log.d(TAG, "选中的照片名字"+selectedPhotoPath);
+                    selectedPhotoData.add(challengeBean);
+                    Log.d(TAG, "选中的照片: "+ selectedPhotoData);
                 } else {
                     // CheckBox 没有被选中
 
-                    selectedPhotoPath.remove(fileName);
-                    Log.d(TAG, "取消后选中的照片名字"+selectedPhotoPath.toString());
+                    selectedPhotoData.remove(challengeBean);
+                    Log.d(TAG, "取消后选中的照片名字"+selectedPhotoData);
                 }
             }
         });
@@ -86,8 +98,8 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.View
 
     }
 
-    public List<String> getSelectedPhotoNameList() {
-        return selectedPhotoPath;
+    public List<ChallengeBean> getSelectedPhotoDataList() {
+        return selectedPhotoData;
     }
 
 
