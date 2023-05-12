@@ -1,12 +1,8 @@
 package com.example.myapplication.ui.me;
 
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
 
 import android.Manifest;
 import android.content.Context;
@@ -21,12 +17,14 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
@@ -43,8 +41,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -62,9 +58,9 @@ public class EditInfoActivity extends AppCompatActivity {
     private Uri photoOutputUri = null;
 
     private LinearLayout ll_edit_photo, ll_edit_name;
-    private ImageView iv_edit_user_photo;
+    private ImageView iv_edit_user_photo, edit_info_back;
     private TextView tv_edit_nickname;
-    private OkHttpClient client;
+//    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,14 +71,26 @@ public class EditInfoActivity extends AppCompatActivity {
         ll_edit_name = findViewById(R.id.ll_edit_name);
         iv_edit_user_photo = findViewById(R.id.iv_edit_user_photo);
         tv_edit_nickname = findViewById(R.id.tv_edit_nickname);
+        edit_info_back = findViewById(R.id.edit_info_back);
+
+        edit_info_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
         CookieJarImpl cookieJar = new CookieJarImpl(EditInfoActivity.this);
-        client = new OkHttpClient.Builder()
+        client.newBuilder().cookieJar(cookieJar)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+                .readTimeout(5, TimeUnit.SECONDS).build();
+//        client = new OkHttpClient.Builder()
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(5, TimeUnit.SECONDS)
+//                .readTimeout(5, TimeUnit.SECONDS)
+//                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
         setInfo();  //设置初始值
 
@@ -125,6 +133,7 @@ public class EditInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
 //        intent.putExtra("flag", 3);
         startActivity(intent);
+//        finish();
 
     }
 
@@ -296,7 +305,11 @@ public class EditInfoActivity extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    if (Looper.myLooper() == null)
+                        Looper.prepare();
+                    Toast.makeText(EditInfoActivity.this, "Server failed. " +
+                            "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
                 }
 
                 @Override

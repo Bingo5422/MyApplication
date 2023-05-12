@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
                 android:gravity="center"
-                android:text="Password:"
+                android:text="Password: "
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
@@ -111,7 +111,15 @@
 
         </LinearLayout>
 
-
+        <TextView
+            android:id="@+id/login_error_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/error_red"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="5dp"
+            android:paddingHorizontal="20dp"
+            android:textSize="12sp"/>
 
         <Button
             android:id="@+id/btn_login_confirm"

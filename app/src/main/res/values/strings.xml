@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Vocabulary Builder</string>
     <string name="title_home">Home</string>
     <string name="title_review">Review</string>
     <string name="title_friends">Friends</string>

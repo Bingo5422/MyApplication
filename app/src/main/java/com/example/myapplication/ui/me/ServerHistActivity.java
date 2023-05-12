@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.me;
 
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -20,6 +22,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,13 +72,14 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
     //选中后的数据
     private boolean isSelectAll;
     private Bitmap bitmap;
-    private TextView server_hist_delete, server_hist_download;
+    private TextView server_hist_delete, tv_server_hist_num;
     private Handler handler;
     private JSONObject json_list;
     private List<Cookie> cookie;
-    private OkHttpClient client;
+//    private OkHttpClient client;
     private HistoryDao historyDao;
     private AlertDialog dialog;
+    private ImageView server_hist_back;
 
 
     @Override
@@ -83,7 +87,8 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_hist);
         server_hist_delete = findViewById(R.id.server_hist_delete);
-//        server_hist_download = findViewById(R.id.server_hist_download);
+        tv_server_hist_num = findViewById(R.id.tv_server_hist_num);
+        server_hist_back = findViewById(R.id.server_hist_back);
 
         RecDataBase recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase")
                 .allowMainThreadQueries().build();
@@ -94,6 +99,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             @Override
             public void handleMessage(Message msg) {
                 if(msg.what==1){ //更新列表
+                    tv_server_hist_num.setText("("+dataArray.size()+"/50)");
                     mCheckAdapter.notifyDataSetChanged();
                 }
                 if(msg.what==2){ //更新alert dialog
@@ -105,130 +111,28 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         };
 
         CookieJarImpl cookieJar = new CookieJarImpl(ServerHistActivity.this);
-        client = new OkHttpClient.Builder()
+        client.newBuilder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
                 .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+//        client = new OkHttpClient.Builder()
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(5, TimeUnit.SECONDS)
+//                .readTimeout(5, TimeUnit.SECONDS)
+//                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
 
         checkedList = new ArrayList<>();
         initData();
         initViews();
 
-// download部分取消
-//        /**下载按钮触发。这里就是同步到本地！！会覆盖本地的收藏夹**/
-//        server_hist_download.setOnClickListener(new View.OnClickListener() {
-//
-//            //todo 加一个同步提示
-//            @Override
-//            public void onClick(View view) {
-//                JSONObject json = new JSONObject();
-//                for(int i=0;i<dataArray.size();i++){
-//                    // 把获取的文件信息储存在json对象中
-//                    try {
-//                        String filename = dataArray.get(i).getFilename();
-//                        //根据文件名查询本地数据库，图片是否已经存在，若不存在再加入下载列表
-//                        List<HistoryBean> b =  historyDao.queryByFilename(filename);
-//                        if(b.isEmpty()){
-//                            json.put(filename, 1);
-//                        }
-//
-//                    } catch (JSONException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-//
-//                // 发送下载请求，是一个包含文件名的json文档
-//                String url = DomainURL + "/hist/download_zip";
-//                RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(json));
-//                Request request = new Request.Builder()
-//                        .url(url)
-//                        .post(body)
-//                        .build();
-//
-//                cookie = client.cookieJar().loadForRequest(request.url());
-//                request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
-//
-//
-//                client.newCall(request).enqueue(new Callback() {
-//                    @Override
-//                    public void onFailure(Call call, IOException e) {
-//                        System.out.println("fail to connect to server");
-//                    }
-//
-//                    @Override
-//                    public void onResponse(Call call, Response response) throws IOException {
-//                        InputStream is = null;
-//                        byte[] buf = new byte[4096];
-//                        int len = 0;
-//                        FileOutputStream fos = null;
-//                        // savePath: 服务器的图片会打包成zip下载到本地的位置，改成需要的路径
-//                        String savePath = ServerHistActivity.this.getFilesDir().getAbsolutePath();
-//                        try {
-//                            is = response.body().byteStream();
-//
-//                            File file = new File(savePath,"pack.zip");
-//                            fos = new FileOutputStream(file);
-//
-//                            while ((len = is.read(buf)) != -1) {
-//                                fos.write(buf, 0, len);
-////                        sum += len;
-////                        int progress = (int) (sum * 1.0f / total * 100);
-//                                // 下载中
-//                            }
-//                            fos.flush();
-//                        } catch (IOException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//
-//                        String zipPath = savePath + "/pack.zip";
-//                        // 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
-//                        FileUtil.unzip(zipPath, savePath+"/photos");
-//
-//                        // 本地的收藏夹清空
-//                        historyDao.clearAllStars();
-//                        // 遍历dataArray，把每个被选中的条目信息保存到本地数据库，如果已经存在，则只把收藏设置为1
-//                        // 每个CheckBean里有相关内容，但不要保存bitmap，用上面解压的图片来保存图片信息
-//                        for(int i=0;i<dataArray.size();i++){
-//                            CheckBean bean = dataArray.get(i);
-//                            // 如果本地没有对应的数据，存相关信息
-//                            if(historyDao.queryByFilename(bean.getFilename()).isEmpty()) {
-//                                HistoryBean historyBean = new HistoryBean();
-//                                historyBean.setName(bean.getName());
-//                                historyBean.setPath(savePath + "/photos/" + bean.getFilename());
-//                                historyBean.setDateTime(bean.getDatetime());
-//                                historyBean.setCode(bean.getCode());
-//                                historyBean.setEnName(bean.getEnName());
-//                                historyBean.setNum(bean.getProficiency());
-//                                historyBean.setFraName(bean.getFraName());
-//                                historyBean.setJpName(bean.getJpName());
-//                                historyBean.setSpaName(bean.getSpaName());
-//                                historyBean.setKorName(bean.getKorName());
-//                                historyBean.setFileName(bean.getFilename());
-//                                historyBean.setIf_star(1);
-//                                historyDao.insertHistory(historyBean);
-//                            }
-//                            // 如果本地有，则设置为收藏
-//                            else{
-//                                historyDao.updateStar_byFilename(1, bean.getFilename());
-//                            }
-//                        }
-//
-//                        if(Looper.myLooper()==null)
-//                            Looper.prepare();
-//                        Toast.makeText(ServerHistActivity.this,
-//                                "Successfully synchronized to local star folder.",Toast.LENGTH_SHORT).show();
-//                        Looper.loop();
-//
-//
-//                    }
-//                });
-//
-////                checkedList.clear(); // 清空被选择的所有项目
-//
-//            }
-//        });
+        server_hist_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         server_hist_delete.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -236,8 +140,8 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             public void onClick(View view) {
 
                 dialog = new AlertDialog.Builder(ServerHistActivity.this)
-                        .setTitle("Warn")//设置对话框的标题
-                        .setMessage("Are you sure to delete? The operation cannot be undone.")//设置对话框的内容
+                        .setTitle("Note")//设置对话框的标题
+                        .setMessage("Are you sure to delete? This operation cannot be undone.")//设置对话框的内容
                         //设置对话框的按钮
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
@@ -279,7 +183,8 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                                         if(Looper.myLooper()==null)
                                             Looper.prepare();
                                         Toast.makeText(ServerHistActivity.this,
-                                                "Delete Successfully",Toast.LENGTH_SHORT).show();
+                                                "Unable to delete. Please check your " +
+                                                        "internet connection",Toast.LENGTH_SHORT).show();
                                         Looper.loop();
                                     }
 
@@ -385,7 +290,13 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("wrong");
+
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerHistActivity.this,
+                        "The record could not be loaded." +
+                                " Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
@@ -436,9 +347,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("wrong");
-            }
+            public void onFailure(Call call, IOException e) {}
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {

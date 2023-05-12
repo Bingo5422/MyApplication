@@ -1,7 +1,9 @@
 package com.example.myapplication.ui.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,7 +39,16 @@ public class WordListActivity extends AppCompatActivity {
         binding.btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if(dataList.isEmpty()){
+                    Toast.makeText(WordListActivity.this, "You need to add words", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent(v.getContext(), WordDetailActivity.class);
+                intent.putExtra("word", dataList.get(0));
+                intent.putExtra("form", form);
+                intent.putExtra("index", 0);
+                v.getContext().startActivity(intent);
             }
         });
 
@@ -57,6 +68,15 @@ public class WordListActivity extends AppCompatActivity {
         adapter.setList(dataList);
         binding.tvCount.setText(dataList.size() + "");
         adapter.notifyDataSetChanged();
+
+        binding.wordListBack.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
 
 
     }

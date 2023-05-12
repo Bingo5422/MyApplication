@@ -1,5 +1,8 @@
 package com.example.myapplication.ui.me;
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +14,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.Utils.ButtonUtil;
 import com.example.myapplication.databinding.FragmentMeBinding;
 
 import org.json.JSONException;
@@ -47,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView iv_back_to_login;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +73,10 @@ public class RegisterActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String url = DomainURL+"/auth/register";
 
-                OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
+//                OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
                 FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
                 formBody.add("user_email", et_email.getText().toString()); //传递键值对参数
                 formBody.add("password", et_password.getText().toString());
@@ -84,9 +92,12 @@ public class RegisterActivity extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Looper.prepare();
-                        Toast.makeText(MainActivity.getContext(), "Server Error." +
-                                " Please check the Internet connection", Toast.LENGTH_SHORT).show();
+                        if (Looper.myLooper()==null)
+                            Looper.prepare();
+                        Toast t = Toast.makeText(MainActivity.getContext(), "Server Error." +
+                                " Please check the Internet connection", Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.CENTER,0,0);
+                        t.show();
                         Looper.loop();
                     }
 
@@ -97,8 +108,13 @@ public class RegisterActivity extends AppCompatActivity {
                         try {
                             res_json = new JSONObject(res);
                             if (res_json.getBoolean("if_success")) {
-                                Looper.prepare();
-                                Toast.makeText(MainActivity.getContext(), "Successfully Registered", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                if (Looper.myLooper()==null)
+                                    Looper.prepare();
+                                Toast t = Toast.makeText(
+                                        MainActivity.getContext(), "Successfully Registered. Please login.", Toast.LENGTH_SHORT);
+                                t.setGravity(Gravity.CENTER,0,0);
+                                t.show();
                                 Looper.loop();
                             } else {
                                 tv_error_info.post(new Runnable() {
@@ -125,42 +141,49 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                if (!ButtonUtil.isFastDoubleClick(30000, RegisterActivity.this, R.id.btn_send_code)){
+                    if (et_email.length()!=0) {
+                        String url = DomainURL + "/auth/captcha/email?email=" + et_email.getText();
 
-                if (et_email.length()!=0) {
-                    String url = DomainURL + "/auth/captcha/email?email=" + et_email.getText();
-
-                    OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
-                    Request request = new Request.Builder()//创建Request 对象。
-                            .url(url)
-                            .build();
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Looper.prepare();
-                            Toast.makeText(MainActivity.getContext(), "Server Error." +
-                                    " Please check the Internet connection", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            JSONObject res_json2;
-                            String res = response.body().string();
-                            try {
-                                res_json2 = new JSONObject(res);
-                                if (res_json2.getBoolean("if_send")) {
+//                    OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
+                        Request request = new Request.Builder()//创建Request 对象。
+                                .url(url)
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                if (Looper.myLooper()==null)
                                     Looper.prepare();
-                                    Toast.makeText(MainActivity.getContext(), "Email sent.", Toast.LENGTH_SHORT).show();
-                                    Looper.loop();
-                                }
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
+                                Toast t = Toast.makeText(MainActivity.getContext(), "Server Error." +
+                                        " Please check the Internet connection", Toast.LENGTH_SHORT);
+                                t.setGravity(Gravity.CENTER,0,0);
+                                t.show();
+                                Looper.loop();
                             }
 
-                        }
-                    });
-                }else{
-                    tv_error_info.setText("Please finish the form.");
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                JSONObject res_json2;
+                                String res = response.body().string();
+                                try {
+                                    res_json2 = new JSONObject(res);
+                                    if (res_json2.getBoolean("if_send")) {
+                                        if (Looper.myLooper()==null)
+                                            Looper.prepare();
+                                        Toast t = Toast.makeText(MainActivity.getContext(), "Email sent.", Toast.LENGTH_SHORT);
+                                        t.setGravity(Gravity.CENTER,0,0);
+                                        t.show();
+                                        Looper.loop();
+                                    }
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                            }
+                        });
+                    }else{
+                        tv_error_info.setText("Please finish the form.");
+                    }
                 }
             }
         });
@@ -174,4 +197,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+
+
 }

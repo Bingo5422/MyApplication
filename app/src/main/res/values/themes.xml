@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MyApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+    <style name="Theme.MyApplication" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
 <!--        <item name="android:windowNoTitle">true</item>-->
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/text_green</item>
@@ -11,9 +11,11 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/background</item>
+        <item name="android:statusBarColor">@color/light_grey</item>
+        <item name="android:windowLightStatusBar">true</item>
 <!--        <item name="android:navigationBarColor">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
         <item name="background">@color/creamy_white</item>
+
     </style>
 </resources>

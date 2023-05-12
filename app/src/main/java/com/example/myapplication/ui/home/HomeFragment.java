@@ -185,7 +185,7 @@ public class HomeFragment extends Fragment {
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0X102, intent,0);
                 //设置闹钟
                 alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-                Toast.makeText(getContext(), "闹钟设置成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "The alarm is set successfully.", Toast.LENGTH_SHORT).show();
             }
         },hour,minute,true);
         timePickerDialog.show();

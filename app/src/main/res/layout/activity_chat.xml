@@ -13,16 +13,18 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/light_grey"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         android:titleTextColor="@android:color/white">
-    <Button
-    android:id="@+id/challenge_button"
-      android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-        android:layout_gravity="end"
-       android:text="Challenge"/>
+
+        <Button
+            android:id="@+id/challenge_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Challenge"/>
+
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -52,7 +54,7 @@
 
         <EditText
             android:id="@+id/input_edit_text"
-            android:hint="输入消息"
+            android:hint="Enter your message"
             android:maxLines="3"
             android:layout_margin="3dip"
             android:layout_width="0dip"
@@ -63,11 +65,12 @@
 
         <Button
             android:id="@+id/send_button"
-            android:layout_width="50dp"
-            android:layout_height="38dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="发送"
+            android:layout_gravity="center"
+            android:background="@drawable/round_send_24"
             android:textSize="10dp"/>
 
     </LinearLayout>

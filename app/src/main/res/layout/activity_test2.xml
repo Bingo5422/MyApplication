@@ -89,29 +89,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnA"
+            <FrameLayout
+                android:background="@color/transparent"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_launcher_background"
-                android:gravity="bottom|center_horizontal"
-                android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:layout_margin="2dp">
+                <ImageView
+                    android:id="@+id/ivA"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:padding="5dp"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop" />
+                <TextView
+                    android:id="@+id/tvA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:text="Button"
+                    android:paddingBottom="5dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </FrameLayout>
 
-            <Button
-                android:id="@+id/btnB"
+            <FrameLayout
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_launcher_background"
-                android:gravity="bottom|center_horizontal"
-                android:text="Button"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:layout_margin="2dp">
+                <ImageView
+                    android:id="@+id/ivB"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:cropToPadding="true"
+                    android:padding="5dp" />
+                <TextView
+                    android:id="@+id/tvB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:text="Button"
+                    android:paddingBottom="5dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -119,29 +141,49 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnC"
+            <FrameLayout
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_launcher_background"
-                android:gravity="bottom|center_horizontal"
-                android:text="Button"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:layout_margin="2dp">
+                <ImageView
+                    android:id="@+id/ivC"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:padding="5dp"
+                    android:cropToPadding="true"/>
+                <TextView
+                    android:id="@+id/tvC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:text="Button"
+                    android:paddingBottom="5dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </FrameLayout>
 
-            <Button
-                android:id="@+id/btnD"
+            <FrameLayout
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_launcher_background"
-                android:gravity="bottom|center_horizontal"
-                android:text="Button"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:layout_margin="2dp">
+                <ImageView
+                    android:id="@+id/ivD"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:cropToPadding="true"
+                    android:padding="5dp" />
+                <TextView
+                    android:id="@+id/tvD"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:text="Button"
+                    android:paddingBottom="5dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </FrameLayout>
         </LinearLayout>
 
     </LinearLayout>
