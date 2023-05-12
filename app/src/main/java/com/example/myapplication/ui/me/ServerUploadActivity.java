@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.Adapter.UploadCheckAdapter;
+import com.example.myapplication.Bean.ChallengeBean;
 import com.example.myapplication.Bean.CheckBean;
 import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Dao.HistoryDao;
@@ -258,6 +260,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
 
                 //服务器没有的图片加入multipartbody准备上传
+                //上传图片
                 if(!server_list.has(bean.getFileName())) {
                     File file = new File(bean.getPath());
 //                    String f = bean.getFileName();
@@ -605,7 +608,13 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 try {
                     is = response.body().byteStream();
 
+
                     File file = new File(savePath, "pack.zip");
+                    if (!file.getParentFile().exists()) {
+                        if (!file.getParentFile().mkdirs()) {
+                            Log.e("Error", "Failed to create directory");
+                        }
+                    }
                     fos = new FileOutputStream(file);
 
                     while ((len = is.read(buf)) != -1) {

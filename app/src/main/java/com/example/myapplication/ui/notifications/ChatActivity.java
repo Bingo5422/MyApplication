@@ -213,7 +213,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     // 将消息插入到数据库中
                     insertChatRecord(message);
-                    // mMessageBeanDatabase.messageBeanDao().insert(message);
+                   // mMessageBeanDatabase.messageBeanDao().insert(message);
                     // 清空输入框
                     mInputEditText.setText("");
 
@@ -271,56 +271,56 @@ public class ChatActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void getmessage(OkHttpClient client){
+        private void getmessage(OkHttpClient client){
         Request request = new Request.Builder()
                 .url("http://192.168.113.21:5000/challenge/getmessage")
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                Log.d("getmessage","onfailure");
-            }
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                    Log.d("getmessage","onfailure");
+                }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String contentType = response.header("Content-Type");
-                    if (contentType != null && contentType.contains("application/json")) {
-                        try {
-                            response = client.newCall(request).execute();
-                            String jsonResponse = response.body().string();
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        String contentType = response.header("Content-Type");
+                        if (contentType != null && contentType.contains("application/json")) {
+                            try {
+                                response = client.newCall(request).execute();
+                                String jsonResponse = response.body().string();
 
-                            // 解析json
-                            JSONObject jsonObject = new JSONObject(jsonResponse);
-                            Iterator<String> keys = jsonObject.keys();
-                            messagenum = jsonObject.length();//todo
+                                // 解析json
+                                JSONObject jsonObject = new JSONObject(jsonResponse);
+                                Iterator<String> keys = jsonObject.keys();
+                                messagenum = jsonObject.length();//todo
 
-                            if (messagenum>lastmessagenum) {
-                                while (keys.hasNext()) {
-                                    String key = keys.next();
-                                    JSONObject messageObj = jsonObject.getJSONObject(key);
-                                    boolean challenge = messageObj.getBoolean("challenge");
-                                    String message = messageObj.getString("message");
-                                    String to = messageObj.getString("to");
-                                    String message_from = messageObj.getString("message_from");
-                                    String time = messageObj.getString("time");
-                                    MessageBean messageBean = new MessageBean(key, message_from, to, message, changeDate(time, 1), challenge);
-                                    mMessageBeanDatabase.messageBeanDao().insert(messageBean);
-                                    if (challenge==true){
-                                        Download(client,message);
+                                if (messagenum>lastmessagenum) {
+                                    while (keys.hasNext()) {
+                                        String key = keys.next();
+                                        JSONObject messageObj = jsonObject.getJSONObject(key);
+                                        boolean challenge = messageObj.getBoolean("challenge");
+                                        String message = messageObj.getString("message");
+                                        String to = messageObj.getString("to");
+                                        String message_from = messageObj.getString("message_from");
+                                        String time = messageObj.getString("time");
+                                        MessageBean messageBean = new MessageBean(key, message_from, to, message, changeDate(time, 1), challenge);
+                                        mMessageBeanDatabase.messageBeanDao().insert(messageBean);
+                                        if (challenge==true){
+                                            Download(client,message);
+                                        }
                                     }
                                 }
+                                lastmessagenum = messagenum;
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
                             }
-                            lastmessagenum = messagenum;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
 
                         // ...
                     } else {
@@ -489,7 +489,7 @@ public class ChatActivity extends AppCompatActivity {
                         ChallengeBean challengeBean = new ChallengeBean();
                         challengeBean.setName(item.getString("name"));
                         challengeBean.setFilepath(folderPath + "/photos/" + item.getString("filename"));
-                        //     challengeBean.setDateTime(item.getString("datetime"));
+                   //     challengeBean.setDateTime(item.getString("datetime"));
                         challengeBean.setCode(item.getString("code"));
                         challengeBean.setEnName(item.getString("enName"));
                         challengeBean.setKorName(item.getString("korName"));
@@ -497,11 +497,11 @@ public class ChatActivity extends AppCompatActivity {
                         challengeBean.setJpName(item.getString("jpName"));
                         challengeBean.setFraName(item.getString("FraName"));
                         challengeBean.setFilename(item.getString("filename"));
-                        //    challengeBean.setIf_star(item.getInt("if_star"));
-                        //    challengeBean.setNum(item.getInt("proficiency"));
+                    //    challengeBean.setIf_star(item.getInt("if_star"));
+                    //    challengeBean.setNum(item.getInt("proficiency"));
 
-                        mChallengeBeanDatabase.challengeDao().insert(challengeBean);
-                        //  mMessageBeanDatabase.messageBeanDao().insert(messageBean);
+                       mChallengeBeanDatabase.challengeDao().insert(challengeBean);
+                             //  mMessageBeanDatabase.messageBeanDao().insert(messageBean);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
