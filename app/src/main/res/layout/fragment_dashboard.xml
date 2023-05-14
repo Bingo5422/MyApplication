@@ -48,7 +48,7 @@
                     android:text="Recall Words!\n(easy)"
                     android:textAllCaps="false"
                     android:gravity="left"
-                    android:textSize="15sp" />
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btnTest"
@@ -59,7 +59,7 @@
                     android:background="@drawable/recall_pics_bg"
                     android:text="Recall Pictures!\n(hard)"
                     android:textAllCaps="false"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:gravity="left"
                     android:paddingLeft="15dp"
                     android:paddingTop="40dp"/>

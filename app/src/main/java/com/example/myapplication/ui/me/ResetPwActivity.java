@@ -1,10 +1,13 @@
 package com.example.myapplication.ui.me;
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,7 +57,8 @@ public class ResetPwActivity extends AppCompatActivity {
                 String url = DomainURL+"/auth/reset_pw";
 
                 CookieJarImpl cookieJar = new CookieJarImpl(ResetPwActivity.this);
-                OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
+                client.newBuilder().cookieJar(cookieJar).build(); // 新加的一段
+//                OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
                 FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
                 formBody.add("password", et_reset_pw.getText().toString());
                 formBody.add("password_confirm", et_confirm_reset_pw.getText().toString());
@@ -70,14 +74,17 @@ public class ResetPwActivity extends AppCompatActivity {
 
                 request.newBuilder().addHeader(cookie.get(0).name(),cookie.get(0).value());
 
-                // 如果cookie不为空， 发送请求414
+                // 如果cookie不为空， 发送请求
                 if(!cookie.isEmpty()){
                     client.newCall(request).enqueue(new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-                            Looper.prepare();
-                            Toast.makeText(MainActivity.getContext(), "Server Error." +
-                                    " Please check the Internet connection", Toast.LENGTH_SHORT).show();
+                            if(Looper.myLooper()==null)
+                                Looper.prepare();
+                            Toast t = Toast.makeText(MainActivity.getContext(), "Server Error." +
+                                    " Please check the Internet connection", Toast.LENGTH_SHORT);
+                            t.setGravity(Gravity.CENTER,0,0);
+                            t.show();
                             Looper.loop();
                         }
 
@@ -88,10 +95,13 @@ public class ResetPwActivity extends AppCompatActivity {
                             try {
                                 res_json = new JSONObject(res);
                                 if (res_json.getBoolean("if_success")) {
+                                    startActivity(new Intent(ResetPwActivity.this, LoginActivity.class));
                                     if(Looper.myLooper()==null)
                                         Looper.prepare();
-                                    Toast.makeText(MainActivity.getContext(),
-                                            "Password reset successfully", Toast.LENGTH_SHORT).show();
+                                    Toast t = Toast.makeText(MainActivity.getContext(),
+                                            "Password reset successfully", Toast.LENGTH_SHORT);
+                                    t.setGravity(Gravity.CENTER,0,0);
+                                    t.show();
                                     Looper.loop();
                                 } else {
                                     tv_reset_error.post(new Runnable() {

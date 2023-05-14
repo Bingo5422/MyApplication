@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.me;
 
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +16,7 @@ import android.os.Looper;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_login;
     private ImageView iv_login_back, iv_if_visible;
     private EditText et_email, et_password;
-    private TextView tv_register, tv_forget;
+    private TextView tv_register, tv_forget, login_error_msg;
     boolean if_visible;
 
 
@@ -68,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         tv_register = findViewById(R.id.tv_go_register);
         tv_forget = findViewById(R.id.tv_forget);
         iv_if_visible = findViewById(R.id.iv_if_visible);
+        login_error_msg = findViewById(R.id.login_error_msg);
 
          if_visible = false;
 
@@ -79,11 +83,11 @@ public class LoginActivity extends AppCompatActivity {
             CookieJarImpl cookieJar = new CookieJarImpl(LoginActivity.this);
             @Override
             public void onClick(View view) {
-                OkHttpClient client = new OkHttpClient.Builder()
-                        .connectTimeout(10,TimeUnit.SECONDS)
-                        .readTimeout(5, TimeUnit.SECONDS)
-                        .writeTimeout(5, TimeUnit.SECONDS)
-                        .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+//                OkHttpClient client = new OkHttpClient.Builder()
+//                        .connectTimeout(10,TimeUnit.SECONDS)
+//                        .readTimeout(5, TimeUnit.SECONDS)
+//                        .writeTimeout(5, TimeUnit.SECONDS)
+//                        .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
                 // 登录为阻塞请求
                 new Thread(new Runnable() {
@@ -104,50 +108,27 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 if(Looper.myLooper()==null)
                                     Looper.prepare();
-                                Toast.makeText(MainActivity.getContext(), "Unable to login, please check" +
-                                        "the Internet connection.", Toast.LENGTH_SHORT).show();
+
+                                Toast t = Toast.makeText(MainActivity.getContext(), "Unable to login, please check " +
+                                        "the Internet connection.", Toast.LENGTH_SHORT);
+                                t.setGravity(Gravity.CENTER, 0, 0);
+                                t.show();
                                 Looper.loop();
                             }
                         } catch (IOException e) {
                             if(Looper.myLooper()==null)
                                 Looper.prepare();
-                            Toast.makeText(MainActivity.getContext(), "Unable to login, please check" +
-                                    "the Internet connection.", Toast.LENGTH_SHORT).show();
+                            Toast t = Toast.makeText(MainActivity.getContext(), "Unable to login, please check " +
+                                    "the Internet connection.", Toast.LENGTH_SHORT);
+                            t.setGravity(Gravity.CENTER, 0, 0);
+                            t.show();
                             Looper.loop();
+//                            Toast.makeText(MainActivity.getContext(), "Unable to login, please check" +
+//                                    "the Internet connection.", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
                             //throw new RuntimeException(e);
                         }
 
-                        // 获得用户其他信息存到sharedpreferences
-                        Request photo_request = new Request.Builder()
-                                .url(DomainURL + "/info/get_photo")
-                                .build();
-                        List<Cookie> cookie = client.cookieJar().loadForRequest(photo_request.url());
-                        Response info_res = null;
-                        if (!cookie.isEmpty()){
-                            photo_request.newBuilder().addHeader(cookie.get(0).name(),cookie.get(0).value());
-                            try {
-                                info_res = client.newCall(photo_request).execute();
-                                if(info_res.isSuccessful()){
-                                    GetInfoSuccess(LoginActivity.this, info_res);
-                                }
-                            } catch (IOException e) {
-                                if(Looper.myLooper()==null)
-                                    Looper.prepare();
-                                Toast.makeText(MainActivity.getContext(), "Unable to get info, please check" +
-                                        "the Internet connection.", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
-                                //throw new RuntimeException(e);
-                            }
-                        }
-
-                        // 登陆成功 跳转回主界面
-                        Intent login_intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(login_intent);
-
-                        if(Looper.myLooper()==null)
-                            Looper.prepare();
-                        Toast.makeText(MainActivity.getContext(), "Login successfully", Toast.LENGTH_SHORT).show();
-                        Looper.loop();
 
                     }
                 }).start();
@@ -202,6 +183,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+
+    }
         private void LoginSuccess(Response response, OkHttpClient client, Context context){
             JSONObject res_json;
             String res = null;
@@ -228,12 +216,54 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("nickname", info.getString("nickname"));
                     editor.commit();
 
-                } else {
+                    // 获得用户其他信息存到sharedpreferences
+                    Request photo_request = new Request.Builder()
+                            .url(DomainURL + "/info/get_photo")
+                            .build();
+                    List<Cookie> cookie = client.cookieJar().loadForRequest(photo_request.url());
+                    Response info_res = null;
+                    if (!cookie.isEmpty()){
+                        photo_request.newBuilder().addHeader(cookie.get(0).name(),cookie.get(0).value());
+                        try {
+                            info_res = client.newCall(photo_request).execute();
+                            if(info_res.isSuccessful()){
+                                GetInfoSuccess(LoginActivity.this, info_res); //获得响应，将图片存到本地
+                            }
+                        } catch (IOException e) {
+                            if(Looper.myLooper()==null)
+                                Looper.prepare();
+                            Toast.makeText(MainActivity.getContext(), "Unable to get info, please check" +
+                                    "your Internet connection.", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                            //throw new RuntimeException(e);
+                        }
+                    }
+
+                    // 登陆成功 跳转回主界面
+                    Intent login_intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(login_intent);
+
                     if(Looper.myLooper()==null)
                         Looper.prepare();
-                    Toast.makeText(MainActivity.getContext(), res_json.getString("message"),
-                            Toast.LENGTH_SHORT).show();
+                    Toast t = Toast.makeText(MainActivity.getContext(), "Login successfully", Toast.LENGTH_SHORT);
+                    t.setGravity(Gravity.CENTER, 0, 0);
+                    t.show();
                     Looper.loop();
+
+                } else {
+                    login_error_msg.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                login_error_msg.setText(res_json.getString("message"));
+                            } catch (JSONException e) {}
+                        }
+                    });
+//                    if(Looper.myLooper()==null)
+//                        Looper.prepare();
+//                    Toast.makeText(MainActivity.getContext(), res_json.getString("message"),
+//                            Toast.LENGTH_SHORT).show();
+//                    Looper.loop();
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -249,7 +279,6 @@ public class LoginActivity extends AppCompatActivity {
                 byte[] buf = new byte[4096];
                 int len = 0;
 
-                //todo 改为需要的头像存储路径
                 String TargetPath = getExternalFilesDir("Load_from_server").getAbsolutePath();
                 File saveFile = new File(TargetPath, "photo.jpg");
 

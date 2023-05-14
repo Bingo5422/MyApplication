@@ -7,6 +7,7 @@
     tools:context=".ui.me.ServerHistActivity">
 
     <ImageView
+        android:id="@+id/server_hist_back"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="15dp"
@@ -24,12 +25,20 @@
         >
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:text="Server History"
             android:gravity="center"
             android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_server_hist_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textSize="15sp"
+            android:text="(/50)"/>
 
     </LinearLayout>
 

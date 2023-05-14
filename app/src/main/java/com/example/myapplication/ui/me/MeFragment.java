@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.me;
 
+import static com.example.myapplication.MainActivity.DomainURL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,7 +45,8 @@ public class MeFragment extends Fragment {
     private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
     private Uri uri;
 //    final static String DomainURL = "http://172.26.14.175:5000";
-    final static String DomainURL = "http://192.168.117.21:5000";
+//    final static String DomainURL = "http://192.168.113.21:5000";
+    static OkHttpClient client;
 //    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
     private Button btn_login, btn_display, btn_edit_info, btn_synchro;
@@ -130,11 +133,16 @@ public class MeFragment extends Fragment {
         }
 
         CookieJarImpl cookieJar = new CookieJarImpl(getActivity());
-        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar)
+        client = new OkHttpClient.Builder().cookieJar(cookieJar)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
                 .build();//创建OkHttpClient对象。
+//        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar)
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(5, TimeUnit.SECONDS)
+//                .readTimeout(5, TimeUnit.SECONDS)
+//                .build();//创建OkHttpClient对象。
         // 为了正常格式的url创建的request对象
         Request request = new Request.Builder()
                 .url(url)
@@ -184,6 +192,14 @@ public class MeFragment extends Fragment {
                             editor.remove("nickname");
                             editor.remove("photo");
                             editor.commit();
+
+                            SharedPreferences p_cookie = getActivity()
+                                    .getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor e_cookie = p_cookie.edit();
+                            e_cookie.clear();
+                            e_cookie.commit();
+
+
                             text.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -255,6 +271,11 @@ public class MeFragment extends Fragment {
         try {
             response = client.newCall(logout_req).execute();
             if(response.isSuccessful()) {
+                //清除cookie
+                SharedPreferences p_cookie = getActivity().getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
+                SharedPreferences.Editor e_cookie = p_cookie.edit();
+                e_cookie.clear();
+                e_cookie.commit();
                 // 清除用户登陆显示
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove("user_id");
@@ -270,7 +291,6 @@ public class MeFragment extends Fragment {
                 user_photo.post(new Runnable() {
                     @Override
                     public void run() {
-                        //todo 退出后更新为默认头像
                         user_photo.setImageResource(R.mipmap.default_portrait);
                     }
                 });
@@ -285,7 +305,7 @@ public class MeFragment extends Fragment {
             else{
                 if(Looper.myLooper()==null)
                     Looper.prepare();
-                Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
+                Toast.makeText(MainActivity.getContext(), "Server Error. Please check " +
                         "the Internet connection", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
@@ -293,7 +313,7 @@ public class MeFragment extends Fragment {
 //            throw new RuntimeException(e);
             if(Looper.myLooper()==null)
                 Looper.prepare();
-            Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
+            Toast.makeText(MainActivity.getContext(), "Server Error. Please check " +
                     "the Internet connection", Toast.LENGTH_SHORT).show();
             Looper.loop();
         }

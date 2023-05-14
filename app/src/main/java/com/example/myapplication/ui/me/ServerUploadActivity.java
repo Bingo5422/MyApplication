@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.me;
 
-import static com.example.myapplication.ui.me.MeFragment.DomainURL;
+
+import static com.example.myapplication.MainActivity.DomainURL;
+import static com.example.myapplication.ui.me.MeFragment.client;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,13 +20,16 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.Adapter.UploadCheckAdapter;
+import com.example.myapplication.Bean.ChallengeBean;
 import com.example.myapplication.Bean.CheckBean;
 import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Dao.HistoryDao;
@@ -76,12 +81,13 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
     private HistoryDao historyDao;
     private List<Cookie> cookie;
     private JSONObject server_list, star_list;
-    private OkHttpClient client;
+//    private OkHttpClient client;
     //修改info_path, delete_info_path 选择合适的路径保存json文档，该文档可以放在和图片一样的路径
     private String savePath, info_path, download_path, delete_info_path;
     private int fileNum;
 
     private NotificationManager notificationManager;
+    private ImageView synchro_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +109,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         btn_upload_unfamiliar = findViewById(R.id.btn_upload_unfamiliar);
         btn_download_stars = findViewById(R.id.btn_download_stars);
         btn_download_unfamiliar = findViewById(R.id.btn_download_unfamiliar);
+        synchro_back = findViewById(R.id.synchro_back);
 
 
         btn_upload_stars.setOnClickListener(this);
@@ -112,6 +119,13 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         btn_download_stars.setOnClickListener(this);
 
         btn_download_unfamiliar.setOnClickListener(this);
+
+        synchro_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
     }
 
@@ -154,20 +168,18 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 .build();
         /***********到这结束**********/
 
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .post(body)
-//                .build();
 
         cookie = client.cookieJar().loadForRequest(request.url());
         request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
         client.newCall(request).enqueue(new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
-                if(Looper.myLooper()==null)
+                notify_builder.setContentText("Failed");
+                notificationManager.notify(notify_id, notify_builder.build());
+                if (Looper.myLooper()==null)
                     Looper.prepare();
                 Toast.makeText(ServerUploadActivity.this,
-                        "Fail to upload.",Toast.LENGTH_SHORT).show();
+                        "Unable to upload. Please check your internet connection.",Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
 
@@ -179,6 +191,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                     if(res_msg.getBoolean("if_success")){
 
                         /********从这开始都是新加的********/
+                        notify_builder.setProgress(100, 100, false);
                         notify_builder.setContentText("Complete");
                         notificationManager.notify(notify_id, notify_builder.build());
                         /********到这结束********/
@@ -189,6 +202,11 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                                 "Successfully uploaded.",Toast.LENGTH_SHORT).show();
                         Looper.loop();
                     }else{
+                        /********从这开始都是新加的********/
+                        notify_builder.setContentText("Interrupted");
+                        notificationManager.notify(notify_id, notify_builder.build());
+                        /********到这结束********/
+
                         if(Looper.myLooper()==null)
                             Looper.prepare();
                         Toast.makeText(ServerUploadActivity.this,
@@ -242,10 +260,16 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
 
                 //服务器没有的图片加入multipartbody准备上传
+                //上传图片
                 if(!server_list.has(bean.getFileName())) {
                     File file = new File(bean.getPath());
+//                    String f = bean.getFileName();
+//                    String[] s = f.split("\\.");
+                    String filetype = bean.getFileName().split("\\.")[1];
+//                    multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),
+//                            (RequestBody.create(MediaType.parse("image/*jpg"), file)));
                     multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),
-                            (RequestBody.create(MediaType.parse("image/*jpg"), file)));
+                            (RequestBody.create(MediaType.parse("image/*"+filetype), file)));
                     fileNum++;
                 }
                 else{
@@ -300,10 +324,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                if(Looper.myLooper()==null)
+                if (Looper.myLooper()==null)
                     Looper.prepare();
                 Toast.makeText(ServerUploadActivity.this,
-                        "Fail to get server list.",Toast.LENGTH_SHORT).show();
+                        "Unable to upload. Please check your internet connection.",Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
 
@@ -351,14 +375,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 }
             }
             return info;
-//            for (int i = 0; i < localList.size(); i++) {
-//                HistoryBean bean = localList.get(i);
-//
-//                if (server_list.has(bean.getFileName())) {
-//                    // 如果本地有服务器也有该文件，就不下载了
-//                    server_list.remove(bean.getFileName());
-//                }
-//            }
 
 
         } catch (JSONException e) {
@@ -367,12 +383,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             throw new RuntimeException(e);
         }
 
-            // 写download.json到本地
-//            FileOutputStream fos = new FileOutputStream(download_path);
-//            OutputStreamWriter os = new OutputStreamWriter(fos);
-//            BufferedWriter w = new BufferedWriter(os);
-//            w.write(info.toString());
-//            w.close();
     }
 
     private void Download(OkHttpClient client, String url, JSONObject info){
@@ -390,7 +400,11 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("fail to connect to server");
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerUploadActivity.this,
+                        "Unable to download. Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
@@ -512,7 +526,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 if(Looper.myLooper()==null)
                     Looper.prepare();
                 Toast.makeText(ServerUploadActivity.this,
-                        "Fail to get server list.",Toast.LENGTH_SHORT).show();
+                        "Unable to download. Please check your internet connection",Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
 
@@ -574,7 +588,12 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("fail to connect to server");
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerUploadActivity.this,
+                        "Unable to download." +
+                                " Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
@@ -589,7 +608,13 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 try {
                     is = response.body().byteStream();
 
+
                     File file = new File(savePath, "pack.zip");
+                    if (!file.getParentFile().exists()) {
+                        if (!file.getParentFile().mkdirs()) {
+                            Log.e("Error", "Failed to create directory");
+                        }
+                    }
                     fos = new FileOutputStream(file);
 
                     while ((len = is.read(buf)) != -1) {
@@ -597,7 +622,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                         sum += len;
                         int progress = (int) (sum * 1.0f / total * 100);
                         // 下载中
-                        //todo: 进度条显示
                         notify_builder.setProgress(100, progress, false);
                         notify_builder.setContentText(progress + "%");
                         notificationManager.notify(111, notify_builder.build());
@@ -667,7 +691,12 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("wrong");
+                if(Looper.myLooper()==null)
+                    Looper.prepare();
+                Toast.makeText(ServerUploadActivity.this,
+                        "Unable to download." +
+                                " Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
@@ -698,7 +727,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             NotificationChannel channel = new NotificationChannel(
                     msg_channel,
                     name,
-                    NotificationManager.IMPORTANCE_HIGH
+                    NotificationManager.IMPORTANCE_DEFAULT // 原来是importance high
             );
             notificationManager = this.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -709,17 +738,22 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
 
         CookieJarImpl cookieJar = new CookieJarImpl(ServerUploadActivity.this);
-        client = new OkHttpClient.Builder()
+        client.newBuilder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
                 .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+//        client = new OkHttpClient.Builder()
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(5, TimeUnit.SECONDS)
+//                .readTimeout(5, TimeUnit.SECONDS)
+//                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
         if(view.getId()==R.id.btn_upload_stars){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Warn")//设置对话框的标题
-                    .setMessage("This operation will overwrite all previous records. " +
-                            "\nAre you sure you want to continue?")//设置对话框的内容
+                    .setTitle("Note")//设置对话框的标题
+                    .setMessage("Note: This operation will overwrite your server favorites. " +
+                            "\n\nAre you sure you want to continue?")//设置对话框的内容
                     //设置对话框的按钮
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
@@ -742,10 +776,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         }
         else if(view.getId()==R.id.btn_upload_unfamiliar){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Warn")//设置对话框的标题
-                    .setMessage("This operation will overwrite all previous records and requires " +
-                            "reuploading the favorites (server favorites will be cleared). " +
-                            "\nAre you sure you want to continue?")//设置对话框的内容
+                    .setTitle("Note")//设置对话框的标题
+                    .setMessage("Note: This operation will overwrite your server unfamiliar words and " +
+                            "server favorites will be cleared. " +
+                            "\n\nAre you sure to continue?")//设置对话框的内容
                     //设置对话框的按钮
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
@@ -767,13 +801,52 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
         }
         else if(view.getId()==R.id.btn_download_stars){
-            starCompare_and_download();
+            AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
+                    .setTitle("Note")//设置对话框的标题
+                    .setMessage("Note: This operation will overwrite your local favorites" +
+                            "\n\nAre you sure to continue?")//设置对话框的内容
+                    //设置对话框的按钮
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            starCompare_and_download();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create();
+            dialog.show();
+
         }
         else if(view.getId()==R.id.btn_download_unfamiliar){
-            List<HistoryBean> local_unfamiliar = historyDao.queryNumLow3();
-            localCompare_and_download(client,
-                    DomainURL + "/hist/filename_list_unfamiliar",
-                    local_unfamiliar);
+            AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
+                    .setTitle("Note")//设置对话框的标题
+                    .setMessage(
+                            "Note: All unfamiliar words downloaded will not be marked as favorites.\n\n" +
+                                    "Are you sure you want to continue?")//设置对话框的内容
+                    //设置对话框的按钮
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            List<HistoryBean> local_unfamiliar = historyDao.queryNumLow3();
+                            localCompare_and_download(client,
+                                    DomainURL + "/hist/filename_list_unfamiliar",
+                                    local_unfamiliar);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create();
+            dialog.show();
+
         }
     }
 }

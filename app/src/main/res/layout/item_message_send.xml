@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/background"
+        android:background="@drawable/light_green_round"
         android:gravity="right|top" >
 
         <TextView
@@ -20,14 +20,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:textSize="12sp" />
+            android:textSize="10sp"
+            android:layout_marginHorizontal="5dp"/>
     </LinearLayout>
 
 </RelativeLayout>
