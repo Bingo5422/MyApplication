@@ -16,10 +16,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +51,8 @@ import com.example.myapplication.ui.recognition.PhotoRecActivity;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class HomeFragment extends Fragment {
@@ -66,6 +70,7 @@ public class HomeFragment extends Fragment {
 
     private int item=0;
     String[] stringArray;
+    Context context;
 
 
 
@@ -73,6 +78,11 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+        Locale.setDefault(Locale.ENGLISH);
+
 
         sp = getActivity().getSharedPreferences("sp", Context.MODE_PRIVATE);
         String lan = sp.getString("lan", "");
@@ -174,22 +184,34 @@ public class HomeFragment extends Fragment {
         int minute = calendar.get(Calendar.MINUTE);
 
         //弹出闹钟框
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),AlertDialog.THEME_HOLO_LIGHT, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 Calendar c = Calendar.getInstance();    //获取日期对象
+
                 c.set(Calendar.HOUR_OF_DAY, hourOfDay); //设置闹钟小时数
                 c.set(Calendar.MINUTE, minute); //设置闹钟分钟数
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MILLISECOND, 0);
+
                 Intent intent = new Intent(getContext(), TimeReceiver.class);
                 //创建pendingIntent
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0X102, intent,0);
                 //设置闹钟
-                alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
                 Toast.makeText(getContext(), "The alarm is set successfully.", Toast.LENGTH_SHORT).show();
             }
-        },hour,minute,true);
+        },hour,minute, true);
+        timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", timePickerDialog);
+        timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL", timePickerDialog);
         timePickerDialog.show();
+
+
+
     }
+
+
+
 
 
 
