@@ -72,7 +72,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         }
 
 
-        if (study) {
+        if (study & !today) {
             holder.star.setVisibility(View.VISIBLE);
         }else {
             holder.star.setVisibility(View.GONE);
