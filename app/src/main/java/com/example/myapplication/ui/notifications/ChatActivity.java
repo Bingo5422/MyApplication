@@ -481,11 +481,7 @@ public class ChatActivity extends AppCompatActivity {
                 // 遍历download_info_json,把里面的信息和对应的图片存储到数据库中
                 for(int i=0;i<download_info_json.length();i++) {
                     try {
-
-
                         JSONObject item = download_info_json.getJSONObject(String.valueOf(i));
-
-
                         ChallengeBean challengeBean = new ChallengeBean();
                         challengeBean.setName(item.getString("name"));
                         challengeBean.setFilepath(folderPath + "/photos/" + item.getString("filename"));
@@ -497,6 +493,9 @@ public class ChatActivity extends AppCompatActivity {
                         challengeBean.setJpName(item.getString("jpName"));
                         challengeBean.setFraName(item.getString("FraName"));
                         challengeBean.setFilename(item.getString("filename"));
+
+                        challengeBean.setGroup(item.getString("group"));
+
                     //    challengeBean.setIf_star(item.getInt("if_star"));
                     //    challengeBean.setNum(item.getInt("proficiency"));
 

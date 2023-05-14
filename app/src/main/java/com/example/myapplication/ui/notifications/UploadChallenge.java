@@ -206,7 +206,7 @@ public class UploadChallenge extends AppCompatActivity {
         // 创建Gson对象
         Gson gson = new Gson();
 
-// 将List<ChallengeBean>转换为JSON字符串
+        // 将List<ChallengeBean>转换为JSON字符串
         String json = gson.toJson(challengeList);
 
         JSONArray jsonArray = new JSONArray(json);

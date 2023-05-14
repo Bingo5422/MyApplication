@@ -64,8 +64,9 @@ public class ChallengeBean  {
         this.group = group;
     }
 
-    @ColumnInfo(name = "group")
+    @ColumnInfo(name = "groupNum")
     private String group;
+
     @Override
     public String toString() {
         return "ChallengeBean{" +
@@ -75,6 +76,8 @@ public class ChallengeBean  {
                 ", jpName='" + jpName + '\'' +
                 ", korName='" + korName + '\'' +
                 ", FraName='" + FraName + '\'' +
+                ", code='" + code + '\'' +
+                ", group='" + group + '\'' +
                 ", spaName='" + spaName + '\'' +
                 ", name='" + name + '\'' +
                 '}';
