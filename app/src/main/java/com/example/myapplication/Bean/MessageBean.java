@@ -24,6 +24,11 @@ public class MessageBean {
 
     @ColumnInfo(name = "challenge")
     private Boolean challenge;
+
+    public void setChallenge(Boolean challenge) {
+        this.challenge = challenge;
+    }
+
     @ColumnInfo(name = "to_user")
     private String toUser;
 

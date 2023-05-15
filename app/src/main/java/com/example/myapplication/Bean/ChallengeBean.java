@@ -11,12 +11,25 @@ import java.io.Serializable;
 
 @Entity(tableName = "challenge_records")
 public class ChallengeBean  {
-    @PrimaryKey(autoGenerate = false)
-    @NonNull
+
     @ColumnInfo(name = "filename")
     private String filename;
+
+
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    private int id;
     @ColumnInfo(name = "filepath")
     private String filepath;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @ColumnInfo(name = "enName")
     private String enName;
     @ColumnInfo(name = "jpName")
@@ -38,15 +51,13 @@ public class ChallengeBean  {
 
     public ChallengeBean(String filename, String filepath,
                          String enName, String jpName, String korName,
-
-
                          String fraName, String code, String group, String spaName, String name) {
         this.filename = filename;
-        this.filepath = filepath;
+this.filepath = filepath;
         this.enName = enName;
         this.jpName = jpName;
         this.korName = korName;
-        FraName = fraName;
+        this.FraName = fraName;
         this.code = code;
         this.group = group;
         this.spaName = spaName;

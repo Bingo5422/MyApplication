@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapplication.Bean.FriendsBean;
@@ -34,11 +35,14 @@ public class AddFriendActivity extends AppCompatActivity {
     private EditText mFriendIdEditText;
     private FriendDatabase mFriendDatabase;
 
+    private ImageView add_fri;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friend);
-
+        add_fri = findViewById(R.id.add_fri_back);
         mFriendIdEditText = findViewById(R.id.editTextFriendId);
         mFriendDatabase = Room.databaseBuilder(getApplicationContext(), FriendDatabase.class, "friend_db").build();
 
@@ -49,7 +53,16 @@ public class AddFriendActivity extends AppCompatActivity {
                 addFriend();
             }
         });
+
+        add_fri.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
+
+
 
     private void addFriend() {
         String friendId = mFriendIdEditText.getText().toString().trim();

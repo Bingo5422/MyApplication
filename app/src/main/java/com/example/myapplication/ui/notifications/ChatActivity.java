@@ -24,6 +24,7 @@ import com.example.myapplication.Bean.ChallengeBean;
 import com.example.myapplication.Bean.FriendsBean;
 import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Bean.MessageBean;
+import com.example.myapplication.Dao.ChallengeDao;
 import com.example.myapplication.Dao.MessageBeanDao;
 import com.example.myapplication.R;
 import com.example.myapplication.Adapter.MessageAdapter;
@@ -34,6 +35,7 @@ import com.example.myapplication.ui.me.LoginActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,19 +93,24 @@ public class ChatActivity extends AppCompatActivity {
 
     SharedPreferences preferences;
     public static String urldown;
-    static int messagenum,lastmessagenum;
+    int messagenum,lastmessagenum;
     static String userId;
     static CookieJarImpl cookieJar;
     static OkHttpClient client;
+    private ChallengeDao challengeDao;
+    private ChallengeBeanDatabase challengeBeanDatabase;
 
+    private int listnum = 0;
 
     private static MessageBeanDatabase mMessageBeanDatabase;
-    private static ChallengeBeanDatabase mChallengeBeanDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        challengeBeanDatabase = Room.databaseBuilder(this, ChallengeBeanDatabase.class, "challenge_db").allowMainThreadQueries().build();
+        challengeDao = challengeBeanDatabase.challengeDao();
         cookieJar = new CookieJarImpl(ChatActivity.this);
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
@@ -123,6 +131,8 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView = findViewById(R.id.recycler_view);
         mAdapter = new MessageAdapter(mMessageList,this);
+
+
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -135,7 +145,7 @@ public class ChatActivity extends AppCompatActivity {
 
         challengeButton = findViewById(R.id.challenge_button);
 
-
+        //Download(client,"9806114");
         challengeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,6 +213,7 @@ public class ChatActivity extends AppCompatActivity {
                     message.setContent(messageText);
                     message.setFromUser(userId);
                     message.setToUser(friendId);
+                    message.setChallenge(false);
                     String date_temp = new Date().toString();
                     try {
                         message.setSendTime(changeDate(date_temp,2));
@@ -216,14 +227,12 @@ public class ChatActivity extends AppCompatActivity {
                    // mMessageBeanDatabase.messageBeanDao().insert(message);
                     // 清空输入框
                     mInputEditText.setText("");
-
-
-
-                    // 将消息添加到 RecyclerView 中
-                    mMessageList.add(message);
-                    mAdapter.setList(mMessageList);
-                    mAdapter.notifyItemInserted(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
-                    mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
+//todo
+//                    // 将消息添加到 RecyclerView 中
+//                    mMessageList.add(message);
+//                    mAdapter.setList(mMessageList);
+//                    mAdapter.notifyItemInserted(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
+//                    mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
                 }
             }
         });
@@ -237,26 +246,30 @@ public class ChatActivity extends AppCompatActivity {
             public void run() {
                 // 从数据库中查询指定好友的聊天记录 sharedPreference
                 List<MessageBean> chatRecords = mMessBeanDao.getMessages(friendId,userId);
-                //chatRecords.addAll(mMessBeanDao.getMessages(userId,friendId));
-                // 将聊天记录添加到消息列表中
-                mMessageList.addAll(chatRecords);
 
-                // 刷新 RecyclerView
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //用于通知 RecyclerView 的 Adapter
-                        // 数据集发生了变化，从而触发 RecyclerView 进行刷新操作，更新显示的数据。
+                if(chatRecords.size()>listnum){
+                    //chatRecords.addAll(mMessBeanDao.getMessages(userId,friendId));
+                    // 将聊天记录添加到消息列表中
+                    mMessageList.addAll(chatRecords);
 
-                        mAdapter.setList(chatRecords);
+                    // 刷新 RecyclerView
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //用于通知 RecyclerView 的 Adapter
+                            // 数据集发生了变化，从而触发 RecyclerView 进行刷新操作，更新显示的数据。
 
-                        mAdapter.notifyDataSetChanged();
-                        //用于将 RecyclerView 滚动到最后一条消息的位置。mMessageList.size() - 1 表示最后一条
-                        // 消息在数据集中的位置，smoothScrollToPosition()
-                        //方法会平滑地滚动 RecyclerView 到指定位置，从而确保用户可以看到最新的消息。
-//                        mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);//todo
-                    }
-                });
+                            mAdapter.setList(chatRecords);
+                            mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
+                            mAdapter.notifyDataSetChanged();
+                            //用于将 RecyclerView 滚动到最后一条消息的位置。mMessageList.size() - 1 表示最后一条
+                            // 消息在数据集中的位置，smoothScrollToPosition()
+                            //方法会平滑地滚动 RecyclerView 到指定位置，从而确保用户可以看到最新的消息。
+
+                        }
+                    });
+                    listnum= chatRecords.size();
+                }
             }
         }).start();
     }
@@ -296,20 +309,23 @@ public class ChatActivity extends AppCompatActivity {
                                 JSONObject jsonObject = new JSONObject(jsonResponse);
                                 Iterator<String> keys = jsonObject.keys();
                                 messagenum = jsonObject.length();//todo
+                                //todo 写报告的时候详细说
+                                ArrayList<String> grouplist =  new ArrayList<>();
 
                                 if (messagenum>lastmessagenum) {
                                     while (keys.hasNext()) {
                                         String key = keys.next();
                                         JSONObject messageObj = jsonObject.getJSONObject(key);
                                         boolean challenge = messageObj.getBoolean("challenge");
-                                        String message = messageObj.getString("message");
+                                        String content = messageObj.getString("message");
                                         String to = messageObj.getString("to");
                                         String message_from = messageObj.getString("message_from");
                                         String time = messageObj.getString("time");
-                                        MessageBean messageBean = new MessageBean(key, message_from, to, message, changeDate(time, 1), challenge);
+                                        MessageBean messageBean = new MessageBean(key, message_from, to, content, changeDate(time, 1), challenge);
                                         mMessageBeanDatabase.messageBeanDao().insert(messageBean);
-                                        if (challenge==true){
-                                            Download(client,message);
+                                            if((!grouplist.contains(content)) & challenge){
+                                                Download(client,content);
+                                                grouplist.add(content);
                                         }
                                     }
                                 }
@@ -408,7 +424,6 @@ public class ChatActivity extends AppCompatActivity {
     private void Download(OkHttpClient client, String group){
 
 
-
         FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
 
         formBody.add("group", group);//传递键值对参数
@@ -427,18 +442,21 @@ public class ChatActivity extends AppCompatActivity {
                 System.out.println("fail to connect to server");
             }
 
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 InputStream is = null;
-                byte[] buf = new byte[4096];
+               // byte[] buf = new byte[1024];
+                byte[] buf = new byte[(int)response.body().contentLength()];
                 int len = 0;
 
                 FileOutputStream fos = null;
-
+                Random r = new Random();
+                int ranPath = r.nextInt(100000);
                 try {
                     is = response.body().byteStream();
 
-                    File file = new File(folderPath,"pack.zip");
+                    File file = new File(folderPath+ranPath,"pack.zip");
                     if (!file.getParentFile().exists()) {
                         if (!file.getParentFile().mkdirs()) {
                             Log.e("Error", "Failed to create directory");
@@ -454,63 +472,103 @@ public class ChatActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
 
+                folderPath = folderPath+ranPath;
                 String zipPath = folderPath + "/pack.zip";
                 // 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
                 FileUtil.unzip(zipPath, folderPath+"/photos");
 
                 //读取解压的下载文件信息
-                File download_info = new File(folderPath+"/photos/messages.json");
-                FileReader fileReader = new FileReader(download_info);
-                Reader reader = new InputStreamReader(new FileInputStream(download_info), "Utf-8");
-                int ch= 0;
-                StringBuffer sb = new StringBuffer();
-                while((ch = reader.read()) != -1) {
-                    sb.append((char) ch);
-                }
-                fileReader.close();
-                reader.close();
+  //              File download_info = new File(folderPath+"/photos/messages.json");
+//                FileReader fileReader = new FileReader(download_info);
+//                Reader reader = new InputStreamReader(new FileInputStream(download_info), "Utf-8");
+//                int ch= 0;
+//                StringBuffer sb = new StringBuffer();
+//                while((ch = reader.read()) != -1) {
+//                    sb.append((char) ch);
+//                }
+//                fileReader.close();
+//                reader.close();
+//
+//                //转json对象
+//                JSONObject download_info_json = null;
+//                try {
+//                    download_info_json = new JSONObject(sb.toString());
+//                } catch (JSONException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//                // 遍历download_info_json,把里面的信息和对应的图片存储到数据库中
+//                for(int i=0;i<download_info_json.length();i++) {
+//                    try {
+//
+//
+//                        JSONObject item = download_info_json.getJSONObject(String.valueOf(i));
+//
+//
+//                        ChallengeBean challengeBean = new ChallengeBean();
+//                        challengeBean.setName(item.getString("name"));
+//                        challengeBean.setFilepath(folderPath + "/photos/" + item.getString("filename"));
+//                   //     challengeBean.setDateTime(item.getString("datetime"));
+//                        challengeBean.setCode(item.getString("code"));
+//                        challengeBean.setEnName(item.getString("enName"));
+//                        challengeBean.setKorName(item.getString("korName"));
+//                        challengeBean.setSpaName(item.getString("spaName"));
+//                        challengeBean.setJpName(item.getString("jpName"));
+//                        challengeBean.setFraName(item.getString("FraName"));
+//                        challengeBean.setFilename(item.getString("filename"));
+//                    //    challengeBean.setIf_star(item.getInt("if_star"));
+//                    //    challengeBean.setNum(item.getInt("proficiency"));
+//
+//                       mChallengeBeanDatabase.challengeDao().insert(challengeBean);
+//                             //  mMessageBeanDatabase.messageBeanDao().insert(messageBean);
+//                    } catch (JSONException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
 
-                //转json对象
-                JSONObject download_info_json = null;
+
+                // 读取message.json文件并解析为ChallengeBean对象
+                String filePath = folderPath+"/photos/messages.json";
                 try {
-                    download_info_json = new JSONObject(sb.toString());
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-
-                // 遍历download_info_json,把里面的信息和对应的图片存储到数据库中
-                for(int i=0;i<download_info_json.length();i++) {
-                    try {
-                        JSONObject item = download_info_json.getJSONObject(String.valueOf(i));
-                        ChallengeBean challengeBean = new ChallengeBean();
-                        challengeBean.setName(item.getString("name"));
-                        challengeBean.setFilepath(folderPath + "/photos/" + item.getString("filename"));
-                   //     challengeBean.setDateTime(item.getString("datetime"));
-                        challengeBean.setCode(item.getString("code"));
-                        challengeBean.setEnName(item.getString("enName"));
-                        challengeBean.setKorName(item.getString("korName"));
-                        challengeBean.setSpaName(item.getString("spaName"));
-                        challengeBean.setJpName(item.getString("jpName"));
-                        challengeBean.setFraName(item.getString("FraName"));
-                        challengeBean.setFilename(item.getString("filename"));
-
-                        challengeBean.setGroup(item.getString("group"));
-
-                    //    challengeBean.setIf_star(item.getInt("if_star"));
-                    //    challengeBean.setNum(item.getInt("proficiency"));
-
-                       mChallengeBeanDatabase.challengeDao().insert(challengeBean);
-                             //  mMessageBeanDatabase.messageBeanDao().insert(messageBean);
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                    // 读取文件内容
+                    InputStream inputStream = new FileInputStream(new File(filePath));
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line = null;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line);
                     }
+                    inputStream.close();
+
+                    // 遍历JSON对象并转化为ChallengeBean对象
+                    JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+                    Iterator<String> keys = jsonObject.keys();
+                    while (keys.hasNext()) {
+
+                        String key = keys.next();
+                        JSONObject challengeObj = jsonObject.getJSONObject(key);
+                        String code = challengeObj.getString("code");
+                        String enName = challengeObj.getString("enName");
+                        String FraName = challengeObj.getString("FraName");
+                        String filename = challengeObj.getString("filename");
+                        String jpName = challengeObj.getString("jpName");
+                        String spaName = challengeObj.getString("spaName");
+                        String korName = challengeObj.getString("korName");
+                        String name = challengeObj.getString("name");
+                        String path = folderPath+"/photos"+"/"+filename;
+                        String challenge_group = challengeObj.getString("challenge_group");
+                        ChallengeBean challengeBean = new ChallengeBean(filename,path, enName,jpName,korName,FraName,code,challenge_group,spaName,name);
+                        challengeDao.insert(challengeBean);
+
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
-                if(Looper.myLooper()==null)
-                    Looper.prepare();
-                Toast.makeText(ChatActivity.this,
-                        "Successfully get challenge.",Toast.LENGTH_SHORT).show();
-                Looper.loop();
 
 
             }
@@ -542,6 +600,7 @@ public class ChatActivity extends AppCompatActivity {
             message.setContent(group);
             message.setFromUser(userId);
             message.setToUser(friendId);
+            message.setChallenge(true);
             String date_temp = new Date().toString();
             try {
                 message.setSendTime(changeDate(date_temp, 2));

@@ -154,7 +154,7 @@ public class UploadChallenge extends AppCompatActivity {
                     List<File> fileList = packPhoto(selectedPhotoDataList);
                     try {
                         uploadFiles(fileList,filejson);
-
+//todo 很精妙写到报告里面
                         Intent intentback = new Intent(UploadChallenge.this, ChatActivity.class);
                         intentback.putExtra("group", group);
                         //startActivity(intentback);

@@ -3,17 +3,23 @@ package com.example.myapplication.Adapter;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.Bean.FriendsBean;
 import com.example.myapplication.Bean.MessageBean;
 import com.example.myapplication.R;
+import com.example.myapplication.ui.notifications.ChatActivity;
+import com.example.myapplication.ui.notifications.ReceiveChallengeActivity;
+
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,13 +92,37 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         sortBeansByTimestamp(mMessageList);
         MessageBean message = mMessageList.get(position);
+        Boolean isChallenge = message.getChallenge();
 
             if (holder instanceof ReceiveViewHolder) {
-                ((ReceiveViewHolder) holder).messageTextView.setText(message.getContent());
-                ((ReceiveViewHolder) holder).timeTextView.setText(String.valueOf(message.getSendTime()));
+                if(isChallenge){
+                    ((ReceiveViewHolder) holder).iv.setVisibility(View.VISIBLE);
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(v.getContext(), ReceiveChallengeActivity.class);
+                            intent.putExtra("group",message.getContent());
+                            v.getContext().startActivity(intent);
+                        }
+                    });
+                }else {
+
+                    ((ReceiveViewHolder) holder).messageTextView.setText(message.getContent());
+                    ((ReceiveViewHolder) holder).timeTextView.setText(String.valueOf(message.getSendTime()));
+                }
+
             } else {
-                ((SendViewHolder) holder).messageTextView.setText(message.getContent());
-                ((SendViewHolder) holder).timeTextView.setText(String.valueOf(message.getSendTime()));
+                if(isChallenge){
+                    ((SendViewHolder) holder).iv.setVisibility(View.VISIBLE);
+                    ((SendViewHolder) holder).messageTextView.setVisibility(View.GONE);
+                    ((SendViewHolder) holder).timeTextView.setVisibility(View.GONE);
+
+                }else{
+                    ((SendViewHolder) holder).iv.setVisibility(View.GONE);
+                    ((SendViewHolder) holder).messageTextView.setText(message.getContent());
+                    ((SendViewHolder) holder).timeTextView.setText(String.valueOf(message.getSendTime()));
+                }
+
             }
         }
 
@@ -133,10 +163,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView messageTextView;
         TextView timeTextView;
 
+        ImageView iv;
         ReceiveViewHolder(View itemView) {
             super(itemView);
             messageTextView = itemView.findViewById(R.id.message_text_view);
             timeTextView = itemView.findViewById(R.id.time_text_view);
+            iv =itemView.findViewById(R.id.heart);
         }
     }
 
@@ -144,6 +176,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static class SendViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         TextView timeTextView;
+        ImageView iv;
 
 
         SendViewHolder(View itemView) {
@@ -151,6 +184,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             messageTextView = itemView.findViewById(R.id.message_text_view);
             timeTextView = itemView.findViewById(R.id.time_text_view);
+            iv =itemView.findViewById(R.id.heart);
         }
     }
 }
