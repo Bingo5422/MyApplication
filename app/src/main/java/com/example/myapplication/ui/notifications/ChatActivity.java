@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.myapplication.Adapter.HistoryAdapter;
 import com.example.myapplication.Bean.ChallengeBean;
 import com.example.myapplication.Bean.FriendsBean;
 import com.example.myapplication.Bean.HistoryBean;
@@ -30,7 +33,9 @@ import com.example.myapplication.R;
 import com.example.myapplication.Adapter.MessageAdapter;
 import com.example.myapplication.Utils.CookieJarImpl;
 import com.example.myapplication.Utils.FileUtil;
+import com.example.myapplication.Utils.VoiceUtil;
 import com.example.myapplication.ui.me.LoginActivity;
+import com.example.myapplication.ui.recognition.HistoryActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +61,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -132,18 +138,38 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycler_view);
         mAdapter = new MessageAdapter(mMessageList,this);
 
+        //Download(client,"4836372");
 
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
         //创建database
-        mMessageBeanDatabase = Room.databaseBuilder(getApplicationContext(), MessageBeanDatabase.class, "message_db").build();
+        mMessageBeanDatabase = Room.databaseBuilder(getApplicationContext(), MessageBeanDatabase.class, "message_db").allowMainThreadQueries().build();
 
         // 初始化输入框和发送按钮
         mInputEditText = findViewById(R.id.input_edit_text);
         mSendButton = findViewById(R.id.send_button);
 
         challengeButton = findViewById(R.id.challenge_button);
+
+        mAdapter.setListener(new MessageAdapter.Listener() {
+
+            @Override
+            public void onClickListener(MessageBean bean) {
+                Download(client,bean.getContent());
+                new AlertDialog.Builder(ChatActivity.this).setMessage("Do you want to challenge now?")
+                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(ChatActivity.this, ReceiveChallengeActivity.class);
+                                intent.putExtra("group", bean.getContent());
+                                startActivity(intent);
+                            }
+                        }).show();
+
+
+            }
+        });
 
         //Download(client,"9806114");
         challengeButton.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +203,7 @@ public class ChatActivity extends AppCompatActivity {
         timer.schedule(new TimerTask(){
             public void run(){
                 getmessage(client);
-                loadChatRecords(friendId);
+               // loadChatRecords(friendId);
             }
         }, 1,5000);//schedule{TimerTask()方法调用，延时执行时间，循环执行时间间隔}
 
@@ -229,13 +255,19 @@ public class ChatActivity extends AppCompatActivity {
                     mInputEditText.setText("");
 //todo
 //                    // 将消息添加到 RecyclerView 中
-//                    mMessageList.add(message);
-//                    mAdapter.setList(mMessageList);
-//                    mAdapter.notifyItemInserted(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
-//                    mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
+                    mMessageList.add(message);
+                    mAdapter.setList(mMessageList);
+                    mAdapter.notifyItemInserted(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
+                    mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
+
                 }
             }
         });
+
+
+
+loadChatRecords(friendId);
+
     }
 
     // 加载历史聊天记录
@@ -247,7 +279,7 @@ public class ChatActivity extends AppCompatActivity {
                 // 从数据库中查询指定好友的聊天记录 sharedPreference
                 List<MessageBean> chatRecords = mMessBeanDao.getMessages(friendId,userId);
 
-                if(chatRecords.size()>listnum){
+
                     //chatRecords.addAll(mMessBeanDao.getMessages(userId,friendId));
                     // 将聊天记录添加到消息列表中
                     mMessageList.addAll(chatRecords);
@@ -258,18 +290,17 @@ public class ChatActivity extends AppCompatActivity {
                         public void run() {
                             //用于通知 RecyclerView 的 Adapter
                             // 数据集发生了变化，从而触发 RecyclerView 进行刷新操作，更新显示的数据。
-
-                            mAdapter.setList(chatRecords);
+                            mAdapter.setList(mMessageList);
                             mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
                             mAdapter.notifyDataSetChanged();
+
                             //用于将 RecyclerView 滚动到最后一条消息的位置。mMessageList.size() - 1 表示最后一条
                             // 消息在数据集中的位置，smoothScrollToPosition()
                             //方法会平滑地滚动 RecyclerView 到指定位置，从而确保用户可以看到最新的消息。
-
                         }
                     });
-                    listnum= chatRecords.size();
-                }
+
+
             }
         }).start();
     }
@@ -323,10 +354,12 @@ public class ChatActivity extends AppCompatActivity {
                                         String time = messageObj.getString("time");
                                         MessageBean messageBean = new MessageBean(key, message_from, to, content, changeDate(time, 1), challenge);
                                         mMessageBeanDatabase.messageBeanDao().insert(messageBean);
-                                            if((!grouplist.contains(content)) & challenge){
-                                                Download(client,content);
-                                                grouplist.add(content);
-                                        }
+
+//                                        mMessageList.add(messageBean);
+//                                        mAdapter.setList(mMessageList);
+////                                        mAdapter.notifyItemInserted(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
+////                                        mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
+
                                     }
                                 }
                                 lastmessagenum = messagenum;
@@ -421,7 +454,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void Download(OkHttpClient client, String group){
+    public boolean Download(OkHttpClient client, String group){
 
 
         FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
@@ -472,13 +505,56 @@ public class ChatActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
 
-                folderPath = folderPath+ranPath;
-                String zipPath = folderPath + "/pack.zip";
-                // 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
-                FileUtil.unzip(zipPath, folderPath+"/photos");
+                String newpath = folderPath + ranPath;
+
+                String zipPath = newpath + "/pack.zip";
+                // 文件解压缩，zipPath是下载下来的压缩包路径
+                FileUtil.unzip(zipPath, newpath);
+
+                // 读取message.json文件并解析为ChallengeBean对象
+                String filePath = newpath+"/messages.json";
+                try {
+                    // 读取文件内容
+                    InputStream inputStream = new FileInputStream(new File(filePath));
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line = null;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line);
+                    }
+                    inputStream.close();
+
+                    // 遍历JSON对象并转化为ChallengeBean对象
+                    JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+                    Iterator<String> keys = jsonObject.keys();
+                    while (keys.hasNext()) {
+
+                        String key = keys.next();
+                        JSONObject challengeObj = jsonObject.getJSONObject(key);
+                        String code = challengeObj.getString("code");
+                        String enName = challengeObj.getString("enName");
+                        String FraName = challengeObj.getString("FraName");
+                        String filename = challengeObj.getString("filename");
+                        String jpName = challengeObj.getString("jpName");
+                        String spaName = challengeObj.getString("spaName");
+                        String korName = challengeObj.getString("korName");
+                        String name = challengeObj.getString("name");
+                        String path = newpath+"/"+filename;
+                        String challenge_group = challengeObj.getString("challenge_group");
+                        ChallengeBean challengeBean = new ChallengeBean(filename,path, enName,jpName,korName,FraName,code,challenge_group,spaName,name);
+                        challengeDao.insert(challengeBean);
+
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 //读取解压的下载文件信息
-  //              File download_info = new File(folderPath+"/photos/messages.json");
+                //              File download_info = new File(folderPath+"/photos/messages.json");
 //                FileReader fileReader = new FileReader(download_info);
 //                Reader reader = new InputStreamReader(new FileInputStream(download_info), "Utf-8");
 //                int ch= 0;
@@ -526,53 +602,9 @@ public class ChatActivity extends AppCompatActivity {
 //                    }
 //                }
 
-
-                // 读取message.json文件并解析为ChallengeBean对象
-                String filePath = folderPath+"/photos/messages.json";
-                try {
-                    // 读取文件内容
-                    InputStream inputStream = new FileInputStream(new File(filePath));
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    StringBuilder stringBuilder = new StringBuilder();
-                    String line = null;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        stringBuilder.append(line);
-                    }
-                    inputStream.close();
-
-                    // 遍历JSON对象并转化为ChallengeBean对象
-                    JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-                    Iterator<String> keys = jsonObject.keys();
-                    while (keys.hasNext()) {
-
-                        String key = keys.next();
-                        JSONObject challengeObj = jsonObject.getJSONObject(key);
-                        String code = challengeObj.getString("code");
-                        String enName = challengeObj.getString("enName");
-                        String FraName = challengeObj.getString("FraName");
-                        String filename = challengeObj.getString("filename");
-                        String jpName = challengeObj.getString("jpName");
-                        String spaName = challengeObj.getString("spaName");
-                        String korName = challengeObj.getString("korName");
-                        String name = challengeObj.getString("name");
-                        String path = folderPath+"/photos"+"/"+filename;
-                        String challenge_group = challengeObj.getString("challenge_group");
-                        ChallengeBean challengeBean = new ChallengeBean(filename,path, enName,jpName,korName,FraName,code,challenge_group,spaName,name);
-                        challengeDao.insert(challengeBean);
-
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-
             }
         });
+    return true;
     }
 
 

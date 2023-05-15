@@ -14,7 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.Bean.ChallengeBean;
 import com.example.myapplication.Bean.FriendsBean;
+import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Bean.MessageBean;
 import com.example.myapplication.R;
 import com.example.myapplication.ui.notifications.ChatActivity;
@@ -34,6 +36,14 @@ import java.util.Locale;
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<MessageBean> mMessageList;
+
+    public interface Listener{
+        void onClickListener(MessageBean bean) throws InterruptedException;
+    }
+    private MessageAdapter.Listener listener;
+    public void setListener(MessageAdapter.Listener listener) {
+        this.listener = listener;
+    }
 
 
     // 创建一个布局参数对象
@@ -97,16 +107,29 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (holder instanceof ReceiveViewHolder) {
                 if(isChallenge){
                     ((ReceiveViewHolder) holder).iv.setVisibility(View.VISIBLE);
+                    ((ReceiveViewHolder) holder).messageTextView.setVisibility(View.GONE);
+                    ((ReceiveViewHolder) holder).timeTextView.setVisibility(View.GONE);
+
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(v.getContext(), ReceiveChallengeActivity.class);
-                            intent.putExtra("group",message.getContent());
-                            v.getContext().startActivity(intent);
+//                            Intent intent = new Intent(v.getContext(), ReceiveChallengeActivity.class);
+//                            intent.putExtra("group",message.getContent());
+//                            v.getContext().startActivity(intent);
+                            if(listener!=null){
+                                try {
+                                    listener.onClickListener(message);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
                         }
                     });
                 }else {
 
+                    ((ReceiveViewHolder) holder).iv.setVisibility(View.GONE);
+                    ((ReceiveViewHolder) holder).messageTextView.setVisibility(View.VISIBLE);
+                    ((ReceiveViewHolder) holder).timeTextView.setVisibility(View.VISIBLE);
                     ((ReceiveViewHolder) holder).messageTextView.setText(message.getContent());
                     ((ReceiveViewHolder) holder).timeTextView.setText(String.valueOf(message.getSendTime()));
                 }
@@ -119,6 +142,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 }else{
                     ((SendViewHolder) holder).iv.setVisibility(View.GONE);
+                    ((SendViewHolder) holder).messageTextView.setVisibility(View.VISIBLE);
+                    ((SendViewHolder) holder).timeTextView.setVisibility(View.VISIBLE);
                     ((SendViewHolder) holder).messageTextView.setText(message.getContent());
                     ((SendViewHolder) holder).timeTextView.setText(String.valueOf(message.getSendTime()));
                 }
@@ -187,4 +212,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             iv =itemView.findViewById(R.id.heart);
         }
     }
+
+
 }
