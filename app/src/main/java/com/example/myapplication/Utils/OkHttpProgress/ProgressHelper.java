@@ -1,8 +1,10 @@
 package com.example.myapplication.Utils.OkHttpProgress;
 
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
 public class ProgressHelper {
+
 
     /**
      * 包装请求体用于上传文件的回调

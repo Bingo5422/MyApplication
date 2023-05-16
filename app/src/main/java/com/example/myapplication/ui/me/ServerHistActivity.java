@@ -77,7 +77,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
     private JSONObject json_list;
     private List<Cookie> cookie;
 //    private OkHttpClient client;
-    private HistoryDao historyDao;
+
     private AlertDialog dialog;
     private ImageView server_hist_back;
 
@@ -89,10 +89,6 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         server_hist_delete = findViewById(R.id.server_hist_delete);
         tv_server_hist_num = findViewById(R.id.tv_server_hist_num);
         server_hist_back = findViewById(R.id.server_hist_back);
-
-        RecDataBase recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase")
-                .allowMainThreadQueries().build();
-        historyDao = recDataBase.historyDao();
 
 
         handler = new Handler(Looper.getMainLooper()){
