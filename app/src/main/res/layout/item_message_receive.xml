@@ -2,14 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/yellow_round"
     android:gravity="left"
     android:orientation="vertical"
     android:padding="8dp">
+<!--    <ImageView-->
+<!--        android:id="@+id/heart"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:visibility="gone"-->
+<!--        android:src="@drawable/heart"/>-->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/heart"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:lottie_rawRes="@raw/challenge"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
 
     <TextView
         android:id="@+id/time_text_view"
-        android:layout_width="8dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/deep_grey"
         android:textSize="12sp" />

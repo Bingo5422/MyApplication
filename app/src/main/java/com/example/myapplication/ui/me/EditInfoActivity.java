@@ -58,7 +58,7 @@ public class EditInfoActivity extends AppCompatActivity {
     private Uri photoOutputUri = null;
 
     private LinearLayout ll_edit_photo, ll_edit_name;
-    private ImageView iv_edit_user_photo;
+    private ImageView iv_edit_user_photo, edit_info_back;
     private TextView tv_edit_nickname;
 //    private OkHttpClient client;
 
@@ -71,6 +71,14 @@ public class EditInfoActivity extends AppCompatActivity {
         ll_edit_name = findViewById(R.id.ll_edit_name);
         iv_edit_user_photo = findViewById(R.id.iv_edit_user_photo);
         tv_edit_nickname = findViewById(R.id.tv_edit_nickname);
+        edit_info_back = findViewById(R.id.edit_info_back);
+
+        edit_info_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
         CookieJarImpl cookieJar = new CookieJarImpl(EditInfoActivity.this);
@@ -97,12 +105,7 @@ public class EditInfoActivity extends AppCompatActivity {
          * 先判断用户以前有没有对我们的应用程序允许过读写内存卡内容的权限，
          * 用户处理的结果在 onRequestPermissionResult 中进行处理
          */
-//        if(ContextCompat.checkSelfPermission(EditInfoActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            // 申请读写内存卡内容的权限
-//            ActivityCompat.requestPermissions(EditInfoActivity.this,
-//                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_SDCARD_PERMISSION_REQUEST_CODE);
-//        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String[] per = {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -125,6 +128,7 @@ public class EditInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
 //        intent.putExtra("flag", 3);
         startActivity(intent);
+//        finish();
 
     }
 
@@ -192,25 +196,6 @@ public class EditInfoActivity extends AppCompatActivity {
                 // 裁剪图片
                 case CROP_PHOTO_REQUEST_CODE:
                     Upload_Photo_Request(client, EditInfoActivity.this);
-//                    setInfo();
-
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Upload_Photo_Request(client, EditInfoActivity.this);
-////                            Get_Photo_Request(client);
-//                        }
-//                    });
-
-
-
-//                        if (file.exists()) {
-//                            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-//                            iv_edit_test.setImageBitmap(bitmap);
-//                            file.delete(); // 选取完后删除照片
-//                        } else {
-//                            Toast.makeText(this, "找不到照片", Toast.LENGTH_SHORT).show();
-//                        }
                     break;
             }
         }
@@ -250,6 +235,11 @@ public class EditInfoActivity extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    if (Looper.myLooper()==null)
+                        Looper.prepare();
+                    Toast.makeText(EditInfoActivity.this,
+                            "Unable to upload. Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                    Looper.loop();
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -277,42 +267,16 @@ public class EditInfoActivity extends AppCompatActivity {
                             Looper.loop();
                         }
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        if (Looper.myLooper() == null)
+                            Looper.prepare();
+                        Toast.makeText(context, "Upload photo failed. " +
+                                "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
                     }
                 }
             });
         }
     }
 
-
-    private void Get_Photo_Request(OkHttpClient client) {
-        Request request = new Request.Builder()//创建Request 对象。
-                .url(DomainURL + "/info/get_photo")
-                .build();
-
-        List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
-        if (!cookie.isEmpty()) {
-            request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    byte[] byteArr = response.body().bytes();
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length);
-                    iv_edit_user_photo.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            iv_edit_user_photo.setImageBitmap(bitmap);
-                        }
-                    });
-                }
-            });
-
-        }
-    }
 }
 

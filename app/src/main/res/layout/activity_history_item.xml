@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/his_photo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginVertical="4dp"
             android:layout_marginHorizontal="20dp"
             android:scaleType="centerCrop"
@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
             app:layout_constraintLeft_toRightOf="@+id/his_photo"
             app:layout_constraintTop_toTopOf="@+id/his_photo">
 

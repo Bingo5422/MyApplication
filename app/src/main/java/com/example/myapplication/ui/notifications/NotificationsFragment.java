@@ -241,8 +241,6 @@
 
 package com.example.myapplication.ui.notifications;
 
-import static com.example.myapplication.MainActivity.DomainURL;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -401,7 +399,7 @@ public class NotificationsFragment extends Fragment  {
         // CookieJarImpl cookieJar = new CookieJarImpl(NotificationsFragment.getContext());
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         Request request = new Request.Builder()
-                .url(DomainURL + "/addfriends/list")
+                .url("http://192.168.113.21:5000/addfriends/list")
                 .build();
         client.newCall(request).enqueue(new Callback() {
 

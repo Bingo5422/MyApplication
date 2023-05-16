@@ -1,7 +1,5 @@
 package com.example.myapplication.ui.notifications;
 
-import static com.example.myapplication.MainActivity.DomainURL;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -11,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapplication.Bean.FriendsBean;
@@ -36,11 +35,14 @@ public class AddFriendActivity extends AppCompatActivity {
     private EditText mFriendIdEditText;
     private FriendDatabase mFriendDatabase;
 
+    private ImageView add_fri;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friend);
-
+        add_fri = findViewById(R.id.add_fri_back);
         mFriendIdEditText = findViewById(R.id.editTextFriendId);
         mFriendDatabase = Room.databaseBuilder(getApplicationContext(), FriendDatabase.class, "friend_db").build();
 
@@ -51,7 +53,16 @@ public class AddFriendActivity extends AppCompatActivity {
                 addFriend();
             }
         });
+
+        add_fri.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
+
+
 
     private void addFriend() {
         String friendId = mFriendIdEditText.getText().toString().trim();
@@ -71,7 +82,7 @@ public class AddFriendActivity extends AppCompatActivity {
         CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         Request request = new Request.Builder()
-                .url(DomainURL + "/addfriends/add/id?id="+friendId)
+                .url("http://192.168.113.21:5000/addfriends/add/id?id="+friendId)
                 .build();
         client.newCall(request).enqueue(new Callback() {
 
@@ -121,7 +132,7 @@ public class AddFriendActivity extends AppCompatActivity {
             CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
             OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
             Request request = new Request.Builder()
-                    .url(DomainURL + "/add/id?id=") //todo
+                    .url("http://192.168.113.21:5000/add/id?id=") //todo
                     .build();
             client.newCall(request).enqueue(new Callback() {
 

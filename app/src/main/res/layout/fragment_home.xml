@@ -63,12 +63,22 @@
 
 
 
-        <ImageView
+<!--        <ImageView-->
+<!--            android:id="@+id/main_camera"-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="250dp"-->
+<!--            android:layout_marginTop="150dp"-->
+<!--            android:background="@mipmap/camera_icon" />-->
+
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/main_camera"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="300dp"
             android:layout_marginTop="150dp"
-            android:background="@mipmap/camera_icon" />
+            android:layout_height="300dp"
+            app:lottie_rawRes="@raw/camera"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            />
 
         <TextView
             android:id="@+id/main_click"

@@ -21,6 +21,7 @@ import com.example.myapplication.Bean.RecordBean;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.Dao.RecordDao;
+import com.example.myapplication.R;
 import com.example.myapplication.databinding.ActivityTest2Binding;
 
 import java.util.ArrayList;
@@ -227,6 +228,12 @@ public class Test2Activity extends AppCompatActivity {
         binding.ivC.setImageDrawable(Drawable.createFromPath(options.get(2).getPath()));
         binding.ivD.setImageDrawable(Drawable.createFromPath(options.get(3).getPath()));
 
+        // 新加的
+        binding.ivA.setBackgroundColor(getResources().getColor(R.color.transparent));
+        binding.ivB.setBackgroundColor(getResources().getColor(R.color.transparent));
+        binding.ivC.setBackgroundColor(getResources().getColor(R.color.transparent));
+        binding.ivD.setBackgroundColor(getResources().getColor(R.color.transparent));
+
 
         binding.llEmpty.setVisibility(View.GONE);
     }
@@ -249,26 +256,32 @@ public class Test2Activity extends AppCompatActivity {
 
         if (buttonText.equals(correctAnswer)) {
             correct++;
-            iv.setImageDrawable(new ColorDrawable(Color.GREEN));
+//            iv.setImageDrawable(new ColorDrawable(Color.GREEN));
+            iv.setBackgroundColor(getResources().getColor(R.color.text_green));
             HistoryBean bean = questionsList.get(question);
             int num = bean.getNum();
             historyDao.updateNum(bean.getId(), num + 1);
             bean.setNum(num + 1);
         } else {
             wrong++;
-            iv.setImageDrawable(new ColorDrawable(Color.BLUE));
+//            iv.setImageDrawable(new ColorDrawable(Color.BLUE));
+            iv.setBackgroundColor(getResources().getColor(R.color.wrong_choice));
 
             if (binding.tvA.getText().toString().equals(correctAnswer)) {
-                binding.ivA.setImageDrawable(new ColorDrawable(Color.GREEN));
+//                binding.ivA.setImageDrawable(new ColorDrawable(Color.GREEN));
+                binding.ivA.setBackgroundColor(getResources().getColor(R.color.text_green));
             }
             if (binding.tvB.getText().toString().equals(correctAnswer)) {
-                binding.ivB.setImageDrawable(new ColorDrawable(Color.GREEN));
+//                binding.ivB.setImageDrawable(new ColorDrawable(Color.GREEN));
+                binding.ivB.setBackgroundColor(getResources().getColor(R.color.text_green));
             }
             if (binding.tvC.getText().toString().equals(correctAnswer)) {
-                binding.ivC.setImageDrawable(new ColorDrawable(Color.GREEN));
+//                binding.ivC.setImageDrawable(new ColorDrawable(Color.GREEN));
+                binding.ivC.setBackgroundColor(getResources().getColor(R.color.text_green));
             }
             if (binding.tvD.getText().toString().equals(correctAnswer)) {
-                binding.ivD.setImageDrawable(new ColorDrawable(Color.GREEN));
+//                binding.ivD.setImageDrawable(new ColorDrawable(Color.GREEN));
+                binding.ivD.setBackgroundColor(getResources().getColor(R.color.text_green));
             }
         }
         binding.ivA.setClickable(false);

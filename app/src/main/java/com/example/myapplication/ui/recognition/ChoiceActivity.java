@@ -159,7 +159,8 @@ public class ChoiceActivity extends AppCompatActivity {
                String fileName = getFileName(path);
 
                //内存权限导致
-                String tempPath = getCacheDir() + File.separator + "image" + File.separator + fileName;
+                //String tempPath = getCacheDir() + File.separator + "image" + File.separator + fileName;
+                String tempPath = picPath + File.separator +fileName;
                 File resultFile = PhotoUtil.compressPhoto(selectFile, 4, tempPath);
                 String absolutePath = resultFile.getAbsolutePath();
                 Log.d(TAG, "压缩后的大小 == "+ resultFile.length());

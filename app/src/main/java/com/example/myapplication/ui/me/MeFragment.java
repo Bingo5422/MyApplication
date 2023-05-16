@@ -41,10 +41,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MeFragment extends Fragment {
-    private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
-    private Uri uri;
-//    final static String DomainURL = "http://172.26.14.175:5000";
-//    final static String DomainURL = "http://192.168.43.208:5000";
+
+    static OkHttpClient client;
 //    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
     private Button btn_login, btn_display, btn_edit_info, btn_synchro;
@@ -52,8 +50,6 @@ public class MeFragment extends Fragment {
     private ImageView user_photo;
     private JSONObject res;
     private SharedPreferences preferences;
-
-    static OkHttpClient client;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -134,10 +130,15 @@ public class MeFragment extends Fragment {
 
         CookieJarImpl cookieJar = new CookieJarImpl(getActivity());
         client = new OkHttpClient.Builder().cookieJar(cookieJar)
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
                 .build();//创建OkHttpClient对象。
+//        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar)
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(5, TimeUnit.SECONDS)
+//                .readTimeout(5, TimeUnit.SECONDS)
+//                .build();//创建OkHttpClient对象。
         // 为了正常格式的url创建的request对象
         Request request = new Request.Builder()
                 .url(url)
@@ -186,8 +187,15 @@ public class MeFragment extends Fragment {
                             editor.remove("user_id");
                             editor.remove("nickname");
                             editor.remove("photo");
-                            // todo 清除cookie（？不确定
                             editor.commit();
+
+                            SharedPreferences p_cookie = getActivity()
+                                    .getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor e_cookie = p_cookie.edit();
+                            e_cookie.clear();
+                            e_cookie.commit();
+
+
                             text.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -259,11 +267,17 @@ public class MeFragment extends Fragment {
         try {
             response = client.newCall(logout_req).execute();
             if(response.isSuccessful()) {
+                //清除cookie
+                SharedPreferences p_cookie = getActivity().getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
+                SharedPreferences.Editor e_cookie = p_cookie.edit();
+                e_cookie.clear();
+                e_cookie.commit();
                 // 清除用户登陆显示
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove("user_id");
                 editor.remove("nickname");
                 editor.remove("photo");
+                // 好像没有把头像的原始文件删掉，但好像不必须，因为头像的存储文件名都固定的，会被反复覆盖
                 editor.commit();
                 text.post(new Runnable() {
                     @Override
@@ -288,7 +302,7 @@ public class MeFragment extends Fragment {
             else{
                 if(Looper.myLooper()==null)
                     Looper.prepare();
-                Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
+                Toast.makeText(MainActivity.getContext(), "Server Error. Please check " +
                         "the Internet connection", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
@@ -296,7 +310,7 @@ public class MeFragment extends Fragment {
 //            throw new RuntimeException(e);
             if(Looper.myLooper()==null)
                 Looper.prepare();
-            Toast.makeText(MainActivity.getContext(), "Server Error. Please check" +
+            Toast.makeText(MainActivity.getContext(), "Server Error. Please check " +
                     "the Internet connection", Toast.LENGTH_SHORT).show();
             Looper.loop();
         }

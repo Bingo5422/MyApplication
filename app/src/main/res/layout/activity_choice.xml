@@ -19,16 +19,16 @@
         >
         <ImageView
             android:id="@+id/cho_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:src="@drawable/baseline_keyboard_arrow_left_24"/>
         <TextView
             android:layout_width="0dp"
             android:layout_weight="5"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textColor="@color/deep_grey"
             android:layout_marginLeft="16dp"
             android:text="Preferences"/>
     </LinearLayout>

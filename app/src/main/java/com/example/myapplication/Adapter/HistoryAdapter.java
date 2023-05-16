@@ -83,7 +83,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         } else {
             holder.name.setText(bean.getName());
         }
-
+        //
         String path = bean.getPath();
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         holder.image.setImageBitmap(bitmap);

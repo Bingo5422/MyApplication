@@ -28,20 +28,18 @@
         android:src="@drawable/img_1"/>
 
 
-
-
     <TextView
         android:id="@+id/date"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
         android:gravity="center"
-        tools:text="1"
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

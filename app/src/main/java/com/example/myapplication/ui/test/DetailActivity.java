@@ -60,6 +60,8 @@ public class DetailActivity extends AppCompatActivity {
         long endTime = sp.getLong(MainActivity.today+"endTime", 0);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(endTime-startTime);
         binding.tvTodayTime.setText("" + minutes);
+
+
     }
 
     @Override

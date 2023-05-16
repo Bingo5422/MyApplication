@@ -25,9 +25,9 @@ public class TimeActivity extends AppCompatActivity {
         mediaPlayer.start();
 
         new AlertDialog.Builder(TimeActivity.this)
-                .setTitle("闹钟")
-                .setMessage("时间到了")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener(){
+                .setTitle("Alarm")
+                .setMessage("Time is up!")
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialogInterface, int which) {
                         TimeActivity.this.finish();
                         mediaPlayer.stop();
@@ -38,7 +38,7 @@ public class TimeActivity extends AppCompatActivity {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default")
                 .setSmallIcon(R.drawable.clock)
                 .setContentTitle("Alarm")
-                .setContentText("Wake up!")
+                .setContentText("Time is up!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 

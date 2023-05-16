@@ -6,28 +6,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <LinearLayout
         android:id="@+id/line1"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/background"
+        android:background="@drawable/light_green_round"
         android:gravity="right|top" >
+<!--        <ImageView-->
+<!--            android:id="@+id/heart"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:visibility="gone"-->
+<!--            android:src="@drawable/heart"/>-->
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/heart"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_rawRes="@raw/challenge"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
         <TextView
             android:id="@+id/message_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:textSize="12sp" />
+            android:textSize="10sp"
+            android:layout_marginHorizontal="5dp"/>
     </LinearLayout>
 
 </RelativeLayout>
