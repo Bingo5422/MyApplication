@@ -89,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
 //                        .writeTimeout(5, TimeUnit.SECONDS)
 //                        .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
-                // 登录为阻塞请求
                 new Thread(new Runnable() {
                     @Override
                     public void run() {

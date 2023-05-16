@@ -231,7 +231,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         try {
             String res = response.body().string();
             server_list = new JSONObject(res.toString());
-            /**不分类的情况*/
+
             for(int i=0;i<localList.size();i++) {
                 //所有信息都加入info
                 HistoryBean bean = localList.get(i);
@@ -442,6 +442,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                     fos.flush();
                     notify_builder2.setContentText("Complete");
                     notificationManager.notify(444, notify_builder2.build());
+                    is.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -778,7 +779,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
                     .setTitle("Note")//设置对话框的标题
                     .setMessage("Note: This operation will overwrite your server unfamiliar words and " +
-                            "server favorites will be cleared. " +
+                            "the server favorites will be affected. " +
                             "\n\nAre you sure to continue?")//设置对话框的内容
                     //设置对话框的按钮
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

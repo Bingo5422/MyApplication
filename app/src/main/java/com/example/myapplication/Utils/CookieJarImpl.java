@@ -38,11 +38,11 @@ public class CookieJarImpl implements CookieJar {
             editor.remove(host+"value");
         }
 //         保存cookie, 对应方式为 host url - cookie
-        long expireDate = cookies.get(0).expiresAt();
-        Boolean bool = expireDate > System.currentTimeMillis();
-        long now = System.currentTimeMillis();
-        long one_day_after = now + 86400*1000;
-        Date tomorrow = new Date(one_day_after);
+//        long expireDate = cookies.get(0).expiresAt();
+//        Boolean bool = expireDate > System.currentTimeMillis();
+//        long now = System.currentTimeMillis();
+//        long one_day_after = now + 86400*1000;
+//        Date tomorrow = new Date(one_day_after);
 
 //        long total_second = expireDate/1000;
 //        long total_minutes = total_second/60;

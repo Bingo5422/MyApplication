@@ -42,10 +42,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MeFragment extends Fragment {
-    private int CAMERA_REQ_CODE = 1, ALBUM_REQ_CODE=1;
-    private Uri uri;
-//    final static String DomainURL = "http://172.26.14.175:5000";
-//    final static String DomainURL = "http://192.168.113.21:5000";
+
     static OkHttpClient client;
 //    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
@@ -281,6 +278,7 @@ public class MeFragment extends Fragment {
                 editor.remove("user_id");
                 editor.remove("nickname");
                 editor.remove("photo");
+                // 好像没有把头像的原始文件删掉，但好像不必须，因为头像的存储文件名都固定的，会被反复覆盖
                 editor.commit();
                 text.post(new Runnable() {
                     @Override
