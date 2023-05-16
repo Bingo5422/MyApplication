@@ -21,9 +21,9 @@
         <Button
             android:id="@+id/challenge_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_gravity="end"
-            android:background="@drawable/challenge"/>
+            android:background="@drawable/challenge1"/>
 
     </androidx.appcompat.widget.Toolbar>
 

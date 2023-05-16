@@ -109,6 +109,7 @@ public class ChatActivity extends AppCompatActivity {
     private int listnum = 0;
 
     private static MessageBeanDatabase mMessageBeanDatabase;
+    private SharedPreferences downSp;
 
 
     @Override
@@ -120,10 +121,52 @@ public class ChatActivity extends AppCompatActivity {
         cookieJar = new CookieJarImpl(ChatActivity.this);
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
-        lastmessagenum = 0;
-        String url = "http://192.168.113.21:5000/";
+//        Intent intent2 = new Intent();
+//        String result = intent2.getStringExtra("grade");
+//        String fId = intent2.getStringExtra("friend_id");
+//        String fName = intent2.getStringExtra("friend_name");
+//
+//
+//
+//        if(result!=null) {
+//            FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
+//            MessageBean message = new MessageBean();
+//            Random r = new Random();
+//            String id = r.nextInt(10000000) + 50 + "";
+//            // 创建一条新的消息
+//            formBody.add("user_id2", fId);//传递键值对参数
+//            formBody.add("message", result);//传递键值对参数
+//            formBody.add("challenge", "0");//传递键值对参数
+//            formBody.add("ID", id);
+//            sendmessage(formBody, client);
+//            message.setId(id);
+//            message.setContent(result);
+//            message.setFromUser(userId);
+//            message.setToUser(fId);
+//            message.setChallenge(false);
+//            String date_temp = new Date().toString();
+//            try {
+//                message.setSendTime(changeDate(date_temp, 2));
+//            } catch (ParseException e) {
+//                throw new RuntimeException(e);
+//            }
+//            Log.d("user", "onClick: messagebean" + message.getFromUser());
+//
+//            // 将消息插入到数据库中
+//            insertChatRecord(message);
+//            mMessageList.add(message);
+//            mAdapter.setList(mMessageList);
+//            mAdapter.notifyItemInserted(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
+//            mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
+//
+//        }
 
-        urldown = "http://192.168.113.21:5000/challenge/download_zip";
+
+
+        lastmessagenum = 0;
+        String url = "http://192.168.24.21:5000/";
+
+        urldown = "http://192.168.24.21:5000/challenge/download_zip";
         //创建challenge文件夹
         String folderName = "challengedown";
         folderPath = ChatActivity.this.getFilesDir().getAbsolutePath() + "/" + folderName;
@@ -156,16 +199,36 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onClickListener(MessageBean bean) {
-                Download(client,bean.getContent());
-                new AlertDialog.Builder(ChatActivity.this).setMessage("Do you want to challenge now?")
-                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(ChatActivity.this, ReceiveChallengeActivity.class);
-                                intent.putExtra("group", bean.getContent());
-                                startActivity(intent);
-                            }
-                        }).show();
+
+                downSp = getSharedPreferences(bean.getContent(), Context.MODE_PRIVATE);
+                String isLoad = downSp.getString("isDown","");
+
+                //Download(client,bean.getContent());
+                if(!isLoad.equals("1")){
+                    Download(client,bean.getContent());
+                }
+
+                downSp = getSharedPreferences(bean.getContent(),MODE_PRIVATE);
+                SharedPreferences.Editor editor =downSp.edit();
+                editor.putString("isDown","1");
+                editor.commit();
+
+//                new AlertDialog.Builder(ChatActivity.this).setMessage("Do you want to challenge now?")
+//                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Intent intent = new Intent(ChatActivity.this, ReceiveChallengeActivity.class);
+//                                intent.putExtra("group", bean.getContent());
+//                                startActivity(intent);
+//                            }
+//                        }).show();
+
+                Intent intent = new Intent(ChatActivity.this,JumpActivity.class);
+                intent.putExtra("group", bean.getContent());
+                intent.putExtra("friend_name",friendName);
+                intent.putExtra("friend_id", friendId);
+                intent.putExtra("userId",userId);
+                startActivity(intent);
 
 
             }
@@ -317,7 +380,7 @@ loadChatRecords(friendId);
 
         private void getmessage(OkHttpClient client){
         Request request = new Request.Builder()
-                .url("http://192.168.113.21:5000/challenge/getmessage")
+                .url("http://192.168.24.21:5000/challenge/getmessage")
                 .build();
 
             client.newCall(request).enqueue(new Callback() {
@@ -389,7 +452,7 @@ loadChatRecords(friendId);
     public static void sendmessage(FormBody.Builder formBody, OkHttpClient client){
 
         Request request = new Request.Builder()//创建Request 对象。
-                .url("http://192.168.113.21:5000/challenge/sendmessage")
+                .url("http://192.168.24.21:5000/challenge/sendmessage")
                 .post(formBody.build())//传递请求体
                 .build();
 
@@ -653,6 +716,62 @@ loadChatRecords(friendId);
             mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
 
         }
+//        if (requestCode == 000 && resultCode == RESULT_OK) {
+//
+//           int re = data.getIntExtra("result",0);
+//           String result  = re+"";
+//            FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
+//
+//            MessageBean message = new MessageBean();
+//            Random r = new Random();
+//            String id = r.nextInt(10000000) + "";
+//            // 创建一条新的消息
+//            formBody.add("user_id2", friendId);//传递键值对参数
+//            formBody.add("message", result);//传递键值对参数
+//            formBody.add("challenge", "1");//传递键值对参数
+//            formBody.add("ID", id);
+//            sendmessage(formBody, client);
+//
+//
+//            message.setId(id);
+//            message.setContent(result);
+//            message.setFromUser(userId);
+//            message.setToUser(friendId);
+//            message.setChallenge(true);
+//            String date_temp = new Date().toString();
+//            try {
+//                message.setSendTime(changeDate(date_temp, 2));
+//            } catch (ParseException e) {
+//                throw new RuntimeException(e);
+//            }
+//            Log.d("user", "onClick: messagebean" + message.getFromUser());
+//
+//            // 将消息插入到数据库中
+//            insertChatRecord(message);
+//            // mMessageBeanDatabase.messageBeanDao().insert(message);
+//            // 清空输入框
+//
+//            // 将消息添加到 RecyclerView 中
+//            mMessageList.add(message);
+//            mAdapter.setList(mMessageList);
+//            mAdapter.notifyItemInserted(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
+//            mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//        }
     }
 
 }

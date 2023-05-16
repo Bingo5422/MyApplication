@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.Bean.ChallengeBean;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ReceiveChallengeActivity extends AppCompatActivity {
 
 
+    private String re;
     private ActivityReceiveChallengeBinding binding;
     private ChallengeDao challengeDao;
     private ChallengeBeanDatabase challengeBeanDatabase;
@@ -56,6 +58,8 @@ public class ReceiveChallengeActivity extends AppCompatActivity {
         //需要receive的时候传来groupNum
         Intent intent = getIntent();
         groupNum = intent.getStringExtra("group");
+        String friendName = intent.getStringExtra("friend_name");
+        String friendId = intent.getStringExtra("friend_id");
 
         Log.d(TAG, "onCreate: 传来的groupNum："+groupNum);
         //构建数据库
@@ -127,10 +131,13 @@ public class ReceiveChallengeActivity extends AppCompatActivity {
 //                    binding.btnD.setBackgroundColor(getResources().getColor(R.color.button));
                 } else if (question == total) {
 
-                    Intent intent = new Intent(ReceiveChallengeActivity.this, ResultActivity.class);
+                    Intent intent = new Intent(ReceiveChallengeActivity.this, ResultChallengeActivity.class);
                     intent.putExtra("correct", correct);
                     intent.putExtra("wrong", wrong);
+                    intent.putExtra("friend_name",friendName);
+                    intent.putExtra("friend_id",friendId);
                     startActivity(intent);
+
                     finish();
 
                 }
@@ -138,6 +145,9 @@ public class ReceiveChallengeActivity extends AppCompatActivity {
                 buttonControl = false;
             }
         });
+
+
+
     }
 
     @Override
@@ -294,6 +304,20 @@ public class ReceiveChallengeActivity extends AppCompatActivity {
 
         buttonControl = true;
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == 666 && resultCode == RESULT_OK) {
+//
+//            re = data.getStringExtra("result");
+//            Log.d(TAG, "ReceiveChallengeActivity里的re"+re);
+//            Intent intent = new Intent(ReceiveChallengeActivity.this,JumpActivity.class);
+//            intent.putExtra("result", re);
+//            setResult(888, intent);
+//        }
+//    }
 
 
 
