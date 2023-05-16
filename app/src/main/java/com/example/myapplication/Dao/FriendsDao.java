@@ -31,5 +31,8 @@ public interface FriendsDao {
     @Insert
     void insert(FriendsBean bean);
 
+    @Query("DELETE FROM FriendsBean")
+    void clearTable();
+
 
 }

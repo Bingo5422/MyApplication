@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.notifications;
 
+import static com.example.myapplication.MainActivity.DomainURL;
+
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -317,7 +319,7 @@ loadChatRecords(friendId);
 
         private void getmessage(OkHttpClient client){
         Request request = new Request.Builder()
-                .url("http://192.168.113.21:5000/challenge/getmessage")
+                .url(DomainURL+"/challenge/getmessage")
                 .build();
 
             client.newCall(request).enqueue(new Callback() {
@@ -389,7 +391,7 @@ loadChatRecords(friendId);
     public static void sendmessage(FormBody.Builder formBody, OkHttpClient client){
 
         Request request = new Request.Builder()//创建Request 对象。
-                .url("http://192.168.113.21:5000/challenge/sendmessage")
+                .url(DomainURL+"/challenge/sendmessage")
                 .post(formBody.build())//传递请求体
                 .build();
 
