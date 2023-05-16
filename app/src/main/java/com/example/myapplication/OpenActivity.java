@@ -23,9 +23,9 @@ public class OpenActivity extends AppCompatActivity {
         lottieAnimationView = findViewById(R.id.lottie);
 
 
-        bg.animate().translationY(-3000).setDuration(1000).setStartDelay(4000);
-        name.animate().translationY(2000).setDuration(1000).setStartDelay(4000);
-        lottieAnimationView.animate().translationY(2000).setDuration(1000).setStartDelay(4000);
+        //bg.animate().translationY(-3000).setDuration(1000).setStartDelay(4000);
+        name.animate().translationY(3000).setDuration(1000).setStartDelay(4000);
+        lottieAnimationView.animate().translationY(3000).setDuration(1000).setStartDelay(4000);
 
 
         new Handler().postDelayed(new Runnable() {
@@ -36,7 +36,7 @@ public class OpenActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 4900); // 延迟 3 秒后跳转到主页
+        }, 4700);
 
     }
 }
