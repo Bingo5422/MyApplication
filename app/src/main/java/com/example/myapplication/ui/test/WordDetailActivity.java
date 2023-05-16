@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.dashboard;
+package com.example.myapplication.ui.test;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,7 +18,6 @@ import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.Dao.RecordDao;
 import com.example.myapplication.Utils.VoiceUtil;
 import com.example.myapplication.databinding.ActivityWordDetailBinding;
-import com.example.myapplication.ui.recognition.HistoryActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;

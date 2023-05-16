@@ -78,22 +78,22 @@
             android:name=".ui.me.ServerHistActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.dashboard.CollectListActivity"
+            android:name=".ui.test.CollectListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.TestActivity"
+            android:name=".ui.test.TestActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.WordDetailActivity"
+            android:name=".ui.test.WordDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.WordListActivity"
+            android:name=".ui.test.WordListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.Test2Activity"
+            android:name=".ui.test.Test2Activity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.DetailActivity"
+            android:name=".ui.test.DetailActivity"
             android:exported="false" />
         <activity
             android:name=".ui.notifications.AddFriendActivity"
@@ -125,7 +125,7 @@
         </provider>
 
         <activity
-            android:name=".ui.dashboard.ResultActivity"
+            android:name=".ui.test.ResultActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

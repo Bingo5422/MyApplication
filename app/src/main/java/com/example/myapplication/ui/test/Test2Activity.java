@@ -1,14 +1,15 @@
-package com.example.myapplication.ui.dashboard;
+package com.example.myapplication.ui.test;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -16,19 +17,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import com.example.myapplication.Bean.HistoryBean;
+import com.example.myapplication.Bean.RecordBean;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
+import com.example.myapplication.Dao.RecordDao;
 import com.example.myapplication.R;
-import com.example.myapplication.databinding.ActivityTestBinding;
+import com.example.myapplication.databinding.ActivityTest2Binding;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 
-public class TestActivity extends AppCompatActivity {
+public class Test2Activity extends AppCompatActivity {
 
-    private ActivityTestBinding binding;
+    private ActivityTest2Binding binding;
     private HistoryDao historyDao;
+    private RecordDao recordDao;
     private RecDataBase recDataBase;
     private List<HistoryBean> questionsList = new ArrayList<>();
     private List<HistoryBean> wrongOptionsList = new ArrayList<>();
@@ -42,6 +47,7 @@ public class TestActivity extends AppCompatActivity {
     private int total = 10;
 
     private HistoryBean correctFlag;
+
     static SharedPreferences sp;
 
     @Override
@@ -49,35 +55,36 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
-        binding = ActivityTestBinding.inflate(getLayoutInflater());
+        recordDao = recDataBase.recordDao();
+
+        binding = ActivityTest2Binding.inflate(getLayoutInflater());
         sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
-
         setContentView(binding.getRoot());
-        binding.btnA.setOnClickListener(new View.OnClickListener() {
+        binding.ivA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerControl(binding.btnA);
+                answerControl(binding.tvA, (ImageView) view);
             }
         });
 
-        binding.btnB.setOnClickListener(new View.OnClickListener() {
+        binding.ivB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerControl(binding.btnB);
+                answerControl(binding.tvB, (ImageView) view);
             }
         });
 
-        binding.btnC.setOnClickListener(new View.OnClickListener() {
+        binding.ivC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerControl(binding.btnC);
+                answerControl(binding.tvC, (ImageView) view);
             }
         });
 
-        binding.btnD.setOnClickListener(new View.OnClickListener() {
+        binding.ivD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerControl(binding.btnD);
+                answerControl(binding.tvD, (ImageView) view);
             }
         });
 
@@ -86,35 +93,36 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (!buttonControl) {
-                    Toast.makeText(TestActivity.this, "please select an answer", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Test2Activity.this, "please select an answer", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 question++;
                 if (buttonControl && question < total) {
                     loadQuestions();
 
-                    binding.btnA.setClickable(true);
-                    binding.btnB.setClickable(true);
-                    binding.btnC.setClickable(true);
-                    binding.btnD.setClickable(true);
+                    binding.ivA.setClickable(true);
+                    binding.ivB.setClickable(true);
+                    binding.ivC.setClickable(true);
+                    binding.ivD.setClickable(true);
 
-                    //这里改了一下按钮背景
-                    binding.btnA.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
-                    binding.btnB.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
-                    binding.btnC.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
-                    binding.btnD.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
-
-//                    binding.btnA.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnB.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnC.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnD.setBackgroundColor(getResources().getColor(R.color.button));
                 } else if (question == total) {
 
-                    Intent intent = new Intent(TestActivity.this, ResultActivity.class);
+                    Calendar c = Calendar.getInstance();
+                    int year = c.get(Calendar.YEAR);
+                    int month = c.get(Calendar.MONTH) + 1;
+                    int day = c.get(Calendar.DAY_OF_MONTH);
+                    RecordBean bean = new RecordBean();
+                    bean.setAddDate(year + "-" + month + "-" + day);
+                    bean.setType(1);
+
+                    recordDao.addToRecord(bean);
+
+                    Intent intent = new Intent(Test2Activity.this, ResultActivity.class);
                     intent.putExtra("correct", correct);
                     intent.putExtra("wrong", wrong);
                     startActivity(intent);
                     finish();
+
 
                 }
 
@@ -170,7 +178,7 @@ public class TestActivity extends AppCompatActivity {
 
         correctFlag = questionsList.get(question);
 
-        binding.ivFlag.setImageBitmap(BitmapFactory.decodeFile(correctFlag.getPath()));
+        binding.ivFlag.setText(correctFlag.getEnName());
 
         wrongOptionsList.clear();
         wrongOptionsList.addAll(historyDao.queryRand3(questionsList.get(question).getName()));
@@ -188,37 +196,49 @@ public class TestActivity extends AppCompatActivity {
 
         String lan = sp.getString("lan", "Chinese");
         if (lan.equals("Spanish")) {
-            binding.btnA.setText(options.get(0).getSpaName());
-            binding.btnB.setText(options.get(1).getSpaName());
-            binding.btnC.setText(options.get(2).getSpaName());
-            binding.btnD.setText(options.get(3).getSpaName());
+            binding.tvA.setText(options.get(0).getSpaName());
+            binding.tvB.setText(options.get(1).getSpaName());
+            binding.tvC.setText(options.get(2).getSpaName());
+            binding.tvD.setText(options.get(3).getSpaName());
         } else if (lan.equals("Japanese")) {
-            binding.btnA.setText(options.get(0).getJpName());
-            binding.btnB.setText(options.get(1).getJpName());
-            binding.btnC.setText(options.get(2).getJpName());
-            binding.btnD.setText(options.get(3).getJpName());
+            binding.tvA.setText(options.get(0).getJpName());
+            binding.tvB.setText(options.get(1).getJpName());
+            binding.tvC.setText(options.get(2).getJpName());
+            binding.tvD.setText(options.get(3).getJpName());
         } else if (lan.equals("Korean")) {
-            binding.btnA.setText(options.get(0).getKorName());
-            binding.btnB.setText(options.get(1).getKorName());
-            binding.btnC.setText(options.get(2).getKorName());
-            binding.btnD.setText(options.get(3).getKorName());
+            binding.tvA.setText(options.get(0).getKorName());
+            binding.tvB.setText(options.get(1).getKorName());
+            binding.tvC.setText(options.get(2).getKorName());
+            binding.tvD.setText(options.get(3).getKorName());
         }else if (lan.equals("French")) {
-            binding.btnA.setText(options.get(0).getFraName());
-            binding.btnB.setText(options.get(1).getFraName());
-            binding.btnC.setText(options.get(2).getFraName());
-            binding.btnD.setText(options.get(3).getFraName());
+            binding.tvA.setText(options.get(0).getFraName());
+            binding.tvB.setText(options.get(1).getFraName());
+            binding.tvC.setText(options.get(2).getFraName());
+            binding.tvD.setText(options.get(3).getFraName());
         }else {
-            binding.btnA.setText(options.get(0).getName());
-            binding.btnB.setText(options.get(1).getName());
-            binding.btnC.setText(options.get(2).getName());
-            binding.btnD.setText(options.get(3).getName());
+            binding.tvA.setText(options.get(0).getName());
+            binding.tvB.setText(options.get(1).getName());
+            binding.tvC.setText(options.get(2).getName());
+            binding.tvD.setText(options.get(3).getName());
         }
+
+
+        binding.ivA.setImageDrawable(Drawable.createFromPath(options.get(0).getPath()));
+        binding.ivB.setImageDrawable(Drawable.createFromPath(options.get(1).getPath()));
+        binding.ivC.setImageDrawable(Drawable.createFromPath(options.get(2).getPath()));
+        binding.ivD.setImageDrawable(Drawable.createFromPath(options.get(3).getPath()));
+
+        // 新加的
+        binding.ivA.setBackgroundColor(getResources().getColor(R.color.transparent));
+        binding.ivB.setBackgroundColor(getResources().getColor(R.color.transparent));
+        binding.ivC.setBackgroundColor(getResources().getColor(R.color.transparent));
+        binding.ivD.setBackgroundColor(getResources().getColor(R.color.transparent));
 
 
         binding.llEmpty.setVisibility(View.GONE);
     }
 
-    public void answerControl(Button btn) {
+    public void answerControl(TextView btn, ImageView iv) {
         String buttonText = btn.getText().toString();
         String correctAnswer = "";
         String lan = sp.getString("lan", "Chinese");
@@ -236,38 +256,38 @@ public class TestActivity extends AppCompatActivity {
 
         if (buttonText.equals(correctAnswer)) {
             correct++;
-            btn.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
-//            btn.setBackgroundColor(Color.GREEN);
+//            iv.setImageDrawable(new ColorDrawable(Color.GREEN));
+            iv.setBackgroundColor(getResources().getColor(R.color.text_green));
             HistoryBean bean = questionsList.get(question);
             int num = bean.getNum();
             historyDao.updateNum(bean.getId(), num + 1);
             bean.setNum(num + 1);
         } else {
             wrong++;
-            btn.setBackground(getResources().getDrawable(R.drawable.test_wrong_btn));
-            //btn.setBackgroundColor(Color.RED); //这里改了错误时候的颜色 原来是color.blue
+//            iv.setImageDrawable(new ColorDrawable(Color.BLUE));
+            iv.setBackgroundColor(getResources().getColor(R.color.wrong_choice));
 
-            if (binding.btnA.getText().toString().equals(correctAnswer)) {
-                binding.btnA.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
-//                binding.btnA.setBackgroundColor(Color.GREEN);
+            if (binding.tvA.getText().toString().equals(correctAnswer)) {
+//                binding.ivA.setImageDrawable(new ColorDrawable(Color.GREEN));
+                binding.ivA.setBackgroundColor(getResources().getColor(R.color.text_green));
             }
-            if (binding.btnB.getText().toString().equals(correctAnswer)) {
-                binding.btnB.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
-//                binding.btnB.setBackgroundColor(Color.GREEN);
+            if (binding.tvB.getText().toString().equals(correctAnswer)) {
+//                binding.ivB.setImageDrawable(new ColorDrawable(Color.GREEN));
+                binding.ivB.setBackgroundColor(getResources().getColor(R.color.text_green));
             }
-            if (binding.btnC.getText().toString().equals(correctAnswer)) {
-                binding.btnC.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
-//                binding.btnC.setBackgroundColor(Color.GREEN);
+            if (binding.tvC.getText().toString().equals(correctAnswer)) {
+//                binding.ivC.setImageDrawable(new ColorDrawable(Color.GREEN));
+                binding.ivC.setBackgroundColor(getResources().getColor(R.color.text_green));
             }
-            if (binding.btnD.getText().toString().equals(correctAnswer)) {
-                binding.btnD.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
-//                binding.btnD.setBackgroundColor(Color.GREEN);
+            if (binding.tvD.getText().toString().equals(correctAnswer)) {
+//                binding.ivD.setImageDrawable(new ColorDrawable(Color.GREEN));
+                binding.ivD.setBackgroundColor(getResources().getColor(R.color.text_green));
             }
         }
-        binding.btnA.setClickable(false);
-        binding.btnB.setClickable(false);
-        binding.btnC.setClickable(false);
-        binding.btnD.setClickable(false);
+        binding.ivA.setClickable(false);
+        binding.ivB.setClickable(false);
+        binding.ivC.setClickable(false);
+        binding.ivD.setClickable(false);
 
         binding.tvCorrect.setText("Correct: " + correct);
         binding.tvWrong.setText("Wrong: " + wrong);

@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.dashboard;
+package com.example.myapplication.ui.test;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,17 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 
-import com.example.myapplication.databinding.FragmentDashboardBinding;
+import com.example.myapplication.databinding.FragmentTestBinding;
 
-public class DashboardFragment extends Fragment {
+public class TestFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private FragmentTestBinding binding;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentTestBinding.inflate(inflater, container, false);
         binding.btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,7 +52,7 @@ public class DashboardFragment extends Fragment {
         binding.btnTest5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), com.example.myapplication.ui.dashboard.CollectListActivity.class);
+                Intent intent = new Intent(view.getContext(), com.example.myapplication.ui.test.CollectListActivity.class);
                 startActivity(intent);
             }
         });

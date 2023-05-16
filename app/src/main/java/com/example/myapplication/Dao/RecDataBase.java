@@ -12,7 +12,6 @@ import com.example.myapplication.Bean.RecordBean;
 
 
 @Database(entities = {RecognitionBean.class, HistoryBean.class, FriendsBean.class, RecordBean.class},version = 1)
-
 public abstract class RecDataBase extends RoomDatabase {
 
     public abstract RecognitionDao recognitionDao();

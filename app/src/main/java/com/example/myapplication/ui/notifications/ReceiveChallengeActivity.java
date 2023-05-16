@@ -21,9 +21,7 @@ import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.ActivityReceiveChallengeBinding;
-import com.example.myapplication.databinding.ActivityTestBinding;
-import com.example.myapplication.ui.dashboard.ResultActivity;
-import com.example.myapplication.ui.dashboard.TestActivity;
+import com.example.myapplication.ui.test.ResultActivity;
 
 import java.util.ArrayList;
 import java.util.HashSet;

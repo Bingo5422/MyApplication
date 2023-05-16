@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.myapplication.ui.dashboard.DashboardFragment"
+        android:name="com.example.myapplication.ui.test.TestFragment"
         android:label="@string/title_review"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_test" />
 
     <fragment
         android:id="@+id/navigation_notifications"
