@@ -74,6 +74,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemViewType(int position) {
         MessageBean message = mMessageList.get(position);
+
+
         if(message.getToUser().equals(userId)) {
             return 1;
         }
@@ -81,6 +83,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return 2;
         }
         return -1;
+
     }
 
     // 创建 ViewHolder
@@ -101,6 +104,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         sortBeansByTimestamp(mMessageList);
+
         MessageBean message = mMessageList.get(position);
         Boolean isChallenge = message.getChallenge();
 

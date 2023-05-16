@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class ReceiveChallengeActivity extends AppCompatActivity {
     private ChallengeBean correctFlag;
     static SharedPreferences sp;
     private String groupNum;
+    private static final String TAG = "ReceiveChallengeActivit";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class ReceiveChallengeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         groupNum = intent.getStringExtra("group");
 
+        Log.d(TAG, "onCreate: 传来的groupNum："+groupNum);
         //构建数据库
         challengeBeanDatabase = Room.databaseBuilder(this, ChallengeBeanDatabase.class, "challenge_db").allowMainThreadQueries().build();
         challengeDao = challengeBeanDatabase.challengeDao();
