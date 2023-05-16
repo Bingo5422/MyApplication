@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.test;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
+import com.example.myapplication.ui.notifications.ChatActivity;
 
 public class ResultActivity extends AppCompatActivity {
     private TextView tvSuccessRate, tvTotalWrong, tvTotalEmpty, tvTotalCorrect;
@@ -50,6 +52,10 @@ public class ResultActivity extends AppCompatActivity {
 //                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                startActivity(newIntent);
+
+                Intent intent = new Intent(ResultActivity.this, ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 finish();
             }
         });
