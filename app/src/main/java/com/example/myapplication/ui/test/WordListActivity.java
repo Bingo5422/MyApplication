@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.dashboard;
+package com.example.myapplication.ui.test;
 
 import android.content.Intent;
 import android.os.Bundle;

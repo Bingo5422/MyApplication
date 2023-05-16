@@ -25,7 +25,6 @@ import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
 import com.example.myapplication.databinding.FragmentMeBinding;
-import com.example.myapplication.ui.dashboard.DetailActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

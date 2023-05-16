@@ -133,6 +133,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        sp.edit().putLong("endTime", System.currentTimeMillis()).commit();
+        sp.edit().putLong(MainActivity.today+"endTime", System.currentTimeMillis()).commit();
     }
 }

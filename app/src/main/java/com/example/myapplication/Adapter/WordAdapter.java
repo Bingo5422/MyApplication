@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.R;
-import com.example.myapplication.ui.dashboard.WordDetailActivity;
+import com.example.myapplication.ui.test.WordDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;

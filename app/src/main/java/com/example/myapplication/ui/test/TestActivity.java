@@ -1,11 +1,9 @@
-package com.example.myapplication.ui.dashboard;
+package com.example.myapplication.ui.test;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import com.example.myapplication.Bean.HistoryBean;
+import com.example.myapplication.Bean.RecordBean;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
+import com.example.myapplication.Dao.RecordDao;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.ActivityTestBinding;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class TestActivity extends AppCompatActivity {
     private int total = 10;
 
     private HistoryBean correctFlag;
+    private RecordDao recordDao;
     static SharedPreferences sp;
 
     @Override
@@ -49,10 +51,14 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
+        recordDao = recDataBase.recordDao();
+//        将ActivityTestBinding对象与该Activity关联起来
         binding = ActivityTestBinding.inflate(getLayoutInflater());
+//        存储和读取应用程序的配置信息
         sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
-
+//        设置布局文件
         setContentView(binding.getRoot());
+//        为按钮A B C D 设置点击事件，当用户点击按钮时，会触发answerControl方法来处理用户的答题行为
         binding.btnA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,19 +86,20 @@ public class TestActivity extends AppCompatActivity {
                 answerControl(binding.btnD);
             }
         });
-
+//      加载下一题的逻辑
         binding.ivNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+//              用户是否选择了答案
                 if (!buttonControl) {
                     Toast.makeText(TestActivity.this, "please select an answer", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 question++;
                 if (buttonControl && question < total) {
+//                  加载下一题
                     loadQuestions();
-
+//                  重置按钮的可点击属性
                     binding.btnA.setClickable(true);
                     binding.btnB.setClickable(true);
                     binding.btnC.setClickable(true);
@@ -104,15 +111,23 @@ public class TestActivity extends AppCompatActivity {
                     binding.btnC.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
                     binding.btnD.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
 
-//                    binding.btnA.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnB.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnC.setBackgroundColor(getResources().getColor(R.color.button));
-//                    binding.btnD.setBackgroundColor(getResources().getColor(R.color.button));
                 } else if (question == total) {
 
+                    Calendar c = Calendar.getInstance();
+                    int year = c.get(Calendar.YEAR);
+                    int month = c.get(Calendar.MONTH) + 1;
+                    int day = c.get(Calendar.DAY_OF_MONTH);
+                    RecordBean bean = new RecordBean();
+                    bean.setAddDate(year + "-" + month + "-" + day);
+                    bean.setType(1);
+
+                    recordDao.addToRecord(bean);
+
+//                  跳转到结果展示页面ResultActivity
                     Intent intent = new Intent(TestActivity.this, ResultActivity.class);
                     intent.putExtra("correct", correct);
                     intent.putExtra("wrong", wrong);
+//                  启动ResultActivity页面
                     startActivity(intent);
                     finish();
 
@@ -124,18 +139,22 @@ public class TestActivity extends AppCompatActivity {
     }
 
     @Override
+//    Activity销毁时，释放ViewBinding对象的引用，以避免内存泄漏
     protected void onDestroy() {
         super.onDestroy();
         binding = null;
     }
 
     @Override
+//  Activity恢复时启动一个新线程，并执行其中的代码
     public void onResume() {
         super.onResume();
+//      包含需要在新线程中执行的代码，在新线程中执行的代码可以执行任何需要在后台线程中执行的操作，如计算
         new Thread(new Runnable() {
             @Override
             public void run() {
                 questionsList.clear();
+//              数据库中查询到的历史记录中答对少于三次
                 questionsList.addAll(historyDao.queryNumLow3());
 
                 if (questionsList.isEmpty()) {
@@ -150,6 +169,8 @@ public class TestActivity extends AppCompatActivity {
 
                 wrongOptionsList.clear();
                 wrongOptionsList.addAll(historyDao.queryRand3(questionsList.get(question).getName()));
+
+//                这里？？？
 
                 binding.llEmpty.post(new Runnable() {
                     @Override
@@ -166,26 +187,27 @@ public class TestActivity extends AppCompatActivity {
         if (wrongOptionsList.size() < 3) {
             return;
         }
+//      第一题的序号是1不是0
         binding.tvQuestion.setText("Question: " + (question + 1));
 
         correctFlag = questionsList.get(question);
-
+//      该题目图片显示在 ImageView 控件上
         binding.ivFlag.setImageBitmap(BitmapFactory.decodeFile(correctFlag.getPath()));
 
         wrongOptionsList.clear();
         wrongOptionsList.addAll(historyDao.queryRand3(questionsList.get(question).getName()));
-
+//      存储着混合选项的列表
         mixOptions.clear();
         mixOptions.add(correctFlag);
         mixOptions.add(wrongOptionsList.get(0));
         mixOptions.add(wrongOptionsList.get(1));
         mixOptions.add(wrongOptionsList.get(2));
-
+//      将 mixOptions 列表中的元素添加到 options 列表中，完成选项设置
         options.clear();
         for (HistoryBean flg : mixOptions) {
             options.add(flg);
         }
-
+//      获取一个名为 "lan" 的偏好设置值，如果找不到则使用默认值 "Chinese"
         String lan = sp.getString("lan", "Chinese");
         if (lan.equals("Spanish")) {
             binding.btnA.setText(options.get(0).getSpaName());
@@ -214,10 +236,10 @@ public class TestActivity extends AppCompatActivity {
             binding.btnD.setText(options.get(3).getName());
         }
 
-
+//      可能是一个加载中的进度条，视图不可见
         binding.llEmpty.setVisibility(View.GONE);
     }
-
+//  设置正确答案的名称
     public void answerControl(Button btn) {
         String buttonText = btn.getText().toString();
         String correctAnswer = "";
@@ -233,11 +255,12 @@ public class TestActivity extends AppCompatActivity {
         }else {
             correctAnswer = correctFlag.getName();
         }
-
+//        处理用户的答案是否正确
         if (buttonText.equals(correctAnswer)) {
             correct++;
             btn.setBackground(getResources().getDrawable(R.drawable.test_true_btn));
 //            btn.setBackgroundColor(Color.GREEN);
+//            更新问题对象中的答对次数属性
             HistoryBean bean = questionsList.get(question);
             int num = bean.getNum();
             historyDao.updateNum(bean.getId(), num + 1);
@@ -264,6 +287,7 @@ public class TestActivity extends AppCompatActivity {
 //                binding.btnD.setBackgroundColor(Color.GREEN);
             }
         }
+//        已经回答过的按钮变为不可点击状态
         binding.btnA.setClickable(false);
         binding.btnB.setClickable(false);
         binding.btnC.setClickable(false);
