@@ -123,9 +123,10 @@ public class ChatActivity extends AppCompatActivity {
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
         lastmessagenum = 0;
-        String url = "http://192.168.113.21:5000/";
+//        String url = "http://192.168.113.21:5000/";
+        String url = DomainURL;
 
-        urldown = "http://192.168.113.21:5000/challenge/download_zip";
+        urldown = DomainURL+"/challenge/download_zip";
         //创建challenge文件夹
         String folderName = "challengedown";
         folderPath = ChatActivity.this.getFilesDir().getAbsolutePath() + "/" + folderName;

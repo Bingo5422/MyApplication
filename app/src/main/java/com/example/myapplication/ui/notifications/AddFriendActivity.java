@@ -134,7 +134,7 @@ public class AddFriendActivity extends AppCompatActivity {
             CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
             OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
             Request request = new Request.Builder()
-                    .url(DomainURL+"/add/id?id=") 
+                    .url(DomainURL+"/add/id?id=")
                     .build();
             client.newCall(request).enqueue(new Callback() {
 
