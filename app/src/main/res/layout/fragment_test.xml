@@ -82,11 +82,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginHorizontal="20dp"
+                android:paddingLeft="10dp"
                 android:layout_marginTop="20dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_find_learning"
                 android:background="@drawable/new_words_nb"
                 app:layout_constraintDimensionRatio="6:1"
-                android:text="New Words Notebook"
+                android:text="Unfamiliar Words Notebook"
                 android:textAllCaps="false"
                 android:textColor="@color/deep_grey"
                 android:textSize="12sp" />

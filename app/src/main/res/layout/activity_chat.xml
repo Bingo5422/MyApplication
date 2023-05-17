@@ -22,6 +22,8 @@
             android:id="@+id/challenge_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:padding="20dp"
+            android:layout_marginRight="10dp"
             android:layout_gravity="end"
             android:background="@drawable/challenge1"/>
 
