@@ -1,6 +1,7 @@
 package com.example.myapplication.Adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -27,6 +28,7 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
     private Context mContext;
     private List<CheckBean> mData;
     private CheckItemListener mCheckListener;
+    private SharedPreferences sp;
 
 
 
@@ -51,7 +53,20 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
         final CheckBean bean = mData.get(position);
         holder.item_server_photo.setImageBitmap(bean.getPic());
 //        holder.item_filename_tv.setText(bean.getFilename());
-        holder.item_enName_tv.setText(bean.getEnName());
+        sp = holder.itemView.getContext().getSharedPreferences("sp", Context.MODE_PRIVATE);
+        String lan = sp.getString("lan", "Chinese");
+        if (lan.equals("Spanish")) {
+            holder.item_enName_tv.setText(bean.getSpaName());
+        } else if (lan.equals("Japanese")) {
+            holder.item_enName_tv.setText(bean.getJpName());
+        } else if (lan.equals("Korean")) {
+            holder.item_enName_tv.setText(bean.getKorName());
+        } else if (lan.equals("French")) {
+            holder.item_enName_tv.setText(bean.getFraName());
+        } else {
+            holder.item_enName_tv.setText(bean.getEnName());
+        }
+//        holder.item_enName_tv.setText(bean.getEnName());
         holder.item_datetime_tv.setText(bean.getDatetime());
         holder.item_cb.setChecked(bean.isChecked());
         holder.item_cb.setOnClickListener(new View.OnClickListener(){
