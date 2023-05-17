@@ -170,7 +170,7 @@ public class TestActivity extends AppCompatActivity {
                 wrongOptionsList.clear();
                 wrongOptionsList.addAll(historyDao.queryRand3(questionsList.get(question).getName()));
 
-//                这里？？？
+
 
                 binding.llEmpty.post(new Runnable() {
                     @Override

@@ -60,6 +60,7 @@ public class Test2Activity extends AppCompatActivity {
         binding = ActivityTest2Binding.inflate(getLayoutInflater());
         sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
         setContentView(binding.getRoot());
+
         binding.ivA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,7 +179,7 @@ public class Test2Activity extends AppCompatActivity {
 
         correctFlag = questionsList.get(question);
 
-        binding.ivFlag.setText(correctFlag.getEnName());
+        binding.ivFlag.setText(correctFlag.getName());
 
         wrongOptionsList.clear();
         wrongOptionsList.addAll(historyDao.queryRand3(questionsList.get(question).getName()));
@@ -216,10 +217,10 @@ public class Test2Activity extends AppCompatActivity {
             binding.tvC.setText(options.get(2).getFraName());
             binding.tvD.setText(options.get(3).getFraName());
         }else {
-            binding.tvA.setText(options.get(0).getName());
-            binding.tvB.setText(options.get(1).getName());
-            binding.tvC.setText(options.get(2).getName());
-            binding.tvD.setText(options.get(3).getName());
+            binding.tvA.setText(options.get(0).getEnName());
+            binding.tvB.setText(options.get(1).getEnName());
+            binding.tvC.setText(options.get(2).getEnName());
+            binding.tvD.setText(options.get(3).getEnName());
         }
 
 
