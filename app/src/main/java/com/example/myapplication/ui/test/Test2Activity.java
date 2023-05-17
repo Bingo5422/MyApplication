@@ -49,7 +49,7 @@ public class Test2Activity extends AppCompatActivity {
     private HistoryBean correctFlag;
 
     static SharedPreferences sp;
-
+    String lan ="";
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,7 @@ public class Test2Activity extends AppCompatActivity {
 
         binding = ActivityTest2Binding.inflate(getLayoutInflater());
         sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
+        lan = sp.getString("lan", "Chinese");
         setContentView(binding.getRoot());
 
         binding.ivA.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +180,7 @@ public class Test2Activity extends AppCompatActivity {
 
         correctFlag = questionsList.get(question);
 
-        binding.ivFlag.setText(correctFlag.getName());
+
 
         wrongOptionsList.clear();
         wrongOptionsList.addAll(historyDao.queryRand3(questionsList.get(question).getName()));
@@ -195,32 +196,42 @@ public class Test2Activity extends AppCompatActivity {
             options.add(flg);
         }
 
-        String lan = sp.getString("lan", "Chinese");
+
         if (lan.equals("Spanish")) {
             binding.tvA.setText(options.get(0).getSpaName());
             binding.tvB.setText(options.get(1).getSpaName());
             binding.tvC.setText(options.get(2).getSpaName());
             binding.tvD.setText(options.get(3).getSpaName());
+
+            binding.ivFlag.setText(correctFlag.getSpaName());
         } else if (lan.equals("Japanese")) {
             binding.tvA.setText(options.get(0).getJpName());
             binding.tvB.setText(options.get(1).getJpName());
             binding.tvC.setText(options.get(2).getJpName());
             binding.tvD.setText(options.get(3).getJpName());
+
+            binding.ivFlag.setText(correctFlag.getJpName());
         } else if (lan.equals("Korean")) {
             binding.tvA.setText(options.get(0).getKorName());
             binding.tvB.setText(options.get(1).getKorName());
             binding.tvC.setText(options.get(2).getKorName());
             binding.tvD.setText(options.get(3).getKorName());
+
+            binding.ivFlag.setText(correctFlag.getKorName());
         }else if (lan.equals("French")) {
             binding.tvA.setText(options.get(0).getFraName());
             binding.tvB.setText(options.get(1).getFraName());
             binding.tvC.setText(options.get(2).getFraName());
             binding.tvD.setText(options.get(3).getFraName());
+
+            binding.ivFlag.setText(correctFlag.getFraName());
         }else {
             binding.tvA.setText(options.get(0).getEnName());
             binding.tvB.setText(options.get(1).getEnName());
             binding.tvC.setText(options.get(2).getEnName());
             binding.tvD.setText(options.get(3).getEnName());
+
+            binding.ivFlag.setText(correctFlag.getName());
         }
 
 
@@ -242,7 +253,7 @@ public class Test2Activity extends AppCompatActivity {
     public void answerControl(TextView btn, ImageView iv) {
         String buttonText = btn.getText().toString();
         String correctAnswer = "";
-        String lan = sp.getString("lan", "Chinese");
+
         if (lan.equals("Spanish")) {
             correctAnswer = correctFlag.getSpaName();
         } else if (lan.equals("Japanese")) {
