@@ -109,7 +109,7 @@
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="Button"
                     android:paddingBottom="5dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/transparent"
                     android:textSize="18sp" />
             </FrameLayout>
 
@@ -131,7 +131,7 @@
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="Button"
                     android:paddingBottom="5dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/transparent"
                     android:textSize="18sp" />
             </FrameLayout>
         </LinearLayout>
@@ -159,7 +159,7 @@
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="Button"
                     android:paddingBottom="5dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/transparent"
                     android:textSize="18sp" />
             </FrameLayout>
 
@@ -181,7 +181,7 @@
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="Button"
                     android:paddingBottom="5dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/transparent"
                     android:textSize="18sp" />
             </FrameLayout>
         </LinearLayout>
