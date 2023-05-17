@@ -1,7 +1,8 @@
-package com.example.myapplication.ui.test;
+package com.example.myapplication.ui.notifications;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -9,13 +10,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
-import com.example.myapplication.ui.notifications.ChatActivity;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultChallengeActivity extends AppCompatActivity {
     private TextView tvSuccessRate, tvTotalWrong, tvTotalEmpty, tvTotalCorrect;
     private Button btnAgain, btnQuit;
     int correct, wrong, empty;
 
+    private static final String TAG = "ResultActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +34,9 @@ public class ResultActivity extends AppCompatActivity {
         wrong = getIntent().getIntExtra("wrong", 0);
         empty = getIntent().getIntExtra("empty", 0);
 
+        String friendName = getIntent().getStringExtra("friend_name");
+        String friendID = getIntent().getStringExtra("friend_id");
+
         tvTotalCorrect.setText("Correct Answers: " + correct);
         tvTotalWrong.setText("Wrong Answers: " + wrong);
         tvTotalEmpty.setText("Empty Answers: " + empty);
@@ -45,6 +49,11 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
 
+        String re = "Correct: "+ correct +"\n"+"Wrong"+wrong;
+
+
+        Log.d(TAG, "result里的 re"+re);
+
         btnQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,11 +61,20 @@ public class ResultActivity extends AppCompatActivity {
 //                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                startActivity(newIntent);
+                Intent intent = new Intent(ResultChallengeActivity.this, ChatActivity.class);
 
-                Intent intent = new Intent(ResultActivity.this, ChatActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                // 在第三个页面（Activity C）的某个地方调用以下代码
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("friend_name",friendName);
+                intent.putExtra("friend_id", friendID);
+
+                intent.putExtra("grade",re);
+
+
+
+
                 startActivity(intent);
-                finish();
             }
         });
     }

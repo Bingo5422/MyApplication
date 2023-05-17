@@ -82,7 +82,7 @@ public class AddFriendActivity extends AppCompatActivity {
         CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         Request request = new Request.Builder()
-                .url("http://192.168.113.21:5000/addfriends/add/id?id="+friendId)
+                .url("http://192.168.24.21:5000/addfriends/add/id?id="+friendId)
                 .build();
         client.newCall(request).enqueue(new Callback() {
 
@@ -132,7 +132,7 @@ public class AddFriendActivity extends AppCompatActivity {
             CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
             OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
             Request request = new Request.Builder()
-                    .url("http://192.168.113.21:5000/add/id?id=") //todo
+                    .url("http://192.168.24.21:5000/add/id?id=") //todo
                     .build();
             client.newCall(request).enqueue(new Callback() {
 
