@@ -266,7 +266,7 @@ public class TestActivity extends AppCompatActivity {
             bean.setNum(num + 1);
         } else {
             wrong++;
-
+            btn.setBackground(getResources().getDrawable(R.drawable.test_wrong_btn));
 
             if (binding.btnA.getText().toString().equals(correctAnswer)) {
                 binding.btnA.setBackground(getResources().getDrawable(R.drawable.test_true_btn));

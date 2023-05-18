@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/brown"
-            android:text="NEW WORD"
+            android:text="Unfamiliar"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/text_green"
-            android:text="VOCABULARY"
+            android:text="Familiar"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>

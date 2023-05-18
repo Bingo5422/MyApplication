@@ -85,7 +85,7 @@ public class WordDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 historyDao.updateNum(historyBean.getId(), 0);
-                Toast.makeText(WordDetailActivity.this, "Add To New Words NoteBook Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WordDetailActivity.this, "Add To Unfamiliar Words Notebook Success", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -104,7 +104,7 @@ public class WordDetailActivity extends AppCompatActivity {
 
                 recordDao.addToRecord(bean);
 
-                Toast.makeText(WordDetailActivity.this, "Add To Vocabulary NoteBook Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WordDetailActivity.this, "Add To Familiar Words Notebook Success", Toast.LENGTH_SHORT).show();
             }
         });
 

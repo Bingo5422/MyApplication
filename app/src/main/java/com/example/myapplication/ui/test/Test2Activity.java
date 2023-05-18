@@ -226,10 +226,10 @@ public class Test2Activity extends AppCompatActivity {
 
             binding.ivFlag.setText(correctFlag.getFraName());
         }else {
-            binding.tvA.setText(options.get(0).getEnName());
-            binding.tvB.setText(options.get(1).getEnName());
-            binding.tvC.setText(options.get(2).getEnName());
-            binding.tvD.setText(options.get(3).getEnName());
+            binding.tvA.setText(options.get(0).getName());
+            binding.tvB.setText(options.get(1).getName());
+            binding.tvC.setText(options.get(2).getName());
+            binding.tvD.setText(options.get(3).getName());
 
             binding.ivFlag.setText(correctFlag.getName());
         }
