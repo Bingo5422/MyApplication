@@ -48,10 +48,7 @@ public class ResultActivity extends AppCompatActivity {
         btnQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent newIntent = new Intent(view.getContext(), MainActivity.class);
-//                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(newIntent);
+
 
                 Intent intent = new Intent(ResultActivity.this, ChatActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

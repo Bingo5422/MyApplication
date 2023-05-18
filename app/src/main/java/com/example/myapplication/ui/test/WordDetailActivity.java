@@ -48,7 +48,7 @@ public class WordDetailActivity extends AppCompatActivity {
 
         form = getIntent().getIntExtra("form", 0);
         if (form == 1) {
-            dataList.addAll(historyDao.queryNumLow3());//生词本
+            dataList.addAll(historyDao.queryNumLow3());
         } else if (form == 2) {
             dataList.addAll(historyDao.queryNumUp3());
         } else if (form == 3) {
