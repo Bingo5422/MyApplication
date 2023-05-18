@@ -66,6 +66,7 @@ public class ResultChallengeActivity extends AppCompatActivity {
                 // 在第三个页面（Activity C）的某个地方调用以下代码
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
                 intent.putExtra("friend_name",friendName);
                 intent.putExtra("friend_id", friendID);
 

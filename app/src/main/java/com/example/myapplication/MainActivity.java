@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
 
         // 语音合成APPID
-        SpeechUtility.createUtility(context, SpeechConstant.APPID + "=54d1647f");
+        SpeechUtility.createUtility(context, SpeechConstant.APPID + "=13bc7120");
 
         sp = getSharedPreferences("sp", MODE_PRIVATE);
 

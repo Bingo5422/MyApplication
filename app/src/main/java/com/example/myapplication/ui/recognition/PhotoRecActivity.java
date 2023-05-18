@@ -374,19 +374,9 @@ public class PhotoRecActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-
                 try {
                     InputStream in = getResources().openRawResource(R.raw.excel);
                     List<RecognitionBean> listData = RecognitionUtil.read(in);
-//                    for (int i = 0; i < listData.size(); i++) {
-//                        if (i>10){
-//                            break;
-//                        }
-//                        Log.d(TAG, "run: 得到的数据 == "+ listData.get(i));
-//                    }
-                    //Log.d(TAG, "run: 总共的数据量 == "+ listData.size());
-
-                    //把Excel放入数据库
                     try {
                         for (int i = 0; i < listData.size(); i++) {
                             RecognitionBean bean = listData.get(i);
@@ -395,8 +385,6 @@ public class PhotoRecActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    Log.d(TAG, "run: 超大的Excel已经添加到数据库了...");
                     ex = getSharedPreferences("Excel",MODE_PRIVATE);
                     SharedPreferences.Editor editor =ex.edit();
                     editor.putString("isLoad","1");
