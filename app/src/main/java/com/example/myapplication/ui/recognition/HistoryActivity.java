@@ -67,9 +67,12 @@ public class HistoryActivity extends AppCompatActivity {
         list.addItemDecoration(mDivider);
 
         //设置适配器
+
         adapter = new HistoryAdapter();
         dataList.addAll(historyDao.query());
         adapter.setList(dataList);
+
+
         adapter.setDao(historyDao);
         list.setAdapter(adapter);
 

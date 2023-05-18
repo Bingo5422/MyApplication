@@ -40,10 +40,10 @@ public class DetailActivity extends AppCompatActivity {
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         int newWord = historyDao.countToDayNewWord(year + "-" + month + "-" + day);
-        binding.tvTodayNewword.setText("" + newWord);
+        //binding.tvTodayNewword.setText("" + newWord);
 
         int vocWord = recordDao.countTodayAddToVocabularyNotebookWords(year + "-" + month + "-" + day);
-        binding.tvTodayWords.setText("" + vocWord);
+        binding.tvTodayWords.setText("" + newWord);
 
         int tranNum = recordDao.countTranTimes(year + "-" + month + "-" + day);
         binding.tvTodayNum.setText("" + tranNum);

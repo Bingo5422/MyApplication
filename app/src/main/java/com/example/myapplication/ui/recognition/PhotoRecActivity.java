@@ -195,9 +195,6 @@ public class PhotoRecActivity extends AppCompatActivity {
                                         HistoryBean historyBean = new HistoryBean();
                                         String time = showTime();
                                         String fileName = getFileName();
-                                        Log.d(TAG, "time: " + time);
-                                        Log.d(TAG, "fileName: " + fileName);
-
                                         historyBean.setPath(photoPath);
                                         historyBean.setId(bean.getId());
                                         historyBean.setCode(bean.getCode());
