@@ -20,11 +20,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
+import com.example.myapplication.Dao.FriendsDao;
+import com.example.myapplication.Dao.RecDataBase;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
 import com.example.myapplication.databinding.FragmentMeBinding;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +54,7 @@ public class MeFragment extends Fragment {
     private ImageView user_photo;
     private JSONObject res;
     private SharedPreferences preferences;
+    private FriendsDao friendsDao;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +67,13 @@ public class MeFragment extends Fragment {
         btn_display = root.findViewById(R.id.btn_display);
         btn_edit_info = root.findViewById(R.id.btn_edit_info);
         btn_synchro = root.findViewById(R.id.btn_synchro);
+
+        //clearTable
+//        FriendDatabase mFriendDatabase = Room.databaseBuilder(getContext(), FriendDatabase.class, "friend_db").build();
+//        friendDao =  mFriendDatabase.friendDao();
+
+        RecDataBase recDataBase = Room.databaseBuilder(getContext(), RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
+        friendsDao = recDataBase.friendsDao();
 
         btn_display.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,12 +201,15 @@ public class MeFragment extends Fragment {
                             editor.remove("photo");
                             editor.commit();
 
+                            //清除cookie
                             SharedPreferences p_cookie = getActivity()
                                     .getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
                             SharedPreferences.Editor e_cookie = p_cookie.edit();
                             e_cookie.clear();
                             e_cookie.commit();
 
+                            //清除之前用户的好友信息
+                            friendsDao.clearTable();
 
                             text.post(new Runnable() {
                                 @Override
@@ -277,8 +292,10 @@ public class MeFragment extends Fragment {
                 editor.remove("user_id");
                 editor.remove("nickname");
                 editor.remove("photo");
-                // 好像没有把头像的原始文件删掉，但好像不必须，因为头像的存储文件名都固定的，会被反复覆盖
                 editor.commit();
+                //清除之前的好友信息
+                friendsDao.clearTable();
+
                 text.post(new Runnable() {
                     @Override
                     public void run() {

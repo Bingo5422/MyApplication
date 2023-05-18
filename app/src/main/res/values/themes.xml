@@ -13,7 +13,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/light_grey</item>
         <item name="android:windowLightStatusBar">true</item>
-<!--        <item name="android:navigationBarColor">?attr/colorPrimaryVariant</item>-->
+<!--        <item name="android:navigationBarColor">@color/text_green</item>-->
         <!-- Customize your theme here. -->
         <item name="background">@color/creamy_white</item>
 

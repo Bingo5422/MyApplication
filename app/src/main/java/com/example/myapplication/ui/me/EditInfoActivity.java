@@ -187,13 +187,13 @@ public class EditInfoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // 通过返回码判断是哪个应用返回的数据
+            // which activity return the result
             switch (requestCode) {
-                // 相册选择
+                // Album
                 case CHOICE_FROM_ALBUM_REQUEST_CODE:
                     cropPhoto(data.getData());
                     break;
-                // 裁剪图片
+                // Crop photo
                 case CROP_PHOTO_REQUEST_CODE:
                     Upload_Photo_Request(client, EditInfoActivity.this);
                     break;

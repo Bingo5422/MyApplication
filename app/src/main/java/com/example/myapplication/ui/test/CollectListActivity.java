@@ -63,5 +63,13 @@ public class CollectListActivity extends AppCompatActivity {
         binding.tvCount.setText(dataList.size() + "/"+ MainActivity.MAX_COUNT);
         adapter.notifyDataSetChanged();
 
+        binding.wordListBack.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 }

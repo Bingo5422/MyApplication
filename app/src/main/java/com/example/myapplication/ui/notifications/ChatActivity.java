@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.notifications;
 
+import static com.example.myapplication.MainActivity.DomainURL;
+
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -71,7 +73,6 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.room.Room;
 
@@ -95,6 +96,7 @@ public class ChatActivity extends AppCompatActivity {
     // 定义请求码和结果码
 
     private static final int RESULT_OK = Activity.RESULT_OK;
+
 
 
     SharedPreferences preferences;
@@ -165,9 +167,10 @@ public class ChatActivity extends AppCompatActivity {
 
 
         lastmessagenum = 0;
-        String url = "http://192.168.24.21:5000/";
+//        String url = "http://192.168.113.21:5000/";
+        String url = DomainURL;
 
-        urldown = "http://192.168.24.21:5000/challenge/download_zip";
+        urldown = DomainURL+"/challenge/download_zip";
         //创建challenge文件夹
         String folderName = "challengedown";
         folderPath = ChatActivity.this.getFilesDir().getAbsolutePath() + "/" + folderName;
@@ -399,7 +402,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private void getmessage(OkHttpClient client) {
         Request request = new Request.Builder()
-                .url("http://192.168.24.21:5000/challenge/getmessage")
+//                .url("http://192.168.24.21:5000/challenge/getmessage")
+                .url(DomainURL+"/challenge/getmessage")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -471,7 +475,7 @@ public class ChatActivity extends AppCompatActivity {
     public static void sendmessage(FormBody.Builder formBody, OkHttpClient client) {
 
         Request request = new Request.Builder()//创建Request 对象。
-                .url("http://192.168.24.21:5000/challenge/sendmessage")
+                .url(DomainURL+"/challenge/sendmessage")
                 .post(formBody.build())//传递请求体
                 .build();
 

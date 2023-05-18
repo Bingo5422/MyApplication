@@ -22,7 +22,7 @@ public class BaiDuRecUtil {
             String param = "image=" + imgParam;
 
             // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
-            String accessToken = "24.44b97a7a042efbf46c72bddb861f5993.2592000.1684322956.282335-32510584";
+            String accessToken = "24.e7cd13935643a1de5e21c5ab5f29823d.2592000.1686961899.282335-32510584";
 
 
             new Thread(){

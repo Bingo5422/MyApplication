@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.notifications;
 
+import static com.example.myapplication.MainActivity.DomainURL;
 import static com.example.myapplication.ui.notifications.ChatActivity.changeDate;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -111,7 +112,7 @@ public class UploadChallenge extends AppCompatActivity {
         friendId = intent.getStringExtra("friend_id");
         userId = intent.getStringExtra("userId");
 
-        url = "http://192.168.24.21:5000/challenge/download_zip";
+        url = DomainURL+"/challenge/download_zip";
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
 
@@ -269,7 +270,7 @@ public class UploadChallenge extends AppCompatActivity {
         RequestBody requestBody = builder.build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.24.21:5000/challenge/upload")
+                .url(DomainURL+"/challenge/upload")
                 .post(requestBody)
                 .build();
 //        Response response = client.newCall(request).execute();

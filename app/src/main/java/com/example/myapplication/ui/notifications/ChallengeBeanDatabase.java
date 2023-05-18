@@ -15,9 +15,7 @@ import com.example.myapplication.Dao.MessageBeanDao;
 
 @Database(entities = {ChallengeBean.class}, version = 1, exportSchema = false)
 public abstract class ChallengeBeanDatabase extends RoomDatabase {
-
     private static volatile ChallengeBeanDatabase instance;
-
     public static synchronized ChallengeBeanDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
@@ -27,6 +25,5 @@ public abstract class ChallengeBeanDatabase extends RoomDatabase {
         }
         return instance;
     }
-
     public abstract ChallengeDao challengeDao();
 }

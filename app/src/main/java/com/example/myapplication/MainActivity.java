@@ -30,10 +30,10 @@ import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity {
-    //public final static String DomainURL = "http://xintong.pythonanywhere.com";
+    public final static String DomainURL = "http://xintong.pythonanywhere.com";
 
  //   public final static String DomainURL = "http://172.26.14.175:5000";
-    public final static String DomainURL = "http://192.168.24.21:5000";
+//    public final static String DomainURL = "http://192.168.24.21:5000";
 //    public final static String DomainURL = "http://192.168.1.59:5000";
 
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
 
         // 语音合成APPID
-        SpeechUtility.createUtility(context, SpeechConstant.APPID + "=54d1647f");
+        SpeechUtility.createUtility(context, SpeechConstant.APPID + "=13bc7120");
 
         sp = getSharedPreferences("sp", MODE_PRIVATE);
 

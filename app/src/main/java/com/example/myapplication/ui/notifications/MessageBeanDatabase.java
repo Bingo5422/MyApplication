@@ -11,9 +11,7 @@ import com.example.myapplication.Dao.MessageBeanDao;
 
 @Database(entities = {MessageBean.class}, version = 1, exportSchema = false)
 public abstract class MessageBeanDatabase extends RoomDatabase {
-
     private static volatile MessageBeanDatabase instance;
-
     public static synchronized MessageBeanDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
@@ -23,6 +21,8 @@ public abstract class MessageBeanDatabase extends RoomDatabase {
         }
         return instance;
     }
-
     public abstract MessageBeanDao messageBeanDao();
 }
+
+
+
