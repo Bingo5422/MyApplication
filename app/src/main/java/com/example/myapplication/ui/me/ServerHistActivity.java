@@ -60,7 +60,7 @@ import okhttp3.Response;
 public class ServerHistActivity extends AppCompatActivity implements CheckAdapter.CheckItemListener {
 
     /**
-     * 这里是收藏界面，回头再改名
+     * The activity for viewing server favorites
      */
     private CheckAdapter mCheckAdapter;
     private RecyclerView check_rcy;
@@ -94,11 +94,11 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         handler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
-                if(msg.what==1){ //更新列表
+                if(msg.what==1){ //if the message code is 1, update the list
                     tv_server_hist_num.setText("("+dataArray.size()+"/50)");
                     mCheckAdapter.notifyDataSetChanged();
                 }
-                if(msg.what==2){ //更新alert dialog
+                if(msg.what==2){ //if the message code is 2, show the dialog
                     if(dialog.isShowing()){
                         dialog.setMessage("Deleting");
                     }
@@ -111,17 +111,12 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
-                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
-//        client = new OkHttpClient.Builder()
-//                .connectTimeout(10, TimeUnit.SECONDS)
-//                .writeTimeout(5, TimeUnit.SECONDS)
-//                .readTimeout(5, TimeUnit.SECONDS)
-//                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+                .cookieJar(cookieJar).build();
 
 
         checkedList = new ArrayList<>();
-        initData();
-        initViews();
+        initData(); // initialize data to be display
+        initViews(); // initialize view
 
         server_hist_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,17 +129,18 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
             @Override
             public void onClick(View view) {
-
+                // alert dialog for deletion confirmation
                 dialog = new AlertDialog.Builder(ServerHistActivity.this)
-                        .setTitle("Note")//设置对话框的标题
-                        .setMessage("Are you sure to delete? This operation cannot be undone.")//设置对话框的内容
-                        //设置对话框的按钮
+                        .setTitle("Note")
+                        .setMessage("Are you sure to delete? This operation cannot be undone.")
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         })
+
+                        // if confirmed, send delete request
                         .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -153,8 +149,8 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                                 handler.sendMessage(message);
 
                                 JSONObject json = new JSONObject();
+                                // add the selected object to a json to send to the server for deleting
                                 for(int i=0;i<checkedList.size();i++){
-                                    // 把获取的文件信息储存在json对象中
                                     try {
                                         json.append(Integer.toString(i), checkedList.get(i).getFilename());
                                     } catch (JSONException e) {
@@ -162,7 +158,6 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                                     }
                                 }
 
-                                // 发送下载请求
                                 String url = DomainURL + "/hist/delete";
                                 RequestBody body = RequestBody.create(MediaType.parse("application/json"),
                                         String.valueOf(json));
@@ -191,21 +186,20 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                                             JSONObject res_json = new JSONObject(response.body().string());
                                             if(res_json.getBoolean("if_success")){
                                                 List<CheckBean> deleteBean=new ArrayList<>();
-                                                //在原本的数据列表中删除对应的bean
+                                                // delete the bean from the original data list
                                                 for(int i=0;i<checkedList.size();i++){
                                                     CheckBean cb = checkedList.get(i);
                                                     for(int j=0;j<dataArray.size();j++){
                                                         if(cb.getFilename()==dataArray.get(j).getFilename()){
-//                                            dataArray.remove(j);
                                                             deleteBean.add(dataArray.get(j));
                                                         }
                                                     }
                                                 }
                                                 dataArray.removeAll(deleteBean);
-                                                // 清空被选择的项目
+                                                // clear the check list as the item checked are deleted
                                                 checkedList.clear();
 
-                                                // 更新ui
+                                                // send message to refresh the list
                                                 Message message = handler.obtainMessage();
                                                 message.what = 1;
                                                 handler.sendMessage(message);
@@ -243,29 +237,26 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
 
 
     private void initViews(){
-        //get the recycle view
         check_rcy = findViewById(R.id.check_rcy);
-        //选择所有的checkbox
         check_all_cb = findViewById(R.id.check_all_cb);
-        // 创建线性布局管理器
+        // linear adapter
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         check_rcy.setLayoutManager(linearLayoutManager);
-        // dataArray:所有数据
+        // dataArray: all data will be put in this list for display
         mCheckAdapter = new CheckAdapter(this, dataArray, this);
         check_rcy.setAdapter(mCheckAdapter);
 
-        // 如果全选
+        // if all item are checked
         check_all_cb.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 isSelectAll = !isSelectAll;
                 checkedList.clear();
                 if(isSelectAll){
-                    // 全选了则所有list都加入被选择的list
                     checkedList.addAll(dataArray);
                 }
-                //给每一个具体的项目都设置为已选择
+                //set each item to checked
                 for(CheckBean checkBean : dataArray){
                     checkBean.setChecked(isSelectAll);
                 }
@@ -273,10 +264,10 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             }
         });
     }
-//返回数据-----------------
+
     private void initData(){
         dataArray = new ArrayList<>();
-        String url = DomainURL + "/hist/list";
+        String url = DomainURL + "/hist/list";  //obtain data list from the server
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -299,6 +290,7 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     json_list = new JSONObject(response.body().string());
+                    // add the information to the list to be displayed
                     for(int i=0; i<json_list.length(); i++){
                         JSONObject item = (JSONObject) json_list.get(Integer.toString(i));
                         CheckBean bean = new CheckBean();
@@ -318,10 +310,10 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
                     }
                     Message message = handler.obtainMessage();
                     message.what = 1;
-                    handler.sendMessage(message);
+                    handler.sendMessage(message);  // refresh the UI
 
                     for(int i=0; i<dataArray.size(); i++){
-                        picloadReq(dataArray.get(i));
+                        picloadReq(dataArray.get(i)); // for each item, send a picture downloading request
                     }
 
                 } catch (JSONException e) {
@@ -357,20 +349,20 @@ public class ServerHistActivity extends AppCompatActivity implements CheckAdapte
         });
     }
 
+    // overwrite the interface provided by the adapter
     @Override
     public void itemChecked(CheckBean checkBean, boolean isChecked) {
-        //处理Item点击选中回调事件
         if (isChecked) {
-        //选中处理
+        //if an item is checked and not already exist in the checked list
             if (!checkedList.contains(checkBean)) {
-                checkedList.add(checkBean);
+                checkedList.add(checkBean); // add it to the checked list
             }
-        } else {//未选中处理
+        } else {
             if (checkedList.contains(checkBean)) {
                 checkedList.remove(checkBean);
             }
         }
-        //判断列表数据是否全部选中
+        // if all the items are checked
         if (checkedList.size() == dataArray.size()) {
             check_all_cb.setChecked(true);
         } else {

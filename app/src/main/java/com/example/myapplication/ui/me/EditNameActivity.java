@@ -58,7 +58,6 @@ public class EditNameActivity extends AppCompatActivity {
         btn_submit_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 登录为阻塞请求
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -70,18 +69,16 @@ public class EditNameActivity extends AppCompatActivity {
     }
     private void SubmitSuccessProcess(){
         CookieJarImpl cookieJar = new CookieJarImpl(EditNameActivity.this);
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .cookieJar(cookieJar).build();
         client.newBuilder().cookieJar(cookieJar)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS).build();
 
-        FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
-        formBody.add("nickname", String.valueOf(et_new_nickname.getText()));//传递键值对参数
-        Request request = new Request.Builder()//创建Request 对象。
+        FormBody.Builder formBody = new FormBody.Builder();
+        formBody.add("nickname", String.valueOf(et_new_nickname.getText()));
+        Request request = new Request.Builder()
                 .url(DomainURL + "/info/set_nickname")
-                .post(formBody.build())//传递请求体
+                .post(formBody.build())
                 .build();
 
         List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
@@ -94,6 +91,7 @@ public class EditNameActivity extends AppCompatActivity {
                     JSONObject res_json = null;
                     res_json = new JSONObject(response.body().string());
                     if (res_json.getBoolean("if_success")) {
+                        // Update local sharedpreference if new nickname is uploaded successfully
                         SharedPreferences preferences =
                                 EditNameActivity.this.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = preferences.edit();

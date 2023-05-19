@@ -60,7 +60,6 @@ public class EditInfoActivity extends AppCompatActivity {
     private LinearLayout ll_edit_photo, ll_edit_name;
     private ImageView iv_edit_user_photo, edit_info_back;
     private TextView tv_edit_nickname;
-//    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,19 +79,15 @@ public class EditInfoActivity extends AppCompatActivity {
             }
         });
 
-
+        // cookie and client configurations
         CookieJarImpl cookieJar = new CookieJarImpl(EditInfoActivity.this);
         client.newBuilder().cookieJar(cookieJar)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS).build();
-//        client = new OkHttpClient.Builder()
-//                .connectTimeout(10, TimeUnit.SECONDS)
-//                .writeTimeout(5, TimeUnit.SECONDS)
-//                .readTimeout(5, TimeUnit.SECONDS)
-//                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
-        setInfo();  //设置初始值
+
+        setInfo();  // Initial values to be displayed
 
         ll_edit_photo.setOnClickListener(clickListener);
 
@@ -102,8 +97,8 @@ public class EditInfoActivity extends AppCompatActivity {
 
 
         /**
-         * 先判断用户以前有没有对我们的应用程序允许过读写内存卡内容的权限，
-         * 用户处理的结果在 onRequestPermissionResult 中进行处理
+         * To determine if the user has previously
+         * allowed us to read and write the contents of the memory card in our application,
          */
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -122,13 +117,12 @@ public class EditInfoActivity extends AppCompatActivity {
 
     }
 
+    // Return operation
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
-//        intent.putExtra("flag", 3);
         startActivity(intent);
-//        finish();
 
     }
 
@@ -136,9 +130,9 @@ public class EditInfoActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            if (view == ll_edit_photo) {
+            if (view == ll_edit_photo) { // edit the user's portrait
                 choiceFromAlbum();
-            } else if (view == ll_edit_name) {
+            } else if (view == ll_edit_name) { // edit user name
                 startActivity(new Intent(EditInfoActivity.this, EditNameActivity.class));
             }
         }
@@ -160,16 +154,13 @@ public class EditInfoActivity extends AppCompatActivity {
         cropPhotoIntent.putExtra("outputX", 300);
         cropPhotoIntent.putExtra("outputY", 300);
 
-//        String outputdir = getFilesDir().getAbsolutePath();
-        // 设置图片的最终输出目录
-//        cropPhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-//                photoOutputUri = Uri.parse("file://" + outputdir + "/photo.jpg"));
         cropPhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                 photoOutputUri = Uri.parse("file:///sdcard/photo.jpg"));
         startActivityForResult(cropPhotoIntent, CROP_PHOTO_REQUEST_CODE);
 
     }
 
+    // The result of obtaining read and write permissions
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -177,7 +168,8 @@ public class EditInfoActivity extends AppCompatActivity {
             case WRITE_SDCARD_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    Toast.makeText(this, "读写内存卡内容权限被拒绝", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,
+                            "The read and write permission of the memory was denied.", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -187,15 +179,15 @@ public class EditInfoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // which activity return the result
+            // determin which activity return the result
             switch (requestCode) {
                 // Album
                 case CHOICE_FROM_ALBUM_REQUEST_CODE:
-                    cropPhoto(data.getData());
+                    cropPhoto(data.getData()); // get the photo and go to crop
                     break;
                 // Crop photo
                 case CROP_PHOTO_REQUEST_CODE:
-                    Upload_Photo_Request(client, EditInfoActivity.this);
+                    Upload_Photo_Request(client, EditInfoActivity.this); // upload the photo
                     break;
             }
         }
@@ -203,7 +195,7 @@ public class EditInfoActivity extends AppCompatActivity {
 
     private void setInfo(){
         SharedPreferences preferences = this.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        // 从本地调取基本用户信息先进行显示
+        // Get the information locally first
         String user = preferences.getString("nickname", "new user");
         tv_edit_nickname.setText(user);
         String photo_path = preferences.getString("photo", "");
@@ -247,10 +239,10 @@ public class EditInfoActivity extends AppCompatActivity {
                     try {
                         res_json = new JSONObject(response.body().string());
                         if (res_json.getBoolean("if_success")) {
-                            //更新sharedpreference中的信息
+                            //Update the information in sharedpreference
                             SharedPreferences preferences = context.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("photo", file.getAbsolutePath()); //存储返回的用户名
+                            editor.putString("photo", file.getAbsolutePath());
                             editor.commit();
 
                             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());

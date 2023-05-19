@@ -47,7 +47,6 @@ import okhttp3.Response;
 public class MeFragment extends Fragment {
 
     static OkHttpClient client;
-//    final static String DomainURL = "http://xintong.pythonanywhere.com";
     private FragmentMeBinding binding;
     private Button btn_login, btn_display, btn_edit_info, btn_synchro;
     private TextView text;
@@ -68,9 +67,6 @@ public class MeFragment extends Fragment {
         btn_edit_info = root.findViewById(R.id.btn_edit_info);
         btn_synchro = root.findViewById(R.id.btn_synchro);
 
-        //clearTable
-//        FriendDatabase mFriendDatabase = Room.databaseBuilder(getContext(), FriendDatabase.class, "friend_db").build();
-//        friendDao =  mFriendDatabase.friendDao();
 
         RecDataBase recDataBase = Room.databaseBuilder(getContext(), RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         friendsDao = recDataBase.friendsDao();
@@ -78,6 +74,7 @@ public class MeFragment extends Fragment {
         btn_display.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // if no user logging in now
                 if(btn_login.getText()=="logout") {
                     startActivity(new Intent(MainActivity.getContext(), ServerHistActivity.class));
                 }else{
@@ -123,7 +120,7 @@ public class MeFragment extends Fragment {
         String url = DomainURL+"/auth/login";
 
         preferences = getActivity().getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        // 从本地调取基本用户信息先进行显示
+        // get the user information locally and display first
         String user = preferences.getString("nickname", "NO USER");
         String photo_path = preferences.getString("photo", "");
         text.setText(user);
@@ -140,26 +137,22 @@ public class MeFragment extends Fragment {
             });
         }
 
+        // implicit server visit
         CookieJarImpl cookieJar = new CookieJarImpl(getActivity());
         client = new OkHttpClient.Builder().cookieJar(cookieJar)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
-                .build();//创建OkHttpClient对象。
-//        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar)
-//                .connectTimeout(10, TimeUnit.SECONDS)
-//                .writeTimeout(5, TimeUnit.SECONDS)
-//                .readTimeout(5, TimeUnit.SECONDS)
-//                .build();//创建OkHttpClient对象。
-        // 为了正常格式的url创建的request对象
+                .build();
+
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
-        // 寻找对应的cookie
+        // get the corresponding cookie
         List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
 
-        // 如果找到了cookie
+        // if there is a cookie
         if(!cookie.isEmpty()){
             request.newBuilder().addHeader(cookie.get(0).name(),cookie.get(0).value());
 
@@ -177,9 +170,9 @@ public class MeFragment extends Fragment {
 
                     try {
                         res = new JSONObject(response.body().string());
-                        // 如果处于登陆状态，cookie没过期
+                        // if the server session is not expired
                         if (res.getBoolean("logon")) {
-                            // 如果名字有更新，用新名字显示
+                            // show new name if it exists
                             String nickname = res.getString("nickname");
                             text.post(new Runnable() {
                                 @Override
@@ -187,30 +180,31 @@ public class MeFragment extends Fragment {
                                     text.setText(nickname);
                                 }
                             });
-                            // 存储新名字到本地SharedPreference
+                            // save the new name to sharedpreference
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("nickname", nickname);
                             editor.commit();
 
-                        // cookie过期
+                        // if the session has expired
                         }else {
-                            // 更改显示的用户，并清除user_id数据
+                            // remove all the information locally
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.remove("user_id");
                             editor.remove("nickname");
                             editor.remove("photo");
                             editor.commit();
 
-                            //清除cookie
+                            //remove cookie
                             SharedPreferences p_cookie = getActivity()
                                     .getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
                             SharedPreferences.Editor e_cookie = p_cookie.edit();
                             e_cookie.clear();
                             e_cookie.commit();
 
-                            //清除之前用户的好友信息
+                            //clear friends list
                             friendsDao.clearTable();
 
+                            // show default values on the layout
                             text.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -247,12 +241,12 @@ public class MeFragment extends Fragment {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 去登录
+                // go to login page
                 if(btn_login.getText().equals("login")) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
-                // 退出登录
+                // logout
                 else{
                     new Thread(new Runnable() {
                         @Override
@@ -273,6 +267,7 @@ public class MeFragment extends Fragment {
         binding = null;
     }
 
+    // process for logging out
     private void LogoutProcess(OkHttpClient client){
         String logout_url = DomainURL+"/auth/logout";
         Request logout_req = new Request.Builder()
@@ -282,18 +277,18 @@ public class MeFragment extends Fragment {
         try {
             response = client.newCall(logout_req).execute();
             if(response.isSuccessful()) {
-                //清除cookie
+                //clear cookie
                 SharedPreferences p_cookie = getActivity().getSharedPreferences("COOKIES", Context.MODE_PRIVATE);
                 SharedPreferences.Editor e_cookie = p_cookie.edit();
                 e_cookie.clear();
                 e_cookie.commit();
-                // 清除用户登陆显示
+                // clear user information displayed
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove("user_id");
                 editor.remove("nickname");
                 editor.remove("photo");
                 editor.commit();
-                //清除之前的好友信息
+                //clear friends list
                 friendsDao.clearTable();
 
                 text.post(new Runnable() {

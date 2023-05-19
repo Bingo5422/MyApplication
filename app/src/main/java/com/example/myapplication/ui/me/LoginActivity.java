@@ -83,21 +83,16 @@ public class LoginActivity extends AppCompatActivity {
             CookieJarImpl cookieJar = new CookieJarImpl(LoginActivity.this);
             @Override
             public void onClick(View view) {
-//                OkHttpClient client = new OkHttpClient.Builder()
-//                        .connectTimeout(10,TimeUnit.SECONDS)
-//                        .readTimeout(5, TimeUnit.SECONDS)
-//                        .writeTimeout(5, TimeUnit.SECONDS)
-//                        .cookieJar(cookieJar).build();//创建OkHttpClient对象。
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
-                        formBody.add("user_email", et_email.getText().toString());//传递键值对参数
-                        formBody.add("password", et_password.getText().toString());//传递键值对参数
-                        Request request = new Request.Builder()//创建Request 对象。
+                        FormBody.Builder formBody = new FormBody.Builder();
+                        formBody.add("user_email", et_email.getText().toString());
+                        formBody.add("password", et_password.getText().toString());
+                        Request request = new Request.Builder()
                                 .url(url)
-                                .post(formBody.build())//传递请求体
+                                .post(formBody.build())
                                 .build();
                         Response response = null;
                         try {
@@ -122,10 +117,6 @@ public class LoginActivity extends AppCompatActivity {
                             t.setGravity(Gravity.CENTER, 0, 0);
                             t.show();
                             Looper.loop();
-//                            Toast.makeText(MainActivity.getContext(), "Unable to login, please check" +
-//                                    "the Internet connection.", Toast.LENGTH_SHORT).show();
-//                            Looper.loop();
-                            //throw new RuntimeException(e);
                         }
 
 
@@ -135,7 +126,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // 返回跳转
         iv_login_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // 进入忘记密码界面
+        // enter the forget password page
         tv_forget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // 密码可见/不可见
+        // set the password visible/invisible
         iv_if_visible.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -189,6 +179,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+        // If get successful message from the server, do this
         private void LoginSuccess(Response response, OkHttpClient client, Context context){
             JSONObject res_json;
             String res = null;
@@ -196,26 +188,26 @@ public class LoginActivity extends AppCompatActivity {
                 res = response.body().string();
                 res_json = new JSONObject(res);
                 if (res_json.getBoolean("if_success")) {
-                    //获取返回数据的头部
+                    //Get the header from the response
                     Headers headers = response.headers();
                     HttpUrl loginUrl = response.request().url();
-                    //获取头部的Cookie,注意：可以通过Cooke.parseAll()来获取
+                    //get cookie from the header
                     List<Cookie> cookies = Cookie.parseAll(loginUrl, headers);
-                    //防止header没有Cookie的情况
+
                     if (cookies != null) {
-                        //存储到Cookie管理器中
+                        //store the cookie locally
                         client.cookieJar().saveFromResponse(loginUrl, cookies);
                     }
 
-                    // 存储用户基本信息到用户sharedpreference中
+                    // save the user nickname information to sharedpreference
                     JSONObject info = new JSONObject(res_json.getString("message"));
                     SharedPreferences preferences = context.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("user_id", info.getString("user_id")); //存储返回的用户名
+                    editor.putString("user_id", info.getString("user_id"));
                     editor.putString("nickname", info.getString("nickname"));
                     editor.commit();
 
-                    // 获得用户其他信息存到sharedpreferences
+                    // get the user's portrait
                     Request photo_request = new Request.Builder()
                             .url(DomainURL + "/info/get_photo")
                             .build();
@@ -226,7 +218,7 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             info_res = client.newCall(photo_request).execute();
                             if(info_res.isSuccessful()){
-                                GetInfoSuccess(LoginActivity.this, info_res); //获得响应，将图片存到本地
+                                GetInfoSuccess(LoginActivity.this, info_res); // perform saving operation
                             }
                         } catch (IOException e) {
                             if(Looper.myLooper()==null)
@@ -234,11 +226,10 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.getContext(), "Unable to get info, please check" +
                                     "your Internet connection.", Toast.LENGTH_SHORT).show();
                             Looper.loop();
-                            //throw new RuntimeException(e);
                         }
                     }
 
-                    // 登陆成功 跳转回主界面
+                    // Login successfully, jump to the main page
                     Intent login_intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(login_intent);
 
@@ -258,11 +249,6 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (JSONException e) {}
                         }
                     });
-//                    if(Looper.myLooper()==null)
-//                        Looper.prepare();
-//                    Toast.makeText(MainActivity.getContext(), res_json.getString("message"),
-//                            Toast.LENGTH_SHORT).show();
-//                    Looper.loop();
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -271,6 +257,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+        // perform this operation if successfully get the portrait response from the server
         protected void GetInfoSuccess(Context context, Response response){
 
             try {
@@ -278,21 +265,24 @@ public class LoginActivity extends AppCompatActivity {
                 byte[] buf = new byte[4096];
                 int len = 0;
 
+                // directory to store the photo
                 String TargetPath = getExternalFilesDir("Load_from_server").getAbsolutePath();
                 File saveFile = new File(TargetPath, "photo.jpg");
 
                 FileOutputStream saveImgOut = new FileOutputStream(saveFile);
                 is = response.body().byteStream();
 
+                // storing
                 while ((len = is.read(buf)) != -1) {
                     saveImgOut.write(buf, 0, len);
                 }
-                //存储完成后需要清除相关的进程
                 saveImgOut.flush();
                 saveImgOut.close();
+
+                // record the photo information in sharedpreference
                 SharedPreferences preferences = context.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("photo", saveFile.getAbsolutePath()); //存储返回的用户名
+                editor.putString("photo", saveFile.getAbsolutePath());
                 editor.commit();
             } catch (IOException e) {
                 throw new RuntimeException(e);

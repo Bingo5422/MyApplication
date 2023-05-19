@@ -69,26 +69,25 @@ public class RegisterActivity extends AppCompatActivity {
         iv_back_to_login = findViewById(R.id.iv_back_to_login);
 
 
-        // 提交注册
+        // sbumit registration information
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 String url = DomainURL+"/auth/register";
 
-//                OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
-                FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
-                formBody.add("user_email", et_email.getText().toString()); //传递键值对参数
+                FormBody.Builder formBody = new FormBody.Builder();
+                formBody.add("user_email", et_email.getText().toString());
                 formBody.add("password", et_password.getText().toString());
                 formBody.add("password_confirm", et_confirm_pw.getText().toString());
                 formBody.add("captcha", et_captcha.getText().toString());
 
-                Request request = new Request.Builder()//创建Request 对象。
+                Request request = new Request.Builder()
                         .url(url)
-                        .post(formBody.build())//传递请求体
+                        .post(formBody.build())
                         .build();
 
-                // 创建一个call请求，并把请求添加到调度中
+
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -136,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        // 发送验证码
+        // button for sending code
         btn_send_code.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -145,8 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (et_email.length()!=0) {
                         String url = DomainURL + "/auth/captcha/email?email=" + et_email.getText();
 
-//                    OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
-                        Request request = new Request.Builder()//创建Request 对象。
+                        Request request = new Request.Builder()
                                 .url(url)
                                 .build();
                         client.newCall(request).enqueue(new Callback() {
@@ -188,7 +186,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        // 返回登录界面
         iv_back_to_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

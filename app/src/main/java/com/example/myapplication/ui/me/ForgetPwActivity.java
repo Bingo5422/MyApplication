@@ -58,37 +58,36 @@ public class ForgetPwActivity extends AppCompatActivity {
         tv_forget_error = findViewById(R.id.tv_forget_error);
 
 
-        // 点击提交表单
+        // click to submit the form
         btn_verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String url = DomainURL+"/auth/forget_pw";
                 CookieJarImpl cookieJar = new CookieJarImpl(ForgetPwActivity.this);
-//                OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build(); //创建OkHttpClient对象。
+
                 client.newBuilder().cookieJar(cookieJar).build();
-                FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
-                formBody.add("user_email", et_email_forget.getText().toString()); //传递键值对参数
+                FormBody.Builder formBody = new FormBody.Builder();
+                formBody.add("user_email", et_email_forget.getText().toString());
                 formBody.add("captcha", et_forget_captcha.getText().toString());
 
-                Request request = new Request.Builder()//创建Request 对象。
+                Request request = new Request.Builder()
                         .url(url)
-                        .post(formBody.build())//传递请求体
+                        .post(formBody.build())
                         .build();
 
-                // 创建一个call请求，并把请求添加到调度中
                 client.newCall(request).enqueue(new VerifyCallback(client));
             }
         });
 
-        // 点击发送验证码
+        // click to get the verification code
         btn_forget_send_code.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
                 if (!ButtonUtil.isFastDoubleClick(30000, ForgetPwActivity.this, R.id.btn_forget_send_code)) {
                     String url = DomainURL + "/auth/forget_pw_captcha/email?email=" + et_email_forget.getText();
-                    //                OkHttpClient client = new OkHttpClient(); //创建OkHttpClient对象。
-                    Request request = new Request.Builder()//创建Request 对象。
+
+                    Request request = new Request.Builder()
                             .url(url)
                             .build();
                     client.newCall(request).enqueue(new Callback() {
@@ -135,7 +134,6 @@ public class ForgetPwActivity extends AppCompatActivity {
             }
         });
 
-        // 点击返回上一界面
         iv_forget_pw_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,12 +167,11 @@ public class ForgetPwActivity extends AppCompatActivity {
                 res_json = new JSONObject(res);
                 if (res_json.getBoolean("if_success")) {
 
-                    //获取返回数据的头部
+                    //Get the header of the response
                     Headers headers = response.headers();
                     HttpUrl Url = response.request().url();
-                    //获取头部的Cookie,注意：可以通过Cooke.parseAll()来获取
+                    //Get cookie from the header
                     List<Cookie> cookies = Cookie.parseAll(Url, headers);
-                    //防止header没有Cookie的情况
                     if (cookies != null) {
                         client.cookieJar().saveFromResponse(Url, cookies);
                     }

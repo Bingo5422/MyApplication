@@ -15,12 +15,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * 文件操作工具类
+ * File manipulation tool class
  */
 public class FileUtil {
 
 	/**
-	 * 读取文件内容为二进制数组
+	 * Read file contents as a binary array
 	 * 
 	 * @param filePath
 	 * @return
@@ -36,7 +36,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * 流转二进制数组
+	 * Flow binary array
 	 * 
 	 * @param in
 	 * @return
@@ -54,7 +54,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * 保存文件
+	 * save file
 	 * 
 	 * @param filePath
 	 * @param fileName
@@ -79,7 +79,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * 解压缩zip
+	 * Unzip file
 	 *
 	 */
 	public static void unzip(String filePath, String outputDir) {

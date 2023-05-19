@@ -7,14 +7,14 @@ public class ProgressHelper {
 
 
     /**
-     * 包装请求体用于上传文件的回调
-     * @param requestBody 请求体RequestBody
-     * @param progressRequestListener 进度回调接口
-     * @return 包装后的进度回调请求体
+     *
+     * The callback that wraps the request body for uploading the file
+     * @param requestBody
+     * @param progressRequestListener Progress callback interface
+     * @return The wrapped request body with callback progress
      */
     public static ProgressRequestBody addProgressRequestListener(
             RequestBody requestBody, ProgressRequestListener progressRequestListener){
-        //包装请求体
         return new ProgressRequestBody(requestBody,progressRequestListener);
     }
 }

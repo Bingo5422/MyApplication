@@ -14,6 +14,7 @@ import androidx.room.Room;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,6 +35,7 @@ import com.example.myapplication.Bean.CheckBean;
 import com.example.myapplication.Bean.HistoryBean;
 import com.example.myapplication.Dao.HistoryDao;
 import com.example.myapplication.Dao.RecDataBase;
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.CookieJarImpl;
 import com.example.myapplication.Utils.FileUtil;
@@ -77,12 +79,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
     private Button btn_upload_stars, btn_upload_unfamiliar, btn_download_stars, btn_download_unfamiliar;
 
-//    private Handler handler;
     private HistoryDao historyDao;
     private List<Cookie> cookie;
     private JSONObject server_list, star_list;
-//    private OkHttpClient client;
-    //修改info_path, delete_info_path 选择合适的路径保存json文档，该文档可以放在和图片一样的路径
+
     private String savePath, info_path, download_path, delete_info_path;
     private int fileNum;
 
@@ -129,8 +129,9 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    // Upload function. Files are uploaded in this method
     private void Upload(OkHttpClient client, String url, MultipartBody body, String type){
-        /********从这开始都是新加的********/
+        /**Notification channel configuration for different type of uploading**/
         String channel_msg = null;
         String content_title = null;
         final int notify_id;
@@ -143,18 +144,19 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             content_title = "Uploading unfamiliar words";
             notify_id = 333;
         }
-        // 创建渠道和notification用于展示下载进度
+        // create notification channel to show progress
         createMessageNotificationChannel(channel_msg);
         NotificationCompat.Builder notify_builder =
                 new NotificationCompat.Builder(ServerUploadActivity.this, channel_msg);
-        notify_builder.setSmallIcon(R.drawable.ic_synchro) // //小图标
-                .setContentTitle(content_title)  //通知标题
-                .setAutoCancel(true);  //点击通知后关闭通知
+        notify_builder.setSmallIcon(R.drawable.ic_synchro)
+                .setContentTitle(content_title)
+                .setAutoCancel(true);
 
-        // 带监听器request实现
+        // The implementation of the listener
         ProgressRequestListener progressListener = new ProgressRequestListener() {
             @Override
             public void onRequestProgress(long bytesWrite, long contentLength, boolean done) {
+                // set the progress in the progressbar
                 int progress = (int) ((100 * bytesWrite) / contentLength);
                 notify_builder.setProgress(100, progress, false);
                 notify_builder.setContentText(progress + "%");
@@ -166,8 +168,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 .url(url)
                 .post(ProgressHelper.addProgressRequestListener(body, progressListener))
                 .build();
-        /***********到这结束**********/
-
 
         cookie = client.cookieJar().loadForRequest(request.url());
         request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
@@ -190,11 +190,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                     res_msg = new JSONObject(response.body().string().toString());
                     if(res_msg.getBoolean("if_success")){
 
-                        /********从这开始都是新加的********/
+                        /**upload finished, set the notification to show complete*/
                         notify_builder.setProgress(100, 100, false);
                         notify_builder.setContentText("Complete");
                         notificationManager.notify(notify_id, notify_builder.build());
-                        /********到这结束********/
 
                         if(Looper.myLooper()==null)
                             Looper.prepare();
@@ -202,10 +201,9 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                                 "Successfully uploaded.",Toast.LENGTH_SHORT).show();
                         Looper.loop();
                     }else{
-                        /********从这开始都是新加的********/
+                        /**upload failed, show relevant message */
                         notify_builder.setContentText("Interrupted");
                         notificationManager.notify(notify_id, notify_builder.build());
-                        /********到这结束********/
 
                         if(Looper.myLooper()==null)
                             Looper.prepare();
@@ -223,17 +221,18 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    // the method to get server list and compare with local list for uploading
     private int UploadCompare(Response response, List<HistoryBean> localList,
                               MultipartBody.Builder multipartBuilder, int fileNum, String type){
-        // 根据服务器列表添加文件或删除文件
-        // int fileNum = 0;  //用来数添加了几个文件的
+
         JSONObject info = new JSONObject();
         try {
             String res = response.body().string();
             server_list = new JSONObject(res.toString());
 
             for(int i=0;i<localList.size();i++) {
-                //所有信息都加入info
+
+                // all information need to be uploaded
                 HistoryBean bean = localList.get(i);
                 JSONObject obj = new JSONObject();
 
@@ -251,28 +250,21 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 if(type=="star"){
                     obj.put("if_star", bean.getIf_star());
                 }else{
+                    // all the unfamiliar words uploaded are marked as not favorite
                     obj.put("if_star", 0);
                 }
-                // 备份生词本所有的收藏都设置为空，如果有需要则自己重新同步收藏
-
-
                 info.put(bean.getFileName(), obj);
 
 
-                //服务器没有的图片加入multipartbody准备上传
-                //上传图片
+                // the files that server does not have will be uploaded by adding to the multipartbody
                 if(!server_list.has(bean.getFileName())) {
                     File file = new File(bean.getPath());
-//                    String f = bean.getFileName();
-//                    String[] s = f.split("\\.");
                     String filetype = bean.getFileName().split("\\.")[1];
-//                    multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),
-//                            (RequestBody.create(MediaType.parse("image/*jpg"), file)));
                     multipartBuilder.addFormDataPart(Integer.toString(fileNum), bean.getFileName(),
                             (RequestBody.create(MediaType.parse("image/*"+filetype), file)));
                     fileNum++;
                 }
-                else{
+                else{ // if the server has the file, remove it from the server list
                     server_list.remove(bean.getFileName());
                 }
 
@@ -286,14 +278,14 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         }
 
         try {
-            // 写info.json到本地
+            // write the info.json to local. This file contains the information to be uploaded
             FileOutputStream fos = new FileOutputStream(info_path);
             OutputStreamWriter os = new OutputStreamWriter(fos);
             BufferedWriter w = new BufferedWriter(os);
             w.write(info.toString());
             w.close();
 
-            // 写delete.json到本地
+            // write the delete.json to local. this file contains the files to be deleted on server
             fos = new FileOutputStream(delete_info_path);
             os = new OutputStreamWriter(fos);
             w = new BufferedWriter(os);
@@ -308,9 +300,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         return fileNum;
 
     }
+
+    // synthesize the compare and upload process
     private void localCompare_and_upload(OkHttpClient client, String url,
                                          List<HistoryBean> localList, String type){
-        //先发送一个请求获得服务器列表
 
         Request request = new Request.Builder()
                 .url(url)
@@ -347,31 +340,30 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                         (RequestBody.create(MediaType.parse("application/json;charset=utf-8"), delete_file)));
 
 
-                // 发送上传请求
+                // Upload
                 Upload(client, DomainURL + "/hist/upload?upload="+type, multipartBuilder.build(), type);
 
             }
         });
     }
 
+    // compare files before downloading
     private JSONObject DownloadCompare(Response response, List<HistoryBean> localList) {
-        // 根据服务器列表添加文件或删除文件
-        // int fileNum = 0;  //用来数添加了几个文件的
         JSONObject info = new JSONObject();
         try {
             String res = response.body().string();
             server_list = new JSONObject(res.toString());
             Iterator keys = server_list.keys();
-//            int i=0;
             while(keys.hasNext()){
                 Object key = keys.next();
                 String filename = key.toString();
 
-                //根据文件名查询本地数据库，图片是否已经存在，若不存在再加入下载列表
+                // Query the local database according to the file
+                // name to check whether the image already exists.
+                // If it does not exist, add it to the download list
                 List<HistoryBean> b =  historyDao.queryByFilename(filename);
                 if(b.isEmpty()) {
                     info.put(filename, 1);
-//                    i++;
                 }
             }
             return info;
@@ -385,9 +377,9 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    // download files
     private void Download(OkHttpClient client, String url, JSONObject info){
 
-        // 发送下载请求，是一个json
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(info));
         Request request = new Request.Builder()
                 .url(url)
@@ -416,13 +408,12 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 FileOutputStream fos = null;
                 float total = response.body().contentLength();
 
-                // 创建渠道和notification用于展示下载进度
                 createMessageNotificationChannel("message4");
                 NotificationCompat.Builder notify_builder2 =
                         new NotificationCompat.Builder(ServerUploadActivity.this, "message4");
-                notify_builder2.setSmallIcon(R.drawable.ic_synchro) // //小图标
-                        .setContentTitle("Downloading unfamiliar words")  //通知标题
-                        .setAutoCancel(true);  //点击通知后关闭通知
+                notify_builder2.setSmallIcon(R.drawable.ic_synchro)
+                        .setContentTitle("Downloading unfamiliar words")
+                        .setAutoCancel(true);
 
                 try {
                     is = response.body().byteStream();
@@ -437,7 +428,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                         notify_builder2.setProgress(100, progress, false);
                         notify_builder2.setContentText(progress + "%");
                         notificationManager.notify(444, notify_builder2.build());
-                        // 下载中
+                        // downloading
                     }
                     fos.flush();
                     notify_builder2.setContentText("Complete");
@@ -448,10 +439,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 String zipPath = savePath + "/pack.zip";
-                // 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
+                //unzip the downloaded zip
                 FileUtil.unzip(zipPath, savePath+"/photos");
 
-                //读取解压的下载文件信息
+                //read the corresponding information
                 File download_info = new File(savePath+"/photos/download_info.json");
                 FileReader fileReader = new FileReader(download_info);
                 Reader reader = new InputStreamReader(new FileInputStream(download_info), "Utf-8");
@@ -463,7 +454,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 fileReader.close();
                 reader.close();
 
-                //转json对象
                 JSONObject download_info_json = null;
                 try {
                     download_info_json = new JSONObject(sb.toString());
@@ -471,7 +461,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                     throw new RuntimeException(e);
                 }
 
-                // 遍历download_info_json,把里面的信息和对应的图片存储到数据库中
+                // traverse download_info_json, store the information to the local database
                 for(int i=0;i<download_info_json.length();i++) {
                     try {
                         JSONObject item = download_info_json.getJSONObject(String.valueOf(i));
@@ -509,6 +499,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
+    // synthesize the downloading compare and downloading process
     private void localCompare_and_download(OkHttpClient client, String url,
                                            List<HistoryBean> localList){
 
@@ -518,8 +509,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
         cookie = client.cookieJar().loadForRequest(request.url());
         request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
-
-//        MultipartBody.Builder multipartBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -534,13 +523,8 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-//                int fileNum=0;
                 JSONObject info = DownloadCompare(response, localList);
 
-//                File download_file = new File(download_path);
-//                multipartBuilder.addFormDataPart (Integer.toString(fileNum),"download_list.json",
-//                        (RequestBody.create(MediaType.parse("application/json;charset=utf-8"), download_file)));
-//                fileNum++;
 
                 String url = DomainURL + "/hist/download_zip";
                 Download(client, url, info);
@@ -551,13 +535,13 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    // method for downloading favorites
     private void Star_download(JSONObject star_list){
         JSONObject json = new JSONObject();
         for(int i=0;i<star_list.length();i++){
             try {
                 JSONObject item = star_list.getJSONObject(String.valueOf(i));
                 String filename = item.getString("filename");
-                //根据文件名查询本地数据库，图片是否已经存在，若不存在再加入下载列表
                 List<HistoryBean> b =  historyDao.queryByFilename(filename);
                 if(b.isEmpty()){
                     json.put(filename,1);
@@ -567,7 +551,6 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             }
         }
 
-        // 发送下载请求，是一个包含文件名的json文档
         String url = DomainURL + "/hist/download_zip";
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(json));
         Request request = new Request.Builder()
@@ -578,12 +561,11 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         cookie = client.cookieJar().loadForRequest(request.url());
         request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
 
-        // 创建渠道和notification用于展示下载进度
         createMessageNotificationChannel("message1");
         NotificationCompat.Builder notify_builder = new NotificationCompat.Builder(ServerUploadActivity.this, "message1");
-        notify_builder.setSmallIcon(R.drawable.ic_synchro) // //小图标
-                .setContentTitle("Downloading your favorites")  //通知标题
-                .setAutoCancel(true);  //点击通知后关闭通知
+        notify_builder.setSmallIcon(R.drawable.ic_synchro)
+                .setContentTitle("Downloading your favorites")
+                .setAutoCancel(true);
 
 
         client.newCall(request).enqueue(new Callback() {
@@ -622,7 +604,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                         fos.write(buf, 0, len);
                         sum += len;
                         int progress = (int) (sum * 1.0f / total * 100);
-                        // 下载中
+                        // downloading
                         notify_builder.setProgress(100, progress, false);
                         notify_builder.setContentText(progress + "%");
                         notificationManager.notify(111, notify_builder.build());
@@ -638,12 +620,12 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 String zipPath = savePath + "/pack.zip";
-                // 文件解压缩，zipPath是下载下来的压缩包路径，savePath是解压后输出文件路径
                 FileUtil.unzip(zipPath, savePath + "/photos");
 
-                // 本地的收藏夹清空
+                // clear the local favorites
                 historyDao.clearAllStars();
-                // 遍历star_list，把每个被选中的条目信息保存到本地数据库，如果已经存在，则只把收藏设置为1
+                /**Iterate over the star_list, saving the information for each selected item
+                 * to the local database, and only set if_star to 1 if it already exists**/
                 for (int i = 0; i < star_list.length(); i++) {
                     try {
                         JSONObject item = star_list.getJSONObject(String.valueOf(i));
@@ -662,7 +644,7 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                             historyBean.setIf_star(1);
                             historyDao.insertHistory(historyBean);
                         }
-                        // 如果本地有，则设置为收藏
+                        // if the file is available locally
                         else {
                             historyDao.updateStar_byFilename(1, item.getString("filename"));
                         }
@@ -681,6 +663,8 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
             }
         });
     }
+
+    // synthesize favorite download process
     private void starCompare_and_download(){
         String url = DomainURL + "/hist/list";
         Request request = new Request.Builder()
@@ -714,21 +698,16 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    // 创建通知渠道
+    // method for creating notification channel
     private void createMessageNotificationChannel(String msg_channel) {
-        //Build.VERSION.SDK_INT 代表操作系统的版本号
-        //Build.VERSION_CODES.O 版本号为26 对应的Android8.0版本
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = this.getString(R.string.app_name);
-//            NotificationChannel channel = new NotificationChannel(
-//                    MESSAGES_CHANNEL,
-//                    name,
-//                    NotificationManager.IMPORTANCE_HIGH
-//            );
+
             NotificationChannel channel = new NotificationChannel(
                     msg_channel,
                     name,
-                    NotificationManager.IMPORTANCE_DEFAULT // 原来是importance high
+                    NotificationManager.IMPORTANCE_DEFAULT
             );
             notificationManager = this.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -744,18 +723,14 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
                 .cookieJar(cookieJar).build();//创建OkHttpClient对象。
-//        client = new OkHttpClient.Builder()
-//                .connectTimeout(10, TimeUnit.SECONDS)
-//                .writeTimeout(5, TimeUnit.SECONDS)
-//                .readTimeout(5, TimeUnit.SECONDS)
-//                .cookieJar(cookieJar).build();//创建OkHttpClient对象。
+
 
         if(view.getId()==R.id.btn_upload_stars){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Note")//设置对话框的标题
+                    .setTitle("Note")
                     .setMessage("Note: This operation will overwrite your server favorites. " +
-                            "\n\nAre you sure you want to continue?")//设置对话框的内容
-                    //设置对话框的按钮
+                            "\n\nAre you sure you want to continue?")
+
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -777,11 +752,11 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         }
         else if(view.getId()==R.id.btn_upload_unfamiliar){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Note")//设置对话框的标题
+                    .setTitle("Note")
                     .setMessage("Note: This operation will overwrite your server unfamiliar words and " +
                             "the server favorites will be affected. " +
-                            "\n\nAre you sure to continue?")//设置对话框的内容
-                    //设置对话框的按钮
+                            "\n\nAre you sure to continue?")
+
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -803,10 +778,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         }
         else if(view.getId()==R.id.btn_download_stars){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Note")//设置对话框的标题
+                    .setTitle("Note")
                     .setMessage("Note: This operation will overwrite your local favorites" +
-                            "\n\nAre you sure to continue?")//设置对话框的内容
-                    //设置对话框的按钮
+                            "\n\nAre you sure to continue?")
+
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -825,11 +800,10 @@ public class ServerUploadActivity extends AppCompatActivity implements View.OnCl
         }
         else if(view.getId()==R.id.btn_download_unfamiliar){
             AlertDialog dialog = new AlertDialog.Builder(ServerUploadActivity.this)
-                    .setTitle("Note")//设置对话框的标题
+                    .setTitle("Note")
                     .setMessage(
                             "Note: All unfamiliar words downloaded will not be marked as favorites.\n\n" +
-                                    "Are you sure you want to continue?")//设置对话框的内容
-                    //设置对话框的按钮
+                                    "Are you sure you want to continue?")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

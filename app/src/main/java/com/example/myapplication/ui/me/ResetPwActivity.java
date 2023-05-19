@@ -57,24 +57,24 @@ public class ResetPwActivity extends AppCompatActivity {
                 String url = DomainURL+"/auth/reset_pw";
 
                 CookieJarImpl cookieJar = new CookieJarImpl(ResetPwActivity.this);
-                client.newBuilder().cookieJar(cookieJar).build(); // 新加的一段
-//                OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();//创建OkHttpClient对象。
-                FormBody.Builder formBody = new FormBody.Builder(); //创建表单请求体
+                client.newBuilder().cookieJar(cookieJar).build();
+
+                FormBody.Builder formBody = new FormBody.Builder();
                 formBody.add("password", et_reset_pw.getText().toString());
                 formBody.add("password_confirm", et_confirm_reset_pw.getText().toString());
-                // 为了正常格式的url创建的request对象
+
                 Request request = new Request.Builder()
                         .url(url)
                         .post(formBody.build())
                         .build();
 
                 HttpUrl httpurl = request.url();
-                // 寻找对应的cookie
+
                 List<Cookie> cookie = client.cookieJar().loadForRequest(httpurl);
 
                 request.newBuilder().addHeader(cookie.get(0).name(),cookie.get(0).value());
 
-                // 如果cookie不为空， 发送请求
+
                 if(!cookie.isEmpty()){
                     client.newCall(request).enqueue(new Callback() {
                         @Override
