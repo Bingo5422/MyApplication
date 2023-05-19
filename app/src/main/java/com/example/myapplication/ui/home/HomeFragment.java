@@ -58,7 +58,7 @@ import java.util.UUID;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    private AlarmManager alarmManager;  //闹钟管理器
+    private AlarmManager alarmManager;  //
     private PendingIntent pendingIntent;
     private ImageView main_camera = null;
     private ImageView main_history = null;
@@ -128,19 +128,19 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        //查看历史记录的按钮监听
+        //history button listener
         main_history = binding.recHistory;
         main_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), HistoryActivity.class);
                 startActivity(intent);
-                Log.d(TAG, "跳到历史界面");
+                Log.d(TAG, "Jump to the history page");
             }
         });
 
 
-        //获取闹钟管理器
+        //Get Alarm Manager
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         binding.timer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +154,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CalendarActivity.class);
                 startActivity(intent);
-                Log.d(TAG, "跳到日历界面");
+                Log.d(TAG, "Jump to the calendar activity");
             }
         });
 
@@ -174,30 +174,30 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
-    //这上面是初始化fragment自带的代码
+    //Here is the code that initializes the fragment itself
 
 
     public void setClock(View view){
-        //获取当前系统时间
+        //Get the current system time
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        //弹出闹钟框
+        //pop up alarm box
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),AlertDialog.THEME_HOLO_LIGHT, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                Calendar c = Calendar.getInstance();    //获取日期对象
+                Calendar c = Calendar.getInstance();    //get date object
 
-                c.set(Calendar.HOUR_OF_DAY, hourOfDay); //设置闹钟小时数
-                c.set(Calendar.MINUTE, minute); //设置闹钟分钟数
+                c.set(Calendar.HOUR_OF_DAY, hourOfDay); //set alarm hours
+                c.set(Calendar.MINUTE, minute); //Set alarm minutes
                 c.set(Calendar.SECOND, 0);
                 c.set(Calendar.MILLISECOND, 0);
 
                 Intent intent = new Intent(getContext(), TimeReceiver.class);
-                //创建pendingIntent
+                //pendingIntent
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0X102, intent,0);
-                //设置闹钟
+                //set
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
                 Toast.makeText(getContext(), "The alarm is set successfully.", Toast.LENGTH_SHORT).show();
             }

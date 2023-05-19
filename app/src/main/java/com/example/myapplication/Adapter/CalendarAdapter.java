@@ -28,7 +28,7 @@ import java.util.List;
 
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
-    private Calendar mTodayCalendar = Calendar.getInstance();//当前时间,未修改
+    private Calendar mTodayCalendar = Calendar.getInstance();//current time, not modified
 
     private List<CalendarBean> mlist;
 
@@ -41,7 +41,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @NonNull
     @Override
-    //创建
+    //Create
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_calendar_item,parent,false);
         ViewHolder vh=new ViewHolder(v);
@@ -86,7 +86,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     @Override
-    //数据条数
+    //
     public int getItemCount() {
         return mlist==null?0:mlist.size();
 

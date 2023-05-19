@@ -18,10 +18,5 @@ public interface RecognitionDao {
     @Insert
     void insert(RecognitionBean bean);
 
-//    @Insert
-//    void insertHistory(HistoryBean bean);
-
-
-
 
 }

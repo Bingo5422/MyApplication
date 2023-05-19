@@ -10,7 +10,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 /**
- * Json工具类.
+ * Json tool class.
  */
 public class GsonUtils {
     private static Gson gson = new GsonBuilder().create();

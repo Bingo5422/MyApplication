@@ -92,7 +92,7 @@ public class PhotoRecActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        photoPath = intent.getStringExtra("path");//intent传来的照片路径
+        photoPath = intent.getStringExtra("path");//The photo path sent by the intent
         Log.d(TAG, "??" + photoPath);
         bitmap = BitmapFactory.decodeFile(photoPath);
         recPhoto.setImageBitmap(bitmap);
@@ -114,18 +114,18 @@ public class PhotoRecActivity extends AppCompatActivity {
             loadExcel();
         }
 
-        Log.d(TAG, "已经加载过excel了" );
+        Log.d(TAG, "already loaded excel" );
 
 
 
 
         currentApi = intent.getStringExtra("api");
-        Log.d(TAG, "传到识别的API是：" + currentApi);
+        Log.d(TAG, "The API passed to the recognition is:" + currentApi);
 
 
 
 
-        //识别结果
+        //recognition result
         recStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,12 +134,12 @@ public class PhotoRecActivity extends AppCompatActivity {
 
 
                 if(currentApi.equals("Xunfei")){
-                    //讯飞
+                    //IFLYTEK
                     RecognitionUtil.startRecognition(photoPath, new RecBack() {
                         @Override
                         public void onFinished(String result) {
-                            Log.d(TAG, "当前正在使用讯飞的api" + currentApi);
-                            Log.d(TAG, "识别成功，result==" + result);
+                            Log.d(TAG, "Currently using IFLYTEK's api" + currentApi);
+                            Log.d(TAG, "The recognition is successful, result==" + result);
 
                             try {
                                 JSONObject obj = new JSONObject(result);
@@ -153,31 +153,31 @@ public class PhotoRecActivity extends AppCompatActivity {
                                     recShow.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Log.d(TAG, "没找到");
+                                            Log.d(TAG, "item not found ");
                                             Toast.makeText(PhotoRecActivity.this, "The item was not found. Please take another picture", Toast.LENGTH_LONG).show();
                                         }
                                     });
                                 } else {
-                                    Log.d(TAG, "讯飞的识别结果，找到了，bean==" + bean);
+                                    Log.d(TAG, "IFLYTEK's recognition results, found, bean==" + bean);
                                     name = bean.getName();
                                     enName = bean.getEnName();
                                     if (bean != null) {
-                                        //先判断目标语言，减少等待时间
+                                        //Determine the target language first to reduce waiting time
                                         String to = decideLan(name,enName);
                                         getTargetLan(name,enName,to);
-                                        //日语
+                                        //Japanese
                                         Thread.sleep(1000);
                                         String text = TransApi.getTransResult(name, "zh", "jp");
                                         Log.d(TAG, "text:" + text);
-                                        //西班牙语
+                                        //spanish
                                         Thread.sleep(1000);
                                         String text2 = TransApi.getTransResult(name, "zh", "spa");
                                         Log.d(TAG, "text2:" + text2);
-                                        //韩语
+                                        //Korean
                                         Thread.sleep(1000);
                                         String text3 = TransApi.getTransResult(name, "zh", "kor");
                                         Log.d(TAG, "text3:" + text3);
-                                        //法语
+                                        //French
                                         Thread.sleep(1000);
                                         String text4 = TransApi.getTransResult(name, "zh", "fra");
                                         Log.d(TAG, "text4:" + text4);
@@ -186,10 +186,10 @@ public class PhotoRecActivity extends AppCompatActivity {
                                         textSpa=JsonToString(text2);
                                         textKor=JsonToString(text3);
                                         textFra=JsonToString(text4);
-                                        Log.d(TAG, "日语翻译"+textJp);
-                                        Log.d(TAG, "西班牙语翻译"+textSpa);
-                                        Log.d(TAG, "韩语翻译"+textKor);
-                                        Log.d(TAG, "法语翻译"+textFra);
+                                        Log.d(TAG, "Japanese translation: "+textJp);
+                                        Log.d(TAG, "Spanish translation: "+textSpa);
+                                        Log.d(TAG, "Korean translation: "+textKor);
+                                        Log.d(TAG, "French translation: "+textFra);
 
 
                                         HistoryBean historyBean = new HistoryBean();
@@ -224,31 +224,29 @@ public class PhotoRecActivity extends AppCompatActivity {
                     });
                 }else if(currentApi.equals("Baidu")){
 
-                    //百度
+                    //Baidu
                     BaiDuRecUtil.baiduRec(photoPath, new RecBack() {
                         @Override
                         public void onFinished(String re) {
-                            Log.d(TAG, "当前正在使用百度的api：" + currentApi);
-                            Log.d(TAG, "百度的识别结果："+re);
+                            Log.d(TAG, "Currently using Baidu's api:" + currentApi);
+                            Log.d(TAG, "Baidu's recognition results:"+re);
                             try{
                                 JSONObject obj = new JSONObject(re);
                                 JSONArray reArray = obj.getJSONArray("result");
                                 JSONObject keyword = reArray.getJSONObject(0);
                                 name = keyword.getString("keyword");
-                                Log.d(TAG, "百度的中文识别结果："+name);
+                                Log.d(TAG, "Baidu's Chinese recognition results："+name);
 
-                                //英语
+
                                 String tranJsonEn = TransApi.getTransResult(name, "zh", "en");
                                 JSONObject enJson = new JSONObject(tranJsonEn);
                                 if (enJson.has("trans_result")) {
                                     enName = enJson.getJSONArray("trans_result").getJSONObject(0).getString("dst");
                                     Thread.sleep(1000);
-                                    Log.d(TAG, "英语翻译"+enName);
                                 } else {
                                     recShow.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Log.d(TAG, "英语翻译失败");
                                             Toast.makeText(PhotoRecActivity.this, "translate fail", Toast.LENGTH_LONG).show();
                                         }
                                     });
@@ -256,22 +254,22 @@ public class PhotoRecActivity extends AppCompatActivity {
                                 }
 
                                 String to = decideLan(name,enName);
-                                //提前打印输出
+                                //print out ahead of time
                                 getTargetLan(name,enName,to);
 
-                                //日语
+
                                 Thread.sleep(1000);
                                 String text = TransApi.getTransResult(name, "zh", "jp");
                                 Log.d(TAG, "text:" + text);
-                                //西班牙语
+
                                 Thread.sleep(1000);
                                 String text2 = TransApi.getTransResult(name, "zh", "spa");
                                 Log.d(TAG, "text2:" + text2);
-                                //韩语
+
                                 Thread.sleep(1000);
                                 String text3 = TransApi.getTransResult(name, "zh", "kor");
                                 Log.d(TAG, "text3:" + text3);
-                                //法语
+
                                 Thread.sleep(1000);
                                 String text4 = TransApi.getTransResult(name, "zh", "fra");
                                 Log.d(TAG, "text4:" + text4);
@@ -281,10 +279,10 @@ public class PhotoRecActivity extends AppCompatActivity {
                                 textSpa=JsonToString(text2);
                                 textKor=JsonToString(text3);
                                 textFra=JsonToString(text4);
-                                Log.d(TAG, "日语翻译"+textJp);
-                                Log.d(TAG, "西班牙语翻译"+textSpa);
-                                Log.d(TAG, "韩语翻译"+textKor);
-                                Log.d(TAG, "法语翻译"+textFra);
+                                Log.d(TAG, "Japanese translation: "+textJp);
+                                Log.d(TAG, "Spanish translation: "+textSpa);
+                                Log.d(TAG, "Korean translation: "+textKor);
+                                Log.d(TAG, "French translation: "+textFra);
 
 
                                 HistoryBean historyBean = new HistoryBean();
@@ -399,7 +397,6 @@ public class PhotoRecActivity extends AppCompatActivity {
     public String showTime() {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
-
         return dateFormat.format(date);
     }
 
@@ -417,7 +414,7 @@ public class PhotoRecActivity extends AppCompatActivity {
         JSONObject tranJson = new JSONObject(text);
         if (tranJson.has("trans_result")) {
             String targetName = tranJson.getJSONArray("trans_result").getJSONObject(0).getString("dst");
-            Log.d(TAG, "目标提前翻译成功："+targetName);
+            Log.d(TAG, "The target is translated successfully ahead of time:"+targetName);
             recShow.post(new Runnable() {
                 @SuppressLint("SetTextI18n")
                 @Override
@@ -447,7 +444,7 @@ public class PhotoRecActivity extends AppCompatActivity {
             });
 
         } else {
-            Log.d(TAG, "目标提前翻译失败或选的是中文");
+            Log.d(TAG, "Target pre-translation failed or selected Chinese");
         }
 
     }
@@ -470,7 +467,7 @@ public class PhotoRecActivity extends AppCompatActivity {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
-                    Log.d(TAG, "提前翻译中文");
+                    Log.d(TAG, "Translate Chinese in advance");
                     recShow.setText(name + "\n" + enName);
                 }
             });
@@ -486,7 +483,7 @@ public class PhotoRecActivity extends AppCompatActivity {
                 }
             });
         }
-        Log.d(TAG, "to的值为："+to);
+        Log.d(TAG, "The value of to is:"+to);
         return to;
     }
 
@@ -499,7 +496,7 @@ public class PhotoRecActivity extends AppCompatActivity {
             recShow.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "Json转换String失败");
+                    Log.d(TAG, "Json conversion to String failed");
                     Toast.makeText(PhotoRecActivity.this, "translate fail", Toast.LENGTH_LONG).show();
                 }
             });

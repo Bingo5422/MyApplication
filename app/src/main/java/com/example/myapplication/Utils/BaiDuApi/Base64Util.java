@@ -1,7 +1,7 @@
 package com.example.myapplication.Utils.BaiDuApi;
 
 /**
- * Base64 工具类
+ * Base64 tools
  */
 public class Base64Util {
     private static final char last2byte = (char) Integer.parseInt("00000011", 2);

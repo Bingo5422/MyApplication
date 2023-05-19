@@ -12,13 +12,13 @@ import java.net.URLConnection;
 import java.util.Map;
 
 /**
- * Http Client 工具类
+ * Http Client tools
  */
 public class HttpUtil {
 
 	
 	/**
-	 * 发送post请求
+	 * send post request
 	 * 
 	 * @param url
 	 * @param header
@@ -29,15 +29,15 @@ public class HttpUtil {
 		String result = "";
 		BufferedReader in = null;
 		try {
-			// 设置 url
+			// set url
 			URL realUrl = new URL(url);
 			URLConnection connection = realUrl.openConnection();
 			HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
-			// 设置 header
+			// set header
 			for (String key : header.keySet()) {
 				httpURLConnection.setRequestProperty(key, header.get(key));
 			}
-			// 设置请求 body
+			// set request body
 			httpURLConnection.setDoOutput(true);
 			httpURLConnection.setDoInput(true);
 			httpURLConnection.setRequestProperty("Content-Type", "binary/octet-stream");
@@ -47,11 +47,11 @@ public class HttpUtil {
 			out.flush();
 			out.close();
 			if (HttpURLConnection.HTTP_OK != httpURLConnection.getResponseCode()) {
-				System.out.println("Http 请求失败，状态码：" + httpURLConnection.getResponseCode());
+				System.out.println("Http request failed with status code:" + httpURLConnection.getResponseCode());
 				return null;
 			}
 
-			// 获取响应body
+			// Get the response body
 			in = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
 			String line;
 			while ((line = in.readLine()) != null) {

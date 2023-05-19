@@ -24,20 +24,20 @@ import com.example.myapplication.R;
 public class SlideRecyclerView extends RecyclerView {
 
     private static final String TAG = "SlideRecyclerView";
-    private static final int INVALID_POSITION = -1; // 触摸到的点不在子View范围内
-    private static final int INVALID_CHILD_WIDTH = -1;  // 子ItemView不含两个子View
-    private static final int SNAP_VELOCITY = 600;   // 最小滑动速度
+    private static final int INVALID_POSITION = -1; // The touched point is not within the scope of the child View
+    private static final int INVALID_CHILD_WIDTH = -1;  // Child ItemView does not contain two child Views
+    private static final int SNAP_VELOCITY = 600;   // minimum sliding speed
 
-    private VelocityTracker mVelocityTracker;   // 速度追踪器
-    private int mTouchSlop; // 认为是滑动的最小距离（一般由系统提供）
-    private Rect mTouchFrame;   // 子View所在的矩形范围
+    private VelocityTracker mVelocityTracker;   // speed tracker
+    private int mTouchSlop; // The minimum distance considered to be sliding (generally provided by the system)
+    private Rect mTouchFrame;   // The rectangular range where the child View is located
     private Scroller mScroller;
-    private float mLastX;   // 滑动过程中记录上次触碰点X
-    private float mFirstX, mFirstY; // 首次触碰范围
-    private boolean mIsSlide;   // 是否滑动子View
-    private ViewGroup mFlingView;   // 触碰的子View
-    private int mPosition;  // 触碰的view的位置
-    private int mMenuViewWidth;    // 菜单按钮宽度
+    private float mLastX;   //Record the last touch point X during sliding
+    private float mFirstX, mFirstY; // first touch range
+    private boolean mIsSlide;   // Whether to slide the child View
+    private ViewGroup mFlingView;   // Touched child View
+    private int mPosition;  // The position of the touched view
+    private int mMenuViewWidth;    // The position of the touched view
 
     public SlideRecyclerView(Context context) {
         this(context, null);
@@ -60,35 +60,42 @@ public class SlideRecyclerView extends RecyclerView {
         obtainVelocity(e);
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (!mScroller.isFinished()) {  // 如果动画还没停止，则立即终止动画
+                if (!mScroller.isFinished()) {  // Immediately terminates the animation if it has not stopped
                     mScroller.abortAnimation();
                 }
                 mFirstX = mLastX = x;
                 mFirstY = y;
-                mPosition = pointToPosition(x, y);  // 获取触碰点所在的position
+                mPosition = pointToPosition(x, y);  //Get the position of the touch point
                 if (mPosition != INVALID_POSITION) {
                     View view = mFlingView;
-                    // 获取触碰点所在的view
+                    // Get the view where the touch point is located
                     mFlingView = (ViewGroup) getChildAt(mPosition - ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition());
-                    // 这里判断一下如果之前触碰的view已经打开，而当前碰到的view不是那个view则立即关闭之前的view，此处并不需要担动画没完成冲突，因为之前已经abortAnimation
+                    // Here to judge if the previously touched view has been opened, and the currently touched view is not that view, close the previous view immediately.
+                    //
+                    // There is no need to worry about the animation not completing the conflict, because the abortAnimation has been done before
                     if (view != null && mFlingView != view && view.getScrollX() != 0) {
                         view.scrollTo(0, 0);
                     }
-                    // 这里进行了强制的要求，RecyclerView的子ViewGroup必须要有2个子view,这样菜单按钮才会有值，
-                    // 需要注意的是:如果不定制RecyclerView的子View，则要求子View必须要有固定的width。
-                    // 比如使用LinearLayout作为根布局，而content部分width已经是match_parent，此时如果菜单view用的是wrap_content，menu的宽度就会为0。
+                    // There is a mandatory requirement here, the sub-ViewGroup of RecyclerView must have 2 sub-views, so that the menu button will have a value,
+                    // It should be noted that if you do not customize the sub-View of RecyclerView, the sub-View must have a fixed width.
+                    // For example, use LinearLayout as the root layout, and the width of the content part is already match_parent.
+                    // At this time, if the menu view uses wrap_content, the width of the menu will be 0.
                     if (mFlingView.getChildCount() == 2) {
                         mMenuViewWidth = mFlingView.getChildAt(1).getWidth();
                     } else {
                         mMenuViewWidth = INVALID_CHILD_WIDTH;
                     }
+
+
+
+
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 mVelocityTracker.computeCurrentVelocity(1000);
-                // 此处有俩判断，满足其一则认为是侧滑：
-                // 1.如果x方向速度大于y方向速度，且大于最小速度限制；
-                // 2.如果x方向的侧滑距离大于y方向滑动距离，且x方向达到最小滑动距离；
+                // There are two judgments here, and if one of them is met, it is considered a side slip:
+                // 1. If the speed in the x direction is greater than the speed in the y direction, and greater than the minimum speed limit;
+                // 2. If the sideslip distance in the x direction is greater than the sliding distance in the y direction, and the x direction reaches the minimum sliding distance;
                 float xVelocity = mVelocityTracker.getXVelocity();
                 float yVelocity = mVelocityTracker.getYVelocity();
                 if (Math.abs(xVelocity) > SNAP_VELOCITY && Math.abs(xVelocity) > Math.abs(yVelocity)
@@ -111,10 +118,10 @@ public class SlideRecyclerView extends RecyclerView {
             float x = e.getX();
             obtainVelocity(e);
             switch (e.getAction()) {
-                case MotionEvent.ACTION_DOWN:   // 因为没有拦截，所以不会被调用到
+                case MotionEvent.ACTION_DOWN:   // Because there is no interception, it will not be called
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    // 随手指滑动
+                    //swipe with finger
                     if (mMenuViewWidth != INVALID_CHILD_WIDTH) {
                         float dx = mLastX - x;
                         if (mFlingView.getScrollX() + dx <= mMenuViewWidth
@@ -128,17 +135,17 @@ public class SlideRecyclerView extends RecyclerView {
                     if (mMenuViewWidth != INVALID_CHILD_WIDTH) {
                         int scrollX = mFlingView.getScrollX();
                         mVelocityTracker.computeCurrentVelocity(1000);
-                        // 此处有两个原因决定是否打开菜单：
-                        // 1.菜单被拉出宽度大于菜单宽度一半；
-                        // 2.横向滑动速度大于最小滑动速度；
-                        // 注意：之所以要小于负值，是因为向左滑则速度为负值
-                        if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) {    // 向左侧滑达到侧滑最低速度，则打开
+                        // There are two reasons here to decide whether to open the menu:
+                        // 1. The width of the menu being pulled out is greater than half of the width of the menu;
+                        // 2. The horizontal sliding speed is greater than the minimum sliding speed;
+                        // Note: The reason why it is smaller than the negative value is because the speed is negative when sliding to the left
+                        if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) {    // Swipe to the left to reach the minimum speed of sideslip, then open
                             mScroller.startScroll(scrollX, 0, mMenuViewWidth - scrollX, 0, Math.abs(mMenuViewWidth - scrollX));
-                        } else if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) {  // 向右侧滑达到侧滑最低速度，则关闭
+                        } else if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) {  // Slip to the right to reach the minimum speed of sideslip, then turn off
                             mScroller.startScroll(scrollX, 0, -scrollX, 0, Math.abs(scrollX));
-                        } else if (scrollX >= mMenuViewWidth / 2) { // 如果超过删除按钮一半，则打开
+                        } else if (scrollX >= mMenuViewWidth / 2) { // Open if more than half of the delete button
                             mScroller.startScroll(scrollX, 0, mMenuViewWidth - scrollX, 0, Math.abs(mMenuViewWidth - scrollX));
-                        } else {    // 其他情况则关闭
+                        } else {    // Close otherwise
                             mScroller.startScroll(scrollX, 0, -scrollX, 0, Math.abs(scrollX));
                         }
                         invalidate();
@@ -146,17 +153,19 @@ public class SlideRecyclerView extends RecyclerView {
                     mMenuViewWidth = INVALID_CHILD_WIDTH;
                     mIsSlide = false;
                     mPosition = INVALID_POSITION;
-                    releaseVelocity();  // 这里之所以会调用，是因为如果前面拦截了，就不会执行ACTION_UP,需要在这里释放追踪
+                    // The reason why it is called here is because if it is intercepted before, ACTION_UP will not be executed, and the tracking needs to be released here
+
+                    releaseVelocity();
                     break;
             }
             return true;
         } else {
-            // 此处防止RecyclerView正常滑动时，还有菜单未关闭
-            closeMenu();
-            // Velocity，这里的释放是防止RecyclerView正常拦截了，但是在onTouchEvent中却没有被释放；
-            // 有三种情况：1.onInterceptTouchEvent并未拦截，在onInterceptTouchEvent方法中，DOWN和UP一对获取和释放；
-            // 2.onInterceptTouchEvent拦截，DOWN获取，但事件不是被侧滑处理，需要在这里进行释放；
-            // 3.onInterceptTouchEvent拦截，DOWN获取，事件被侧滑处理，则在onTouchEvent的UP中释放。
+            // Here to prevent the RecyclerView from sliding normally, the menu is not closed
+            //closeMenu();
+            // Velocity, the release here is to prevent RecyclerView from being intercepted normally, but it is not released in onTouchEvent;
+            // There are three situations: 1. onInterceptTouchEvent is not intercepted, in the onInterceptTouchEvent method, a pair of DOWN and UP is acquired and released;
+            // 2. onInterceptTouchEvent is intercepted, and DOWN is acquired, but the event is not handled by the sideslip, and needs to be released here;
+            // 3. onInterceptTouchEvent is intercepted, DOWN is acquired, and the event is handled by sliding, it is released in the UP of onTouchEvent.
             releaseVelocity();
         }
         return super.onTouchEvent(e);
@@ -208,8 +217,9 @@ public class SlideRecyclerView extends RecyclerView {
     }
 
     /**
-     * 将显示子菜单的子view关闭
-     * 这里本身是要自己来实现的，但是由于不定制item，因此不好监听器点击事件，因此需要调用者手动的关闭
+     * Close the subview that displays the submenu
+     *
+     * since the item is not customized, it is not easy to listen to the click event, so the caller needs to close it manually
      */
     public void closeMenu() {
         if (mFlingView != null && mFlingView.getScrollX() != 0) {

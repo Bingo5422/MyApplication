@@ -10,21 +10,21 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * MD5编码相关的类
+ * MD5 encoding related classes
  * 
  * @author wangjingtao
  * 
  */
 public class MD5 {
-    // 首先初始化一个字符数组，用来存放每个16进制字符
+    // First initialize a character array to store each hexadecimal character
     private static final char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
             'e', 'f' };
 
     /**
-     * 获得一个字符串的MD5值
+     * Get the MD5 value of a string
      * 
-     * @param input 输入的字符串
-     * @return 输入字符串的MD5值
+     * @param input input string
+     * @return MD5 value of the input string
      * 
      */
     public static String md5(String input) {
@@ -32,15 +32,15 @@ public class MD5 {
             return null;
 
         try {
-            // 拿到一个MD5转换器（如果想要SHA1参数换成”SHA1”）
+            // Get an MD5 converter (if you want to change the SHA1 parameter to "SHA1")
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            // 输入的字符串转换成字节数组
+            // Convert the input string to a byte array
             byte[] inputByteArray = input.getBytes("utf-8");
-            // inputByteArray是输入字符串转换得到的字节数组
+            // inputByteArray is the byte array converted from the input string
             messageDigest.update(inputByteArray);
-            // 转换并返回结果，也是字节数组，包含16个元素
+            // Convert and return the result, also a byte array, containing 16 elements
             byte[] resultByteArray = messageDigest.digest();
-            // 字符数组转换成字符串返回
+            // Convert character array to string and return
             return byteArrayToHex(resultByteArray);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             return null;
@@ -48,7 +48,7 @@ public class MD5 {
     }
 
     /**
-     * 获取文件的MD5值
+     * Get the MD5 value of the file
      * 
      * @param file
      * @return
@@ -56,7 +56,7 @@ public class MD5 {
     public static String md5(File file) {
         try {
             if (!file.isFile()) {
-                System.err.println("文件" + file.getAbsolutePath() + "不存在或者不是文件");
+                System.err.println("File" + file.getAbsolutePath() + "does not exist or is not a file");
                 return null;
             }
 
@@ -105,16 +105,17 @@ public class MD5 {
     }
 
     private static String byteArrayToHex(byte[] byteArray) {
-        // new一个字符数组，这个就是用来组成结果字符串的（解释一下：一个byte是八位二进制，也就是2位十六进制字符（2的8次方等于16的2次方））
+        // new A character array, this is used to form the result string (explain: a byte is an eight-bit binary, that is,
+        // two hexadecimal characters (2 to the 8th power is equal to 16 to the 2nd power))
         char[] resultCharArray = new char[byteArray.length * 2];
-        // 遍历字节数组，通过位运算（位运算效率高），转换成字符放到字符数组中去
+        // Traverse the byte array, convert it into characters and put them in the character array through bit operation (bit operation efficiency is high)
         int index = 0;
         for (byte b : byteArray) {
             resultCharArray[index++] = hexDigits[b >>> 4 & 0xf];
             resultCharArray[index++] = hexDigits[b & 0xf];
         }
 
-        // 字符数组组合成字符串返回
+        // Combining character arrays into string returns
         return new String(resultCharArray);
 
     }

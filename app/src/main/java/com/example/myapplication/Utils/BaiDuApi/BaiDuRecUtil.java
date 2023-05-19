@@ -5,15 +5,15 @@ import com.example.myapplication.Utils.RecBack;
 
 
 /**
- * 通用物体和场景识别
+ * General Object and Scene Recognition
  */
 public class BaiDuRecUtil {
     static String result = null;
     public static String baiduRec(String path, RecBack back) {
-        // 请求url
+        // request url
         String url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general";
         try {
-            // 本地文件路径
+            // local file path
             String filePath = path;
             byte[] imgData = FileUtil.readFileByBytes(filePath);
             String imgStr = Base64Util.encode(imgData);
@@ -21,7 +21,9 @@ public class BaiDuRecUtil {
 
             String param = "image=" + imgParam;
 
-            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            // Note that the access_token is obtained for each request to simplify the coding.
+            // The access_token in the online environment has an expiration time.
+            // The client can cache it by itself and obtain it again after it expires.
             String accessToken = "24.e7cd13935643a1de5e21c5ab5f29823d.2592000.1686961899.282335-32510584";
 
 

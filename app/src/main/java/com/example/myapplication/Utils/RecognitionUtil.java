@@ -24,21 +24,16 @@ import java.util.List;
 import java.util.Map;
 
 public class RecognitionUtil {
-    // webapi 接口地址
+    // webapi interface address
     private static final String URL = "http://tupapi.xfyun.cn/v1/currency";
-    // 应用ID
+    // app ID
     private static final String APPID = "13bc7120";
-    // 接口密钥
+    // app key
     private static final String API_KEY = "74a42b1433f879df65ed6bdc937b872e";
-    // 图片名称
+
     private static final String IMAGE_NAME = "temp.jpg";
-    // 图片url
-    //private static final String IMAGE_URL = " ";
 
-    // 图片地址
-    //private static String PATH = "文件路径";
-
-    //传入文件路径
+    //Pass in the file path
     public static void startRecognition(String path,RecBack back){
 
         new Thread(){
@@ -50,7 +45,7 @@ public class RecognitionUtil {
                     Map<String, String> header = buildHttpHeader();
                     byte[] imageByteArray = FileUtil.read(path);
                     String result = HttpUtil.doPost1(URL, header, imageByteArray);
-                    System.out.println("接口调用结果：" + result);
+                    System.out.println("Interface call result: " + result);
                     back.onFinished(result);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -61,7 +56,7 @@ public class RecognitionUtil {
 
     }
     /**
-     * 组装http请求头
+     * Assemble the http request header
      */
     private static Map<String, String> buildHttpHeader() throws UnsupportedEncodingException {
         String curTime = System.currentTimeMillis() / 1000L + "";
@@ -84,12 +79,8 @@ public class RecognitionUtil {
             XSSFWorkbook workbook = new XSSFWorkbook(stream);
             XSSFSheet sheet = workbook.getSheetAt(0);
             int rowsCount = sheet.getPhysicalNumberOfRows();
-            FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
-
             for (int r = 0; r < rowsCount; r++) {
                 Row row = sheet.getRow(r);
-                int cellsCount = row.getPhysicalNumberOfCells();
-
                 RecognitionBean bean = new RecognitionBean();
                 String code = row.getCell(0).toString();
                 String enName = row.getCell(1).toString();
@@ -103,12 +94,12 @@ public class RecognitionUtil {
                 if (cellCate != null) {
                     cate = cellCate.toString();
                 }
-                int newCode = -1;
+                int Code = -1;
                 try {
-                    newCode = (int) Double.parseDouble(code);
+                    Code = (int) Double.parseDouble(code);
                 } catch (NumberFormatException e) {
                 }
-                bean.setCode(newCode + "");
+                bean.setCode(""+Code);
                 bean.setEnName(enName);
                 bean.setName(name);
                 bean.setCate(cate);

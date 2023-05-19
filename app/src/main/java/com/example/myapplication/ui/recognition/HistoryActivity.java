@@ -60,13 +60,13 @@ public class HistoryActivity extends AppCompatActivity {
 
 
 
-        //设置布局管理器
+        //Set layout manager
         list.setLayoutManager(new LinearLayoutManager(this));
-        //设置分割线
+        //set dividing line
         DividerItemDecoration mDivider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         list.addItemDecoration(mDivider);
 
-        //设置适配器
+        //Set the adapter
 
         adapter = new HistoryAdapter();
         dataList.addAll(historyDao.query());

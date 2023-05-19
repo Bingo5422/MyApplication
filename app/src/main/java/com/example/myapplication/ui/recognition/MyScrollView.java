@@ -55,7 +55,8 @@ public class MyScrollView extends HorizontalScrollView {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                changeScrollx();            //根据滑动距离判断是否显示删除按钮
+                //Determine whether to display the delete button according to the sliding distance
+                changeScrollx();
                 return false;
             default:
                 break;
@@ -64,12 +65,12 @@ public class MyScrollView extends HorizontalScrollView {
     }
 
     public void changeScrollx(){
-        //触摸滑动的距离大于删除按钮宽度的一半
+        //The distance of the touch swipe is greater than half the width of the delete button
         if(getScrollX() >= (btn_width/2)){
-            //显示删除按钮
+            //Show delete button
             this.smoothScrollTo(btn_width, 0);
         }else{
-            //隐藏删除按钮
+            //hide delete button
             this.smoothScrollTo(0, 0);
         }
     }

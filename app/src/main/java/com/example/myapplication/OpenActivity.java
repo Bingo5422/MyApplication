@@ -31,7 +31,7 @@ public class OpenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // 在延迟后执行的代码
+                //Code to execute after a delay
                 Intent intent = new Intent(OpenActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

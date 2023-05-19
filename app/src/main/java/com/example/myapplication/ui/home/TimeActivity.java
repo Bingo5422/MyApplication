@@ -20,7 +20,7 @@ public class TimeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time);
-        //铃声
+        //ring
         mediaPlayer = MediaPlayer.create(this, R.raw.ring);
         mediaPlayer.start();
 

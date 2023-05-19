@@ -23,12 +23,12 @@ public class TransApi {
 
         params.put("appid", appid);
 
-        // 随机数
+        // random number
         String salt = String.valueOf(System.currentTimeMillis());
         params.put("salt", salt);
 
-        // 签名
-        String src = appid + query + salt + securityKey; // 加密前的原文
+        // sign
+        String src = appid + query + salt + securityKey; // Original text before encryption
         params.put("sign", MD5.md5(src));
 
         return params;

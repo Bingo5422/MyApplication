@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * http 工具类
+ * http Tools
  */
 public class HttpUtil {
 
@@ -37,31 +37,31 @@ public class HttpUtil {
     public static String postGeneralUrl(String generalUrl, String contentType, String params, String encoding)
             throws Exception {
         URL url = new URL(generalUrl);
-        // 打开和URL之间的连接
+        // Open a connection to a URL
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
-        // 设置通用的请求属性
+        // Set common request properties
         connection.setRequestProperty("Content-Type", contentType);
         connection.setRequestProperty("Connection", "Keep-Alive");
         connection.setUseCaches(false);
         connection.setDoOutput(true);
         connection.setDoInput(true);
 
-        // 得到请求的输出流对象
+        // Get the requested output stream object
         DataOutputStream out = new DataOutputStream(connection.getOutputStream());
         out.write(params.getBytes(encoding));
         out.flush();
         out.close();
 
-        // 建立实际的连接
+        // make the actual connection
         connection.connect();
-        // 获取所有响应头字段
+        // Get all response header fields
         Map<String, List<String>> headers = connection.getHeaderFields();
-        // 遍历所有的响应头字段
+        // Iterate over all response header fields
         for (String key : headers.keySet()) {
             System.err.println(key + "--->" + headers.get(key));
         }
-        // 定义 BufferedReader输入流来读取URL的响应
+        // Define a BufferedReader input stream to read URL responses
         BufferedReader in = null;
         in = new BufferedReader(
                 new InputStreamReader(connection.getInputStream(), encoding));

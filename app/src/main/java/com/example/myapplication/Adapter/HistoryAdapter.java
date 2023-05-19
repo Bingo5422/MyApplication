@@ -54,7 +54,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @NonNull
     @Override
-    //创建
+    //Create
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_history_item,parent,false);
         ViewHolder vh=new ViewHolder(v);
@@ -62,7 +62,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     }
 
     @Override
-    //绑定数据
+    //binding data
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         HistoryBean bean = list.get(position);
@@ -135,7 +135,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
 
     @Override
-    //数据条数
+    //Number of data
     public int getItemCount() {
         return list==null?0:list.size();
     }

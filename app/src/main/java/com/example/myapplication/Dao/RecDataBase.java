@@ -15,6 +15,7 @@ import com.example.myapplication.Bean.RecordBean;
 public abstract class RecDataBase extends RoomDatabase {
 
     public abstract RecognitionDao recognitionDao();
+
     public abstract HistoryDao historyDao();
     public abstract RecordDao recordDao();
     public abstract  FriendsDao friendsDao();

@@ -11,11 +11,6 @@ public class RecognitionBean {
     private String code;
     private String enName;
 
-
-
-
-
-
     public String getEnName() {
         return enName;
     }

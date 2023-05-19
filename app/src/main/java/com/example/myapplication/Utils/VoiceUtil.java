@@ -18,10 +18,10 @@ public abstract class VoiceUtil {
 
     private static File pcmFile;
     private static SpeechSynthesizer mTts;
-    // 引擎类型
+    // engine type
     private static String mEngineType = SpeechConstant.TYPE_CLOUD;
 
-    // 默认发音人: xiaoyan,aisxping,aisjinger,aisbabyxu  aisjiuxu(男)
+    // default speaker: xiaoyan,aisxping,aisjinger,aisbabyxu  aisjiuxu(man)
 
     
     private static String voicer;
@@ -31,18 +31,18 @@ public abstract class VoiceUtil {
 
 
     static {
-        // 初始化合成对象，并初始化监听
+        // Initialize the composite object and initialize the listener
 
         mTts = SpeechSynthesizer.createSynthesizer(MainActivity.getContext(), new InitListener() {
             @Override
             public void onInit(int code) {
                 Log.d(TAG, "InitListener init() code = " + code);
                 if (code != ErrorCode.SUCCESS) {
-                    Toast.makeText(MainActivity.getContext(),"初始化失败,错误码："+ code,Toast.LENGTH_SHORT );
+                    Toast.makeText(MainActivity.getContext(),"Initialization failed, error code:"+ code,Toast.LENGTH_SHORT );
                 } else {
-                    // 初始化成功，之后可以调用startSpeaking方法
-                    // 注：有的开发者在onCreate方法中创建完合成对象之后马上就调用startSpeaking进行合成，
-                    // 正确的做法是将onCreate中的startSpeaking调用移至这里
+                    // The initialization is successful, and then the startSpeaking method can be called
+                    // Note: Some developers call startSpeaking to synthesize immediately after creating the synthetic object in the onCreate method.
+                    // The correct way is to move the startSpeaking call in onCreate here
                 }
             }
         });
@@ -51,47 +51,47 @@ public abstract class VoiceUtil {
 
 
 
-    // 开始合成
-    // 收到onCompleted 回调时，合成结束、生成合成音频
-    // 合成的音频格式：只支持pcm格式
+    // start compositing
+    // When the onCompleted callback is received, the synthesis ends and the synthesized audio is generated
+    // Synthesized audio format: only pcm format is supported
     public  static void voice(Context context, String texts,String voicer){
         pcmFile = new File(context.getExternalCacheDir().getAbsolutePath(), "tts_pcmFile.pcm");
         pcmFile.delete();
-        // 设置参数
+        // Setting parameters
         setParam(voicer);
-        // 合成并播放
+        // Compose and play
         //int code = mTts.startSpeaking(texts, mTtsListener);
         int code = mTts.startSpeaking(texts, null);
 //			/**
-//			 * 只保存音频不进行播放接口,调用此接口请注释startSpeaking接口
-//			 * text:要合成的文本，uri:需要保存的音频全路径，listener:回调接口
+//			* Only save the audio without playing the interface, please comment the startSpeaking interface to call this interface
+//          * text: the text to be synthesized, uri: the full path of the audio to be saved, listener: the callback interface
 //			*/
 //                String path = getExternalFilesDir("msc").getAbsolutePath() + "/tts.pcm";
-//                //  synthesizeToUri 只保存音频不进行播放
+//                //  synthesizeToUri Only save the audio without playing it
 //                int code = mTts.synthesizeToUri(texts, path, mTtsListener);
         if (code != ErrorCode.SUCCESS) {
-            Toast.makeText(MainActivity.getContext(),"语音合成失败,错误码："+ code,Toast.LENGTH_SHORT );
+            Toast.makeText(MainActivity.getContext(),"Speech synthesis failed, error code："+ code,Toast.LENGTH_SHORT );
         }
     }
 
 
     private static void setParam(String voicer) {
-        // 清空参数
+        // clear parameters
         mTts.setParameter(SpeechConstant.PARAMS, null);
-        // 根据合成引擎设置相应参数
+        // Set the corresponding parameters according to the synthesis engine
         if (mEngineType.equals(SpeechConstant.TYPE_CLOUD)) {
             mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
-            // 支持实时音频返回，仅在 synthesizeToUri 条件下支持
+            // Support real-time audio return, only supported under synthesizeToUri condition
             mTts.setParameter(SpeechConstant.TTS_DATA_NOTIFY, "1");
             //	mTts.setParameter(SpeechConstant.TTS_BUFFER_TIME,"1");
 
-            // 设置在线合成发音人
+            // Set up an online synthetic speaker
             mTts.setParameter(SpeechConstant.VOICE_NAME, voicer);
-            //设置合成语速
+            //Set synthetic speech rate
             mTts.setParameter(SpeechConstant.SPEED, "50");
-            //设置合成音调
+            //Set Synth Pitch
             mTts.setParameter(SpeechConstant.PITCH, "50");
-            //设置合成音量
+            //Set composition volume
             mTts.setParameter(SpeechConstant.VOLUME, "50");
         } else {
             mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_LOCAL);
@@ -99,12 +99,13 @@ public abstract class VoiceUtil {
 
         }
 
-        //设置播放器音频流类型
+        //Set the player audio stream type
         mTts.setParameter(SpeechConstant.STREAM_TYPE, "3");
-        // 设置播放合成音频打断音乐播放，默认为true
+        // Set to play synthetic audio to interrupt music playback, the default is true
         mTts.setParameter(SpeechConstant.KEY_REQUEST_FOCUS, "false");
 
-        // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
+        // Set the audio save path, the save audio format supports pcm, wav,
+        // set the path to sd card, please pay attention to the WRITE_EXTERNAL_STORAGE permission
         mTts.setParameter(SpeechConstant.AUDIO_FORMAT, "pcm");
         mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH,
                 MainActivity.getContext().getExternalFilesDir("msc").getAbsolutePath() + "/tts.pcm");

@@ -39,13 +39,13 @@ public class CalendarActivity extends AppCompatActivity {
     private int firstDayInMonth;
     public final static List<Integer> day31 = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
     public final static List<Integer> day30 = Arrays.asList(4, 6, 9, 11);
-    private Calendar mTodayCalendar = Calendar.getInstance();//当前时间，未修改
+    private Calendar mTodayCalendar = Calendar.getInstance();//current time, not modified
 
 
     private int month;
     private int year;
 
-    //用历史记录判断是否学过
+    //Use history to judge whether have learned
     boolean isStudy;
     private RecDataBase recDataBase;
     private HistoryDao historyDao;
@@ -71,7 +71,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         cardBackground = findViewById(R.id.card_background);
-        cardBackground.setAlpha(0.6f);//背景不透明度
+        cardBackground.setAlpha(0.6f);//background opacity
 
 
         cardTitle = findViewById(R.id.card_title);
@@ -79,7 +79,7 @@ public class CalendarActivity extends AppCompatActivity {
 
 
 
-        //网格布局 7列
+        //Grid layout 7 columns
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,7);
         cardList.setLayoutManager(gridLayoutManager);
         calendarAdapter = new CalendarAdapter();
@@ -91,14 +91,14 @@ public class CalendarActivity extends AppCompatActivity {
         month = calendar.get(Calendar.MONTH);//4
 
 
-        //年月标题
+        //year month title
         initTitle(year,month);
 
-        //当月月份第一天是一周中的第几天
+        //The first day of the month is the day of the week
         firstDayInMonth = getFirstDayOfMonth(year, month);
-        Log.d(TAG, year + "年"+ (month+1) + "月的第一天是星期" + (firstDayInMonth-1));
+        Log.d(TAG, "year"+year + ", month"+ (month+1) + "first day is" + (firstDayInMonth-1));
 
-        //填充数据
+        //Data input
         List<CalendarBean> calendarData = setMonth(firstDayInMonth,year,month);
         calendarAdapter.setList(calendarData);
 
@@ -116,7 +116,7 @@ public class CalendarActivity extends AppCompatActivity {
 //        isStudy = historyDao.queryByDate(eachDay);
 //        Log.d(TAG, "onCreate: eachDay: "+eachDay+" ,isStudy: "+isStudy);
 
-        //切换月份
+        //switch month
         last = findViewById(R.id.last);
         next = findViewById(R.id.next);
 
@@ -132,8 +132,7 @@ public class CalendarActivity extends AppCompatActivity {
                 }
                 initTitle(year,month);
                 firstDayInMonth = getFirstDayOfMonth(year, month);
-                Log.d(TAG, year + "年"+ (month+1) + "月的第一天是星期" + (firstDayInMonth-1));
-                //填充数据
+                //data input
                 List<CalendarBean> calendarData = setMonth(firstDayInMonth,year,month);
                 calendarAdapter.setList(calendarData);
 
@@ -151,8 +150,7 @@ public class CalendarActivity extends AppCompatActivity {
                 }
                 initTitle(year,month);
                 firstDayInMonth = getFirstDayOfMonth(year, month);
-                Log.d(TAG, year + "年"+ (month+1) + "月的第一天是星期" + (firstDayInMonth-1));
-                //填充数据
+                //data input
                 List<CalendarBean> calendarData = setMonth(firstDayInMonth,year,month);
                 calendarAdapter.setList(calendarData);
 
@@ -167,15 +165,15 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     public void initTitle(int year, int month){
-        month = month +1;//月份从0开始
+        month = month +1;//month starts at 0
         cardTitle.setText(""+year+"   "+month);
     }
 
     public static int getFirstDayOfMonth(int year, int month) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, 1);//当月第一天
+        calendar.set(year, month, 1);//first day of the month
 
-        Log.d(TAG, "当前是一周的第 "+calendar.get(Calendar.DAY_OF_WEEK)+"天");//星期一是第二天
+        Log.d(TAG, "It is currently the " +calendar.get(Calendar.DAY_OF_WEEK)+" day of the week");//monday is the next day
         return calendar.get(Calendar.DAY_OF_WEEK);
     }
 
@@ -198,7 +196,7 @@ public class CalendarActivity extends AppCompatActivity {
             yearNext=year+1;
         }
 
-        List<CalendarBean> data = new ArrayList<>();//整个gridview的数据，包括三个月
+        List<CalendarBean> data = new ArrayList<>();//The data of the entire gridview, including three months
 //        List<CalendarBean> lastMonth = new ArrayList<>();
 //        List<CalendarBean> nextMonth = new ArrayList<>();
 
@@ -206,17 +204,18 @@ public class CalendarActivity extends AppCompatActivity {
         int lastMonthDay = monthCount(monthLast,yearLast);
         int currentMonthDay = monthCount(month,year);
         int nextMonthDay = monthCount(monthNext,yearNext);
-        Log.d(TAG, "setMonth: 本月是"+(month+1)+"月"+"，有"+currentMonthDay+"天");
-        Log.d(TAG, "setMonth: 上月是"+(monthLast+1)+"月"+"，有"+lastMonthDay+"天");
-        Log.d(TAG, "setMonth: 下月是"+(monthNext+1)+"月"+"，有"+nextMonthDay+"天");
+        Log.d(TAG, "setMonth: Current month: "+(month+1)+"，has "+currentMonthDay+" days");
+        Log.d(TAG, "setMonth: Last month: "+(monthLast+1)+"，has "+lastMonthDay+" days");
+        Log.d(TAG, "setMonth: Next month: "+(monthNext+1)+", has "+nextMonthDay+" days");
 
 
-        //填充上月最后几天
-        //firstDay = 1时，就是星期日，当前月第一天已经处于星期日，不需要添加上一个月补充天数
+        //Fill in the last days of the previous month
+        //When firstDay = 1, it is Sunday, and the first day of the current month is already on Sunday,
+        // so there is no need to add the supplementary days of the previous month
         if (firstDay != 1) {
             int monthFormatInt = monthLast;
-            monthFormatInt++;//存的addDate的月份是从1开始的
-            //5月是05，
+            monthFormatInt++;//The month of the saved addDate starts from 1
+            //month 5 is 05
             String monthFormat;
             if(monthFormatInt<10){
                 monthFormat = "0" + monthFormatInt;
@@ -242,9 +241,9 @@ public class CalendarActivity extends AppCompatActivity {
             }
         }
 
-        //填充当月
-        int monthFormatInt = month;//存的addDate的月份是从1开始的
-        //5月是05，
+        //fill current month
+        int monthFormatInt = month;//The month of the saved addDate starts from 1
+        //month 5 is 05
         monthFormatInt++;
         String monthFormat;
         if(monthFormatInt<10){
@@ -283,7 +282,7 @@ public class CalendarActivity extends AppCompatActivity {
         int needAddNext = 42-data.size();
 
 
-        //填充下月
+        //fill next month
         for(int i = 1; i<=needAddNext;i++){
             CalendarBean nextBean = new CalendarBean();
             nextBean.setDate(i);

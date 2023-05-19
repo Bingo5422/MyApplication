@@ -25,7 +25,7 @@ public class PhotoUtil {
 
 
 
-    //获取图片角度
+    //Get picture angle
     public static int imgDegree(String path) {
         if (TextUtils.isEmpty(path)) {
             return 0;
@@ -46,12 +46,12 @@ public class PhotoUtil {
                     break;
             }
         } catch (Exception e) {
-            //相应异常处理
+
         }
         return degree;
     }
 
-    //图片旋转
+    //picture rotation
     public static Bitmap rotateImage(Bitmap bitmap, float degree) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
@@ -59,7 +59,7 @@ public class PhotoUtil {
         return bmp;
     }
 
-    //图片压缩
+    //Image Compression
     public static File compressPhoto(File file, int scale) {
         //String photo_path = MainActivity.getContext().getFilesDir() + File.separator + "photos" + File.separator + "temp.jpg";
         File targetFile = new File(file.getAbsolutePath());

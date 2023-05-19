@@ -2,6 +2,7 @@ package com.example.myapplication.ui.test;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class DetailActivity extends AppCompatActivity {
     private HistoryDao historyDao;
     private RecordDao recordDao;
     private ActivityDetailBinding binding;
+    private static final String TAG = "DetailActivity";
     SharedPreferences sp ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class DetailActivity extends AppCompatActivity {
         sp = getSharedPreferences("sp", MODE_PRIVATE);
         long startTime = sp.getLong(MainActivity.today+"startTime", 0);
         long endTime = sp.getLong(MainActivity.today+"endTime", 0);
+        Log.d(TAG, "onCreate: endtime:"+endTime);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(endTime-startTime);
         binding.tvTodayTime.setText("" + minutes);
 

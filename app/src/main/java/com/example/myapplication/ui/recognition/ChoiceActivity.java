@@ -53,16 +53,16 @@ public class ChoiceActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"The current api is："+currentApi,Toast.LENGTH_SHORT).show();
         }));
 
-        Log.d(TAG, "当前api是" +currentApi);
+        Log.d(TAG, "Current api is: " +currentApi);
 
 
         picPath = this.getFilesDir().getAbsolutePath() + File.separator + "photos";
         File temp = new File(picPath);
 
-        //创建文件夹
+        //create folder
         if (!temp.exists()) {
             temp.mkdirs();
-            Log.d(TAG, "onCreate: 文件夹创建了 路径为 = " + temp.getAbsolutePath());
+            Log.d(TAG, "onCreate: Folder created with path = " + temp.getAbsolutePath());
         }
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -121,14 +121,14 @@ public class ChoiceActivity extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
         }
-        Log.d(TAG, "fileName: 随机文件创建了，路径为 = " + file.getAbsolutePath());
+        Log.d(TAG, "fileName: A random file is created with path =  " + file.getAbsolutePath());
         return file;
     }
 
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //判断是否为当前请求
+        //Determine whether it is the current request
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
             PhotoUtil.compressPhoto(file, 4);
@@ -140,17 +140,17 @@ public class ChoiceActivity extends AppCompatActivity {
 
         }
 
-        //在相册里面选择好相片之后调回到现在的这个activity中
+        //After selecting a photo in the album, call back to the current activity
         if(requestCode==2 && resultCode == RESULT_OK){
             try {
 
-                Uri selectedImage = data.getData(); //获取系统返回的照片的Uri
+                Uri selectedImage = data.getData(); //Get the Uri of the photo returned by the system
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
                 Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
+                        filePathColumn, null, null, null);//Query the photo corresponding to the specified Uri from the system table
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String path = cursor.getString(columnIndex);  //获取照片路径
+                String path = cursor.getString(columnIndex);  //get photo path
                 cursor.close();
 
 
@@ -158,13 +158,13 @@ public class ChoiceActivity extends AppCompatActivity {
                Log.d(TAG, "压缩前的大小 == "+ selectFile.length());
                String fileName = getFileName(path);
 
-               //内存权限导致
+               //memory permissions lead to
                 //String tempPath = getCacheDir() + File.separator + "image" + File.separator + fileName;
                 String tempPath = picPath + File.separator +fileName;
                 File resultFile = PhotoUtil.compressPhoto(selectFile, 4, tempPath);
                 String absolutePath = resultFile.getAbsolutePath();
-                Log.d(TAG, "压缩后的大小 == "+ resultFile.length());
-                Log.d(TAG, "在相册打开"+absolutePath);
+                Log.d(TAG, "Compressed size == "+ resultFile.length());
+                Log.d(TAG, "open in photo album"+absolutePath);
                 Intent intent = new Intent(ChoiceActivity.this, PhotoRecActivity.class);
                 intent.putExtra("path", absolutePath);
                 intent.putExtra("api",currentApi);
