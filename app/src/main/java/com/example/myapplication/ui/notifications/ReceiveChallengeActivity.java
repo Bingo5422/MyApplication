@@ -119,7 +119,7 @@ public class ReceiveChallengeActivity extends AppCompatActivity {
                     binding.btnC.setClickable(true);
                     binding.btnD.setClickable(true);
 
-                    //这里改了一下按钮背景
+                    //change the button background here
                     binding.btnA.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
                     binding.btnB.setBackground(getResources().getDrawable(R.drawable.test_options_btn));
                     binding.btnC.setBackground(getResources().getDrawable(R.drawable.test_options_btn));

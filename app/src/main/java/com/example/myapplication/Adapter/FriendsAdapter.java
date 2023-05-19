@@ -181,18 +181,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         holder.id.setText(bean.getEmail()+"");
         holder.name.setText(bean.getName());
 
-//        String path = bean.getPath();
-//        Bitmap bitmap = BitmapFactory.decodeFile(path);
-        //holder.image.setImageBitmap(bitmap);
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // 点击列表项时，跳转到聊天界面，并传递选中的好友信息
-//                Intent intent = new Intent(this.context, ChatActivity.class);
-//                intent.putExtra("friend_name", friend);
-//                context.startActivity(intent);
-//            }
-//        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

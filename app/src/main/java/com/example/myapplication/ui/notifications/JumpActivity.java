@@ -54,38 +54,9 @@ public class JumpActivity extends AppCompatActivity {
             }
         });
 
-//        tvRe = findViewById(R.id.result);
-//        reBack = findViewById(R.id.finish);
-//
-//        reBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent intentback = new Intent();
-//                intentback.putExtra("result", intentback);
-//                //startActivity(intentback);
-//                setResult(000, intentback);
-//                finish();
-//
-//            }
-//        });
-
 
 
     }
 
 
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == 666 && resultCode == RESULT_OK) {
-//
-//            re = data.getStringExtra("result");
-//            Log.d(TAG, "onActivityResult: jump里的"+re);
-//            tvRe.setText("Your grade: "+re+"");
-//
-//        }
-//    }
 }

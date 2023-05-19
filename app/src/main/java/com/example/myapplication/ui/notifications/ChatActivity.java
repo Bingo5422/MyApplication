@@ -73,6 +73,7 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.room.Room;
 
@@ -96,7 +97,6 @@ public class ChatActivity extends AppCompatActivity {
     // 定义请求码和结果码
 
     private static final int RESULT_OK = Activity.RESULT_OK;
-
 
 
     SharedPreferences preferences;
@@ -124,58 +124,22 @@ public class ChatActivity extends AppCompatActivity {
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
         firsttime = true;
-//        Intent intent2 = new Intent();
-//        String result = intent2.getStringExtra("grade");
-//        String fId = intent2.getStringExtra("friend_id");
-//        String fName = intent2.getStringExtra("friend_name");
+
 //
         messagelistnum = new ArrayList<>();
         messagelistnum.add(0);
-//
-//        if(result!=null) {
-//            FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
-//            MessageBean message = new MessageBean();
-//            Random r = new Random();
-//            String id = r.nextInt(10000000) + 50 + "";
-//            // 创建一条新的消息
-//            formBody.add("user_id2", fId);//传递键值对参数
-//            formBody.add("message", result);//传递键值对参数
-//            formBody.add("challenge", "0");//传递键值对参数
-//            formBody.add("ID", id);
-//            sendmessage(formBody, client);
-//            message.setId(id);
-//            message.setContent(result);
-//            message.setFromUser(userId);
-//            message.setToUser(fId);
-//            message.setChallenge(false);
-//            String date_temp = new Date().toString();
-//            try {
-//                message.setSendTime(changeDate(date_temp, 2));
-//            } catch (ParseException e) {
-//                throw new RuntimeException(e);
-//            }
-//            Log.d("user", "onClick: messagebean" + message.getFromUser());
-//
-//            // 将消息插入到数据库中
-//            insertChatRecord(message);
-//            mMessageList.add(message);
-//            mAdapter.setList(mMessageList);
-//            mAdapter.notifyItemInserted(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
-//            mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1>0?mMessageList.size() - 1:0);
-//
-//        }
 
 
         lastmessagenum = 0;
 //        String url = "http://192.168.113.21:5000/";
         String url = DomainURL;
 
-        urldown = DomainURL+"/challenge/download_zip";
-        //创建challenge文件夹
+        urldown = DomainURL + "/challenge/download_zip";
+        //Create a challenge folder
         String folderName = "challengedown";
         folderPath = ChatActivity.this.getFilesDir().getAbsolutePath() + "/" + folderName;
 
-        //知道自己是谁
+        //Know who you are
         preferences = getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         userId = preferences.getString("user_id", "");
 
@@ -190,10 +154,10 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        //创建database
+        //create database
         mMessageBeanDatabase = Room.databaseBuilder(getApplicationContext(), MessageBeanDatabase.class, "message_db").allowMainThreadQueries().build();
 
-        // 初始化输入框和发送按钮
+        // Initializes the input box and send button
         mInputEditText = findViewById(R.id.input_edit_text);
         mSendButton = findViewById(R.id.send_button);
 
@@ -217,15 +181,6 @@ public class ChatActivity extends AppCompatActivity {
                 editor.putString("isDown", "1");
                 editor.commit();
 
-//                new AlertDialog.Builder(ChatActivity.this).setMessage("Do you want to challenge now?")
-//                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Intent intent = new Intent(ChatActivity.this, ReceiveChallengeActivity.class);
-//                                intent.putExtra("group", bean.getContent());
-//                                startActivity(intent);
-//                            }
-//                        }).show();
 
                 Intent intent = new Intent(ChatActivity.this, JumpActivity.class);
                 intent.putExtra("group", bean.getContent());
@@ -250,41 +205,37 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        // 获取数据库实例和聊天记录 Dao
+        // Get the database instance and chat log Dao
         MessageBeanDatabase db = MessageBeanDatabase.getInstance(this);
         mMessBeanDao = db.messageBeanDao();
 
-        // 从 Intent 中获取对方用户的 ID 和名字
+        // Gets the ID and name of the other user from the Intent
         Intent intent = getIntent();
         friendId = intent.getStringExtra("friend_id");
         friendName = intent.getStringExtra("friend_name");
 
-        // 设置 ActionBar 的标题为好友的名字
+        // Set the title of the ActionBar to your friend's name
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(friendName);
 //        getmessage(client);
 //        loadChatRecords(friendId);
 
-        //每过0.5秒刷新一次
+        //Refresh every 0.5 seconds
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             public void run() {
                 getmessage(client);
                 loadChatRecords(friendId);
             }
-        }, 1, 500);//schedule{TimerTask()方法调用，延时执行时间，循环执行时间间隔}
+        }, 1, 500);
 
 
-        // 加载历史聊天记录
-
-
-        // 设置发送按钮的点击事件
         mSendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                // 获取输入框中的文本
+                // Gets the text in the input box
                 String messageText = mInputEditText.getText().toString().trim();
 
                 FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
@@ -293,7 +244,7 @@ public class ChatActivity extends AppCompatActivity {
                     MessageBean message = new MessageBean();
                     Random r = new Random();
                     String id = r.nextInt(10000000) + 50 + "";
-                    // 创建一条新的消息
+                    // Create a new message
                     formBody.add("user_id2", friendId);//传递键值对参数
                     formBody.add("message", mInputEditText.getText().toString());//传递键值对参数
                     formBody.add("challenge", "0");//传递键值对参数
@@ -314,13 +265,12 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     Log.d("user", "onClick: messagebean" + message.getFromUser());
 
-                    // 将消息插入到数据库中
+                    // Insert the message into the database
                     insertChatRecord(message);
                     // mMessageBeanDatabase.messageBeanDao().insert(message);
-                    // 清空输入框
+                    // Clear input field
                     mInputEditText.setText("");
-//todo
-//                    // 将消息添加到 RecyclerView 中
+
                     mMessageList.add(message);
                     mAdapter.setList(mMessageList);
                     mAdapter.notifyItemInserted(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
@@ -329,53 +279,51 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-
-
         loadChatRecords(friendId);
 
     }
 
-    // 加载历史聊天记录
+    // Load the history chat
     private void loadChatRecords(String friendId) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // 从数据库中查询指定好友的聊天记录 sharedPreference
+                // Queries the chat record sharedPreference of the specified friend from the database
                 List<MessageBean> chatRecords = mMessBeanDao.getMessages(friendId, userId);
                 if (firsttime) {
                     firsttime = false;
                     //chatRecords.addAll(mMessBeanDao.getMessages(userId,friendId));
-                    // 将聊天记录添加到消息列表中
+                    // Add the chat to the message list
                     mMessageList.addAll(chatRecords);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //用于通知 RecyclerView 的 Adapter
-                            // 数据集发生了变化，从而触发 RecyclerView 进行刷新操作，更新显示的数据。
+                            // Notifies the Adapter for RecyclerView
+                            // The data set has changed, triggering a refresh operation for RecyclerView to update the displayed data.
                             mAdapter.setList(mMessageList);
                             mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
                             mAdapter.notifyDataSetChanged();
 
                         }
                     });
-                    messagelistnum.add(chatRecords.size()-1);
+                    messagelistnum.add(chatRecords.size() - 1);
                 } else {
                     int lastIdx = chatRecords.size() - 1;
                     messagelistnum.add(lastIdx);
                     int mnum = messagelistnum.size();
                     if (messagelistnum.get(mnum - 1) > messagelistnum.get(mnum - 2)) {
-                        //只加最后一条消息
+                        //Just add the last message
                         MessageBean lastElementchat = chatRecords.get(lastIdx);
                         int index = mMessageList.size() - 1;
                         MessageBean lastElementmM = mMessageList.get(index);
-                        if (!lastElementmM.getSendTime().equals(lastElementchat.getSendTime()) ) {
+                        if (!lastElementmM.getSendTime().equals(lastElementchat.getSendTime())) {
                             mMessageList.add(lastElementchat);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    //用于通知 RecyclerView 的 Adapter
-                                    // 数据集发生了变化，从而触发 RecyclerView 进行刷新操作，更新显示的数据。
+                                    // Notifies the Adapter for RecyclerView
+                                    // The data set has changed, triggering a refresh operation for RecyclerView to update the displayed data.
                                     mAdapter.setList(mMessageList);
                                     mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
                                     mAdapter.notifyDataSetChanged();
@@ -403,7 +351,7 @@ public class ChatActivity extends AppCompatActivity {
     private void getmessage(OkHttpClient client) {
         Request request = new Request.Builder()
 //                .url("http://192.168.24.21:5000/challenge/getmessage")
-                .url(DomainURL+"/challenge/getmessage")
+                .url(DomainURL + "/challenge/getmessage")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -422,12 +370,10 @@ public class ChatActivity extends AppCompatActivity {
                             response = client.newCall(request).execute();
                             String jsonResponse = response.body().string();
 
-                            // 解析json
+                            // Parse json
                             JSONObject jsonObject = new JSONObject(jsonResponse);
                             Iterator<String> keys = jsonObject.keys();
-                            messagenum = jsonObject.length();//todo
-                            //todo 写报告的时候详细说
-                            ArrayList<String> grouplist = new ArrayList<>();
+                            messagenum = jsonObject.length();
 
                             if (messagenum > lastmessagenum) {
                                 while (keys.hasNext()) {
@@ -441,11 +387,6 @@ public class ChatActivity extends AppCompatActivity {
                                     MessageBean messageBean = new MessageBean(key, message_from, to, content, changeDate(time, 1), challenge);
                                     mMessageBeanDatabase.messageBeanDao().insert(messageBean);
 
-//                                        mMessageList.add(messageBean);
-//                                        mAdapter.setList(mMessageList);
-////                                        mAdapter.notifyItemInserted(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
-////                                        mRecyclerView.smoothScrollToPosition(mMessageList.size() - 1 > 0 ? mMessageList.size() - 1 : 0);
-
                                 }
                             }
                             lastmessagenum = messagenum;
@@ -457,7 +398,6 @@ public class ChatActivity extends AppCompatActivity {
                             throw new RuntimeException(e);
                         }
 
-                        // ...
                     } else {
                         // 响应内容为 HTML 格式
                         Log.d("html", "html");
@@ -475,7 +415,7 @@ public class ChatActivity extends AppCompatActivity {
     public static void sendmessage(FormBody.Builder formBody, OkHttpClient client) {
 
         Request request = new Request.Builder()//创建Request 对象。
-                .url(DomainURL+"/challenge/sendmessage")
+                .url(DomainURL + "/challenge/sendmessage")
                 .post(formBody.build())//传递请求体
                 .build();
 
@@ -553,8 +493,6 @@ public class ChatActivity extends AppCompatActivity {
                 .post(formBody.build())
                 .build();
 
-//        cookie = client.cookieJar().loadForRequest(request.url());
-//        request.newBuilder().addHeader(cookie.get(0).name(), cookie.get(0).value());
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -591,17 +529,15 @@ public class ChatActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
                 String newpath = folderPath + ranPath;
-
                 String zipPath = newpath + "/pack.zip";
-                // 文件解压缩，zipPath是下载下来的压缩包路径
+                // Decompress files. zipPath is the path of the downloaded package
                 FileUtil.unzip(zipPath, newpath);
 
-                // 读取message.json文件并解析为ChallengeBean对象
+                // Read the message.json file and parse it into the ChallengeBean object
                 String filePath = newpath + "/messages.json";
                 try {
-                    // 读取文件内容
+                    //Read file contents
                     InputStream inputStream = new FileInputStream(new File(filePath));
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                     StringBuilder stringBuilder = new StringBuilder();
@@ -611,7 +547,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     inputStream.close();
 
-                    // 遍历JSON对象并转化为ChallengeBean对象
+                    // Iterate through the JSON object and convert it to the ChallengeBean object
                     JSONObject jsonObject = new JSONObject(stringBuilder.toString());
                     Iterator<String> keys = jsonObject.keys();
                     while (keys.hasNext()) {
@@ -630,64 +566,13 @@ public class ChatActivity extends AppCompatActivity {
                         String challenge_group = challengeObj.getString("challenge_group");
                         ChallengeBean challengeBean = new ChallengeBean(filename, path, enName, jpName, korName, FraName, code, challenge_group, spaName, name);
                         challengeDao.insert(challengeBean);
-
                     }
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                //读取解压的下载文件信息
-                //              File download_info = new File(folderPath+"/photos/messages.json");
-//                FileReader fileReader = new FileReader(download_info);
-//                Reader reader = new InputStreamReader(new FileInputStream(download_info), "Utf-8");
-//                int ch= 0;
-//                StringBuffer sb = new StringBuffer();
-//                while((ch = reader.read()) != -1) {
-//                    sb.append((char) ch);
-//                }
-//                fileReader.close();
-//                reader.close();
-//
-//                //转json对象
-//                JSONObject download_info_json = null;
-//                try {
-//                    download_info_json = new JSONObject(sb.toString());
-//                } catch (JSONException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                // 遍历download_info_json,把里面的信息和对应的图片存储到数据库中
-//                for(int i=0;i<download_info_json.length();i++) {
-//                    try {
-//
-//
-//                        JSONObject item = download_info_json.getJSONObject(String.valueOf(i));
-//
-//
-//                        ChallengeBean challengeBean = new ChallengeBean();
-//                        challengeBean.setName(item.getString("name"));
-//                        challengeBean.setFilepath(folderPath + "/photos/" + item.getString("filename"));
-//                   //     challengeBean.setDateTime(item.getString("datetime"));
-//                        challengeBean.setCode(item.getString("code"));
-//                        challengeBean.setEnName(item.getString("enName"));
-//                        challengeBean.setKorName(item.getString("korName"));
-//                        challengeBean.setSpaName(item.getString("spaName"));
-//                        challengeBean.setJpName(item.getString("jpName"));
-//                        challengeBean.setFraName(item.getString("FraName"));
-//                        challengeBean.setFilename(item.getString("filename"));
-//                    //    challengeBean.setIf_star(item.getInt("if_star"));
-//                    //    challengeBean.setNum(item.getInt("proficiency"));
-//
-//                       mChallengeBeanDatabase.challengeDao().insert(challengeBean);
-//                             //  mMessageBeanDatabase.messageBeanDao().insert(messageBean);
-//                    } catch (JSONException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }
 
             }
         });

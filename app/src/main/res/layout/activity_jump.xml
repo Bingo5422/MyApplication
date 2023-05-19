@@ -45,39 +45,6 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="true"/>
 
-<!--    <TextView-->
-<!--        android:id="@+id/result"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/lo"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="5dp"-->
-<!--        android:background="@drawable/test_options_btn"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="18sp" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/finish"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/result"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        android:layout_width="300dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="5dp"-->
-<!--        android:background="@drawable/test_options_btn"-->
-<!--        android:text="Share Grade"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="18sp" />-->
-
-
-
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

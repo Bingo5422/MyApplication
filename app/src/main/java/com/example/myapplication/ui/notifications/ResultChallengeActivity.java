@@ -57,13 +57,9 @@ public class ResultChallengeActivity extends AppCompatActivity {
         btnQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent newIntent = new Intent(view.getContext(), MainActivity.class);
-//                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(newIntent);
+
                 Intent intent = new Intent(ResultChallengeActivity.this, ChatActivity.class);
 
-                // 在第三个页面（Activity C）的某个地方调用以下代码
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

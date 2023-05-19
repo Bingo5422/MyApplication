@@ -103,11 +103,11 @@ public class UploadChallenge extends AppCompatActivity {
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
 
-        //定义group
+        //Define group
         r = new Random();
         group = r.nextInt(10000000) +"";
 
-        //得到准备接受挑战的好友的id,和自己的id
+        //Get the id of your friend who's ready to take the challenge, and get your own id
         Intent intent = getIntent();
         friendId = intent.getStringExtra("friend_id");
         userId = intent.getStringExtra("userId");
@@ -116,21 +116,21 @@ public class UploadChallenge extends AppCompatActivity {
         recDataBase = Room.databaseBuilder(this, RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         historyDao = recDataBase.historyDao();
 
-        //创建challenge文件夹
+        //Create a challenge folder
         String folderName = "challenge";
         folderPath = UploadChallenge.this.getFilesDir().getAbsolutePath() + "/" + folderName;
         File folder = new File(folderPath);
         if (!folder.exists()) {
             boolean success = folder.mkdirs();
             if (success) {
-                // 文件夹创建成功
+                // Folder created successfully
                 Log.d(TAG, "Folder created at path: " + folderPath);
             } else {
-                // 文件夹创建失败
+                // Folder creation failure
                 Log.e(TAG, "Failed to create folder at path: " + folderPath);
             }
         } else {
-            // 文件夹已经存在
+            // Folder already exists
             Log.d(TAG, "Folder already exists at path: " + folderPath);
         }
 
@@ -155,7 +155,7 @@ public class UploadChallenge extends AppCompatActivity {
                     List<File> fileList = packPhoto(selectedPhotoDataList);
                     try {
                         uploadFiles(fileList,filejson);
-//todo 很精妙写到报告里面
+
                         Intent intentback = new Intent(UploadChallenge.this, ChatActivity.class);
                         intentback.putExtra("group", group);
                         //startActivity(intentback);
@@ -175,7 +175,7 @@ public class UploadChallenge extends AppCompatActivity {
 
 
 
-        //网格布局 3列
+        //Grid layout 3 columns
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
         challenge_rv.setLayoutManager(gridLayoutManager);
 
@@ -207,7 +207,7 @@ public class UploadChallenge extends AppCompatActivity {
         // 创建Gson对象
         Gson gson = new Gson();
 
-        // 将List<ChallengeBean>转换为JSON字符串
+        // Convert the List<ChallengeBean> to a JSON string
         String json = gson.toJson(challengeList);
 
         JSONArray jsonArray = new JSONArray(json);
@@ -285,9 +285,6 @@ public class UploadChallenge extends AppCompatActivity {
         }
 
         );
-
-
-
 
     }
 

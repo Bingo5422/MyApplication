@@ -306,42 +306,16 @@ public class NotificationsFragment extends Fragment  {
 
 
 
-
-//    @SuppressLint("ResourceType")
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-////        Intent intent = new Intent(getContext(), FriendsListActivity.class);
-////        startActivity(intent);
-//
-//    }
-
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-//        contentView = inflater.inflate(R.layout.activity_friends_list, container, false);
 
-//        NotificationsViewModel notificationsViewModel =
-//                new ViewModelProvider(this).get(NotificationsViewModel.class);
-
-//    binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-//    View root = binding.getRoot();
         list= root.findViewById(R.id.fri_list1);
         recDataBase = Room.databaseBuilder(getContext(), RecDataBase.class, "RecDataBase").allowMainThreadQueries().build();
         friendsDao = recDataBase.friendsDao();
         friendsBean = new FriendsBean();
 
-//        //先放几个数据
-//        FriendsBean f1 = new FriendsBean();
-//        f1.setName("Nick");
-//        f1.setEmail("123456@qq.com");
-//        FriendsBean f2 = new FriendsBean();
-//        f2.setName("Tom");
-////        f2.setEmail("12345678@qq.com");
-//        friendsDao.insert(f1);
-//        friendsDao.insert(f2);
 
         // ImageView add_fir = root.findViewById(R.id.add_fir1);
         add_fir=binding.addFir1;
@@ -352,53 +326,27 @@ public class NotificationsFragment extends Fragment  {
                 startActivity(intent);
             }
         });
-//        insert();
-//        l.addAll(friendsDao.query());
-//        adapter.setList(l);
-//        adapter.setDao(friendsDao);
 
 
-
-        //设置布局管理器
+        //Set up the layout manager
         list.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        //设置分割线
+        //Set the dividing line
         DividerItemDecoration mDivider = new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL);
         list.addItemDecoration(mDivider);
-        //设置适配器
-
+        //Setup adapter
         adapter = new FriendsAdapter();
         list.setAdapter(adapter);
 
-
-
-        //设置适配器
-//        adapter = new FriendsAdapter(l, new FriendsAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(FriendsBean friend) {
-//                // 点击某个好友后进入聊天页面
-//                Intent intent = new Intent(getContext(), ChatActivity.class);
-//                intent.putExtra("friendId", friendsBean.getId());
-//                startActivity(intent);
-//            }
-//        });
-
-
         loadFriend();
-//        loadHistory();
-
-        // final TextView textView = binding.textNotifications;
-        //notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
-
 
     }
 
 
 
     private void loadFriend() {
-        //需要传一个context 先这么写
+
         CookieJarImpl cookieJar = new CookieJarImpl(getContext());
-        // CookieJarImpl cookieJar = new CookieJarImpl(NotificationsFragment.getContext());
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         Request request = new Request.Builder()
                 .url(DomainURL+"/addfriends/list")
@@ -414,9 +362,7 @@ public class NotificationsFragment extends Fragment  {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     JSONObject res = new JSONObject(response.body().string());
-
                     Iterator<String> keys = res.keys();
-
                     String value = null;
                     String email = null;
                     while (keys.hasNext()) {
@@ -432,7 +378,6 @@ public class NotificationsFragment extends Fragment  {
                         }catch (Exception e){
                             Log.e("Exception",e.toString());
                         }
-
                     }
                     loadHistory();
                 } catch (JSONException e) {
@@ -447,21 +392,6 @@ public class NotificationsFragment extends Fragment  {
         super.onDestroyView();
         binding = null;
     }
-
-//    public void insert(){
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                Random r = new Random();
-//                friendsBean.setId(r.nextInt(1000000));
-//                friendsBean.setName("Tony");
-//                friendsBean.setPath("");
-//                friendsDao.insert(friendsBean);
-//            }
-//        }.start();
-//
-//    }
 
 
 

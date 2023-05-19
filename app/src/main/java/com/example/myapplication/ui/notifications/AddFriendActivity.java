@@ -65,7 +65,6 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
 
-
     private void addFriend() {
         String friendId = mFriendIdEditText.getText().toString().trim();
         if (friendId.isEmpty()) {
@@ -73,24 +72,21 @@ public class AddFriendActivity extends AppCompatActivity {
             return;
         }
 
-        // 检查该好友是否已存在
-//        FriendsBean friend = mFriendDatabase.friendDao().getId(friendId);
-//        if (friend != null) {
-//
-//        }
+        // Check whether the friend already exists
 
-        // 调用服务器 API 获取好友信息，这里直接模拟获取到了好友的名字
-        String friendName = "用户" + friendId;
+
+        // Call the server API to get the friend information, here directly simulated to get the friend's name
+
         CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         Request request = new Request.Builder()
-                .url(DomainURL+"/addfriends/add/id?id="+friendId)
+                .url(DomainURL + "/addfriends/add/id?id=" + friendId)
                 .build();
         client.newCall(request).enqueue(new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d(null,"failed to add friend");
+                Log.d(null, "failed to add friend");
             }
 
             @Override
@@ -99,10 +95,9 @@ public class AddFriendActivity extends AppCompatActivity {
 
                     JSONObject res = new JSONObject(response.body().string());
                     String email = res.getString("id");
-                    if(email=="0"){
+                    if (email == "0") {
 
-                    }
-                    else{
+                    } else {
                         FriendsBean friend = new FriendsBean();
                         friend.setEmail(email);
                         friend.setName(res.getString("nickname"));
@@ -114,69 +109,65 @@ public class AddFriendActivity extends AppCompatActivity {
             }
         });
 
-//        AddFriendTask task = new AddFriendTask();
-//        task.execute(Integer.valueOf(friendId));
-    }
 
-    private class AddFriendTask extends AsyncTask<Integer, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Integer... integers) {
-            Integer friendId = integers[0];
-
-            // 检查该好友是否已存在
-            FriendsBean friend = mFriendDatabase.friendDao().getId(friendId);
-            if (friend != null) {
-                return false;
-            }
-
-            // 调用服务器 API 获取好友信息，这里直接模拟获取到了好友的名字
-            String friendName = "用户" + friendId;
-            CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
-            OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
-            Request request = new Request.Builder()
-                    .url(DomainURL+"/add/id?id=")
-                    .build();
-            client.newCall(request).enqueue(new Callback() {
-
-                @Override
-                public void onFailure(Call call, IOException e) {
-
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    try {
-                        JSONObject res = new JSONObject(response.body().string());
-                        String email = res.getString("id");
-                        if(email=="0"){
-
-                        }
-                        else{
-                            FriendsBean friend = new FriendsBean();
-                            friend.setEmail(email);
-                            friend.setName(res.getString("nickname"));
-                            mFriendDatabase.friendDao().addFriend(friend);
-                        }
-
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-
-
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success) {
-                Toast.makeText(getApplicationContext(), "添加好友成功", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(getApplicationContext(), "该好友已添加", Toast.LENGTH_SHORT).show();
-            }
-        }
+//        private class AddFriendTask extends AsyncTask<Integer, Void, Boolean> {
+//            @Override
+//            protected Boolean doInBackground(Integer... integers) {
+//                Integer friendId = integers[0];
+//
+//                // Check whether the friend already exists
+//                FriendsBean friend = mFriendDatabase.friendDao().getId(friendId);
+//                if (friend != null) {
+//                    return false;
+//                }
+//
+//                // Call the server API to get the friend information, here directly simulated to get the friend's name
+//
+//                CookieJarImpl cookieJar = new CookieJarImpl(AddFriendActivity.this);
+//                OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+//                Request request = new Request.Builder()
+//                        .url(DomainURL + "/add/id?id=")
+//                        .build();
+//                client.newCall(request).enqueue(new Callback() {
+//
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//                        try {
+//                            JSONObject res = new JSONObject(response.body().string());
+//                            String email = res.getString("id");
+//                            if (email == "0") {
+//
+//                            } else {
+//                                FriendsBean friend = new FriendsBean();
+//                                friend.setEmail(email);
+//                                friend.setName(res.getString("nickname"));
+//                                mFriendDatabase.friendDao().addFriend(friend);
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                });
+//
+//
+//                return true;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Boolean success) {
+//                if (success) {
+//                    Toast.makeText(getApplicationContext(), "Succeeded in adding a friend", Toast.LENGTH_SHORT).show();
+//                    finish();
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "The friend has been added", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
     }
 }
