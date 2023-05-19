@@ -51,7 +51,8 @@ public class EditNameActivity extends AppCompatActivity {
         edit_name_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intent = new Intent(EditNameActivity.this, EditInfoActivity.class);
+                startActivity(intent);
             }
         });
 

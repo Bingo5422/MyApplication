@@ -75,7 +75,8 @@ public class EditInfoActivity extends AppCompatActivity {
         edit_info_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
