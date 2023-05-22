@@ -63,6 +63,8 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder>{
             holder.item_enName_tv.setText(bean.getKorName());
         } else if (lan.equals("French")) {
             holder.item_enName_tv.setText(bean.getFraName());
+        } else if (lan.equals("Chinese")) {
+            holder.item_enName_tv.setText(bean.getName());
         } else {
             holder.item_enName_tv.setText(bean.getEnName());
         }
