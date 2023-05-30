@@ -26,7 +26,7 @@ import java.util.List;
 
 
 public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ViewHolder> {
-    private Calendar mTodayCalendar = Calendar.getInstance();//当前时间,未修改
+    private Calendar mTodayCalendar = Calendar.getInstance();//The previous time is not modified
 
     private List<HistoryBean> mlist;
     private List<ChallengeBean> selectedPhotoData = new ArrayList<>();
@@ -41,7 +41,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.View
 
     @NonNull
     @Override
-    //创建
+    //create
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_challenge_item,parent,false);
         ViewHolder vh=new ViewHolder(v);
@@ -76,14 +76,14 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.View
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    // CheckBox 被选中
+                    // CheckBox be selected
                     selectedPhotoData.add(challengeBean);
-                    Log.d(TAG, "选中的照片: "+ selectedPhotoData);
+                    Log.d(TAG, "Selected photo: "+ selectedPhotoData);
                 } else {
-                    // CheckBox 没有被选中
+                    // CheckBox Not be selected
 
                     selectedPhotoData.remove(challengeBean);
-                    Log.d(TAG, "取消后选中的照片名字"+selectedPhotoData);
+                    Log.d(TAG, "Name of the selected photo after canceling"+selectedPhotoData);
                 }
             }
         });

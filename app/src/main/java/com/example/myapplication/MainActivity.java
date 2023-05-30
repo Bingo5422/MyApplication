@@ -31,11 +31,11 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     // The URL of the server
-   public final static String DomainURL = "http://xintong.pythonanywhere.com";
+//   public final static String DomainURL = "http://xintong.pythonanywhere.com";
 
  //   public final static String DomainURL = "http://172.26.14.175:5000";
  //   public final static String DomainURL = "http://192.168.24.21:5000";
-//    public final static String DomainURL = "http://192.168.1.59:5000";
+    public final static String DomainURL = "http://192.168.43.208:5000";
 
 
 
@@ -87,14 +87,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
+        setContentView(binding.getRoot()); // getRoot is getting the basic view of the main activity
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        // nav_host_fragment_activity_main is the fragment in activity main
+        // its navGraph is the different fragments navigation
+        // in the fragments navigation, each fragment binds with their layout
+
         // Start
         NavigationUI.setupWithNavController(binding.navView, navController);
+        // navView is the name of the navigation view on the main activity layout
+
 
     }
 

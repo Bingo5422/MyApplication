@@ -284,9 +284,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Cookie;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -338,53 +341,72 @@ public class NotificationsFragment extends Fragment  {
         list.setAdapter(adapter);
 
         loadFriend();
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                loadFriend();
+//            }
+//        },0,2000);
         return root;
 
+    }
+
+    public void onResume(){
+        super.onResume();
+        loadFriend();
     }
 
 
 
     private void loadFriend() {
 
-        CookieJarImpl cookieJar = new CookieJarImpl(getContext());
+//        CookieJarImpl cookieJar = new CookieJarImpl(getContext());
+        CookieJarImpl cookieJar = new CookieJarImpl(getActivity());
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+
         Request request = new Request.Builder()
                 .url(DomainURL+"/addfriends/list")
                 .build();
-        client.newCall(request).enqueue(new Callback() {
 
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d(null, "load friend failed");
-            }
+        // get the corresponding cookie
+//        List<Cookie> cookie = client.cookieJar().loadForRequest(request.url());
+//        if(!cookie.isEmpty()) {
+            client.newCall(request).enqueue(new Callback() {
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    JSONObject res = new JSONObject(response.body().string());
-                    Iterator<String> keys = res.keys();
-                    String value = null;
-                    String email = null;
-                    while (keys.hasNext()) {
-                        email = keys.next();
-                        value = res.getString(email);
-                        Log.d(TAG,"email"+email);
-                        Log.d(TAG,"va"+value);
-                        FriendsBean friend = new FriendsBean();
-                        friend.setEmail(email);
-                        friend.setName(value);
-                        try{
-                            friendsDao.insert(friend);
-                        }catch (Exception e){
-                            Log.e("Exception",e.toString());
-                        }
-                    }
-                    loadHistory();
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.d(null, "load friend failed");
                 }
-            }
-        });
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        JSONObject res = new JSONObject(response.body().string());
+                        Iterator<String> keys = res.keys();
+                        String value = null;
+                        String email = null;
+                        while (keys.hasNext()) {
+                            email = keys.next();
+                            value = res.getString(email);
+                            Log.d(TAG, "email" + email);
+                            Log.d(TAG, "va" + value);
+                            FriendsBean friend = new FriendsBean();
+                            friend.setEmail(email);
+                            friend.setName(value);
+                            try {
+                                friendsDao.insert(friend);
+                            } catch (Exception e) {
+                                Log.e("Exception", e.toString());
+                            }
+                        }
+                        loadHistory();
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+//        }
     }
 
     @Override

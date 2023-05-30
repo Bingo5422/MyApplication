@@ -148,14 +148,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     private  OnItemClickListener mOnItemClickListener ;
     private FriendsDao friendsDao;
 
-//    public FriendsAdapter(List<FriendsBean> friendList, OnItemClickListener onItemClickListener) {
-//        list = friendList;
-//        mOnItemClickListener = onItemClickListener;
-//    }
+
 
     public void setList(List<FriendsBean> list) {
         this.list = list;
-        notifyDataSetChanged();//刷新
+        notifyDataSetChanged();//refresh
     }
     public void setDao(FriendsDao friendsDao) {
         this.friendsDao = friendsDao;
@@ -168,7 +165,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     @NonNull
     @Override
-    //创建
+    //create
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_friends_item, parent, false);
         ViewHolder vh = new ViewHolder(v);

@@ -53,6 +53,7 @@ public class AddFriendActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addFriend();
+                finish();
             }
         });
 

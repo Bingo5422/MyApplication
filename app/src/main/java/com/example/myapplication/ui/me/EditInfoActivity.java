@@ -157,6 +157,8 @@ public class EditInfoActivity extends AppCompatActivity {
 
         cropPhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                 photoOutputUri = Uri.parse("file:///sdcard/photo.jpg"));
+//        cropPhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                photoOutputUri = Uri.parse("file:///data/data/com.example.myapplication/files/photo.jpg"));
         startActivityForResult(cropPhotoIntent, CROP_PHOTO_REQUEST_CODE);
 
     }
